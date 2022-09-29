@@ -148,14 +148,6 @@ void read_ic(const char *fname, int readTypes)
       NumPart = 0;
       NumGas  = 0;
 
-/*new*/
-
-#ifdef BLACKHOLES
-      NumBh  = 0;
-#endif
-
-/*new*/
-
 #if defined(RECOMPUTE_POTENTIAL_IN_SNAPSHOT)
       if(rep == 1)
         MPI_Allreduce(MPI_IN_PLACE, ntype_in_files, num_files * NTYPES, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
@@ -225,17 +217,9 @@ void read_ic(const char *fname, int readTypes)
       /* now do the memory allocation */
       if(rep == 0)
         {
-          int max_load, max_sphload, max_bhload;
+          int max_load, max_sphload;
           MPI_Allreduce(&NumPart, &max_load, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
           MPI_Allreduce(&NumGas, &max_sphload, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
-
-/*new*/
-
-#ifdef BLACKHOLES
-          MPI_Allreduce(&NumBh, &max_bhload, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
-#endif
-
-/*new*/
 
 #ifdef GENERATE_GAS_IN_ICS
           if(max_sphload < max_load)
@@ -244,14 +228,6 @@ void read_ic(const char *fname, int readTypes)
 
           All.MaxPart    = max_load / (1.0 - 2 * ALLOC_TOLERANCE);
           All.MaxPartSph = max_sphload / (1.0 - 2 * ALLOC_TOLERANCE);
-
-/*new*/
-
-#ifdef BLACKHOLES
-          All.MaxBh = max_bhload / (1.0-2*ALLOC_TOLERANCE);
-#endif
-
- /*new*/
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE
           if(All.TotPartSpecial != 0)
@@ -489,25 +465,6 @@ void read_ic(const char *fname, int readTypes)
         SphP[i].Volume = P[i].Mass / SphP[i].Density;
     }
 
-/*new*/
-
-#ifdef BLACKHOLES
-  int j =0;
-  for(int i = 0, i<= NumPart; i++)
-    {
-      if(P[i].Type == 5)
-        {
-          P[i].BhID = j;
-          BhP[j].PID = i;
-          j++;
-        }
-    }
-#endif
-
-/*new*/
-
-
-
   MPI_Barrier(MPI_COMM_WORLD);
 
   t1 = second();
@@ -639,16 +596,6 @@ void empty_read_buffer(enum iofields blocknr, int offset, int pc, int type)
               case A_P:
                 particle = offset + n;
                 break;
-
-/*new*/
-
-#ifdef BLACKHOLES
-              case A_BH:
-                break;
-#endif
-
-/*new*/
-
               case A_PS:
                 terminate("Not good, trying to read into PS[]?\n");
                 break;
@@ -698,17 +645,6 @@ void empty_read_buffer(enum iofields blocknr, int offset, int pc, int type)
               case A_P:
                 array_pos = P + offset + n;
                 break;
-
-/*new*/
-
-#ifdef BLACKHOLES
-              case A_BH:
-                array_pos = BhP + offset + n;
-                break;
-#endif
-
-/*new*/
-
               case A_PS:
                 terminate("Not good, trying to read into PS[]?\n");
                 break;
@@ -782,7 +718,6 @@ void empty_read_buffer(enum iofields blocknr, int offset, int pc, int type)
         P[offset + n].Type = type; /* initialize type here as well */
     }
 }
-
 
 /*! \brief Distributes the particle numbers in the file fname
  *         to tasks 'readTask' to 'lastTask', and calculates the number of
@@ -931,13 +866,7 @@ void share_particle_number_in_file(const char *fname, int filenr, int readTask, 
           All.TotNumPart += header.npartTotal[type];
           All.TotNumPart += (((long long)header.npartTotalHighWord[type]) << 32);
         }
-/*new*/
 
-#ifdef BLACKHOLES
-      All.TotNumBh += header.npartTotal[5] + (((long long)header.npartTotalHighWord[5]) << 32);
-#endif
-
-/*new*/
 #ifdef GENERATE_GAS_IN_ICS
       if(RestartFlag == 0)
         {
@@ -980,15 +909,14 @@ void share_particle_number_in_file(const char *fname, int filenr, int readTask, 
 
       set_cosmo_factors_for_current_time();
     }
-  
+
   if(ThisTask == readTask)
     {
       for(type = 0, n_in_file = 0; type < NTYPES; type++)
         n_in_file += header.npart[type];
-        
-        printf("READIC: Reading file `%s' on task=%d and distribute it to %d to %d (contains %d particles).\n", fname, ThisTask,
-             readTask, lastTask, n_in_file);  
-      
+
+      printf("READIC: Reading file `%s' on task=%d and distribute it to %d to %d (contains %d particles).\n", fname, ThisTask,
+             readTask, lastTask, n_in_file);
 
       myflush(stdout);
     }
@@ -1005,16 +933,6 @@ void share_particle_number_in_file(const char *fname, int filenr, int readTask, 
 
       if(type == 0)
         NumGas += n_for_this_task;
-
-/*new*/
-
-#ifdef BLACKHOLES
-      if(type==5)
-        NumBh += n_for_this_task;
-#endif
-
-/*new*/
-
     }
 
   if(ThisTask == readTask)
@@ -1075,7 +993,6 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
   hid_t hdf5_file     = 0, hdf5_grp[NTYPES], hdf5_dataspace_in_file;
   hid_t hdf5_datatype = 0, hdf5_dataspace_in_memory, hdf5_dataset;
   hsize_t dims[2], count[2], start[2];
-
 #endif /* #ifdef HAVE_HDF5 */
 
   if(ThisTask == readTask)
@@ -1180,7 +1097,7 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
             "READIC: Type 2 (disk):  %8d  (tot=%15lld) masstab= %g\n"
             "READIC: Type 3 (bulge): %8d  (tot=%15lld) masstab= %g\n"
             "READIC: Type 4 (stars): %8d  (tot=%15lld) masstab= %g\n"
-            "READIC: Type 5 (bndry): %8d  (tot=%15lld) masstab= %g\n",
+            "READIC: Type 5 (bndry): %8d  (tot=%15lld) masstab= %g\n\n",
             filenr, fname, header.npart[0], header.npartTotal[0] + (((long long)header.npartTotalHighWord[0]) << 32), All.MassTable[0],
             header.npart[1], header.npartTotal[1] + (((long long)header.npartTotalHighWord[1]) << 32), All.MassTable[1],
             header.npart[2], header.npartTotal[2] + (((long long)header.npartTotalHighWord[2]) << 32), All.MassTable[2],
@@ -1188,7 +1105,6 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
             header.npart[4], header.npartTotal[4] + (((long long)header.npartTotalHighWord[4]) << 32), All.MassTable[4],
             header.npart[5], header.npartTotal[5] + (((long long)header.npartTotalHighWord[5]) << 32), All.MassTable[5]);
     }
-
 
   /* to collect the gas particles all at the beginning (in case several
      snapshot files are read on the current CPU) we move the collisionless
@@ -1213,7 +1129,7 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
       blocknr = (enum iofields)bnr;
 
       if(blocknr == IO_LASTENTRY)
-        { 
+        {
 #if defined(RECOMPUTE_POTENTIAL_IN_SNAPSHOT)
           int pc = nstart;
 
@@ -1265,7 +1181,7 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
           npart = get_particles_in_block(blocknr, &typelist[0]);
 
           if(npart > 0)
-            { 
+            {
               if(ThisTask == readTask)
                 {
                   if(All.ICFormat == 2)
@@ -1296,7 +1212,6 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
 #ifdef HAVE_HDF5
                   pcsum = 0;
 #endif /* #ifdef HAVE_HDF5 */
-                  
                   if(typelist[type] == 0)
                     {
                       /* we are expecting (npart>0) this block, but not for this particle type */
@@ -1307,7 +1222,6 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
                       offset += n_for_this_task;
                     }
                   else
-
                     {
                       /* we are expecting (npart>0) this block for this particle type, read or recv */
                       for(task = readTask; task <= lastTask; task++)
@@ -1324,7 +1238,6 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
                           do
                             {
                               pc = n_for_this_task;
-                      
 
                               if(pc > blockmaxlen)
                                 pc = blockmaxlen;
@@ -1474,18 +1387,7 @@ void read_file(const char *fname, int filenr, int readTask, int lastTask, int re
 
       if(type == 0)
         NumGas += n_for_this_task;
-
-/*new*/
-
-#ifdef BLACKHOLES
-      if(type == 5)
-        NumBh += n_for_this_task;
     }
-#endif
-
-/*new*/
-
-
 
   if(ThisTask == readTask)
     {

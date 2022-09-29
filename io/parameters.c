@@ -506,16 +506,6 @@ void read_parameter_file(char *fname)
       id[nt++] = REAL;
 #endif /* #ifdef ONEDIMS_SPHERICAL */
 
-/*new*/
-
-#ifdef BLACKHOLES
-      strcpy(tag[nt], "BlackHoleParameter");
-      addr[nt] = &All.BlackHoleParameter;
-      id[nt++] = INT;
-#endif
-
-/*new*/
-
       if((fd = fopen(fname, "r")))
         {
           sprintf(buf, "%s%s", fname, "-usedvalues");

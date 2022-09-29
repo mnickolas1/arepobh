@@ -507,12 +507,11 @@ void set_vertex_velocities(void);
 int scalar_init(MyFloat *addr, MyFloat *addr_mass, int type);
 void compute_interface_fluxes(tessellation *T);
 void update_primitive_variables(void);
-
 void set_pressure_of_cell_internal(struct particle_data *P, struct sph_particle_data *SphP, int i);
 void do_validity_checks(struct particle_data *P, struct sph_particle_data *SphP, int i, struct pv_update_data *pvd);
 void update_primitive_variables_single(struct particle_data *P, struct sph_particle_data *SphP, int i, struct pv_update_data *pvd);
-void update_internal_energy(struct particle_data *P, struct sph_particle_data *SphP, int i, struct pv_update_data *pvd);
 
+void update_internal_energy(struct particle_data *P, struct sph_particle_data *SphP, int i, struct pv_update_data *pvd);
 void mpi_exchange_buffers(void *send_buf, int *send_count, int *send_offset, void *recv_buf, int *recv_count, int *recv_offset,
                           int item_size, int commtag, int include_self);
 int mpi_calculate_offsets(int *send_count, int *send_offset, int *recv_count, int *recv_offset, int send_identical);

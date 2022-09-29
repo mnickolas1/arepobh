@@ -710,14 +710,6 @@ extern int FlagNyt;
 extern int NumPart; /*!< number of particles on the LOCAL processor */
 extern int NumGas;  /*!< number of gas particles on the LOCAL processor  */
 
-/*new*/
-
-#ifdef BLACKHOLES
-extern int NumBh;
-#endif
-
-/*new*/
-
 extern gsl_rng *random_generator;     /*!< a random number generator  */
 extern gsl_rng *random_generator_aux; /*!< an auxialiary random number generator for use if one doesn't want to influence the main
                                          code's random numbers  */
@@ -886,25 +878,10 @@ extern struct global_data_all_processes
   long long TotNumPart; /*!<  total particle numbers (global value) */
   long long TotNumGas;  /*!<  total gas particle number (global value) */
 
-/*new*/
-
-#ifdef BLACKHOLES
-  long long TotNumBh;
-#endif
-
-/*new*/
-
   int MaxPart;    /*!< This gives the maxmimum number of particles that can be stored on one
                      processor. */
   int MaxPartSph; /*!< This gives the maxmimum number of SPH particles that can be stored on one
                      processor. */
-/*new*/
-  
-#ifdef BLACKHOLES
-  int MaxBh;
-#endif
-
-/*new*/
 
 #if defined(COOLING)
   char TreecoolFile[MAXLEN_PATH];
@@ -1226,18 +1203,7 @@ extern struct global_data_all_processes
   double CoreRadius;
 #endif /* #ifdef ONEDIMS_SPHERICAL */
 
-
-
   double GlobalDisplacementVector[3];
-
-/*new*/
-
-#ifdef BLACKHOLES
-  int BlackHoleParameter;
-#endif
-
-/*new*/
-
 } All;
 
 /*****************************************************************************
@@ -1305,15 +1271,6 @@ extern struct particle_data
   unsigned char SofteningType;
   signed char TimeBinGrav;
   signed char TimeBinHydro;
-
-/*new*/
-
-#ifdef BLACKHOLES
-  MyIDType BhID;
-#endif
-
-/*new*/
-
 } * P,              /*!< holds particle data on local processor */
     *DomainPartBuf; /*!< buffer for particle data used in domain decomposition */
 
@@ -1387,7 +1344,7 @@ extern struct sph_particle_data
 #if defined(REGULARIZE_MESH_FACE_ANGLE) || defined(OUTPUT_MESH_FACE_ANGLE)
   MySingle MaxFaceAngle;
 #endif /* #if defined(REGULARIZE_MESH_FACE_ANGLE) || defined(OUTPUT_MESH_FACE_ANGLE) */
-  
+
   MySingle ActiveArea;
 
 #if defined(OUTPUT_DIVVEL)
@@ -1450,7 +1407,7 @@ extern struct sph_particle_data
 #ifdef REFINEMENT_HIGH_RES_GAS
   int AllowRefinement;
 #endif /* #ifdef REFINEMENT_HIGH_RES_GAS */
- 
+
 #ifdef REFINEMENT_SPLIT_CELLS
   MySingle SepVector[3];
 #endif /* #ifdef REFINEMENT_SPLIT_CELLS */
@@ -1467,24 +1424,6 @@ extern struct sph_particle_data
 
 } * SphP,          /*!< holds SPH particle data on local processor */
     *DomainSphBuf; /*!< buffer for SPH particle data in domain decomposition */
-
-/*new*/
-
-#ifdef BLACKHOLES
-extern struct bh_particle_data
-{
-double Density;
-double Temperature;
-MyIDType PID;
-
-}  * BhP,          
-    *DomainBhBuf; 
-
-#define BPP(i) = BhP[P(i).BhID]
-
-#endif 
-
-/*new*/
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE
 extern struct special_particle_data
@@ -1667,7 +1606,6 @@ extern struct io_header
 
   int composition_vector_length; /*!< specifies the length of the composition vector (0 if not present)  */
 
-
 #if(NTYPES == 6)
   char fill[40];   /*!< fills to 256 Bytes */
 #elif(NTYPES == 7) /* #if (NTYPES==6) */
@@ -1772,16 +1710,6 @@ enum iofields
   IO_TASK,
   IO_TIMEBIN_HYDRO,
 
-
-/*new*/
-
-#ifdef BLACKHOLES
-  IO_BHTEMPERATURE,
-  IO_BHDENSITY,
-#endif  
-
-/*new*/
-
   IO_LASTENTRY /* This should be kept - it signals the end of the list */
 };
 
@@ -1790,17 +1718,7 @@ enum arrays
   A_NONE,
   A_SPHP,
   A_P,
-
-/*new*/
-
-#ifdef BLACKHOLES
-  A_BH,
-#endif
-
-/*new*/
-  
   A_PS
-
 };
 
 enum types_in_file

@@ -130,17 +130,6 @@ double EgyInjection;
 int NumPart; /*!< number of particles on the LOCAL processor */
 int NumGas;  /*!< number of gas particles on the LOCAL processor  */
 
-
-/*new*/
-
-#ifdef BLACKHOLES
-int NumBh;
-#endif
-
-/*new*/
-
-
-
 gsl_rng *random_generator;     /*!< a random number generator  */
 gsl_rng *random_generator_aux; /*!< an auxialiary random number generator for use if one doesn't want to influence the main code's
                                   random numbers  */
@@ -241,15 +230,6 @@ struct subfind_data *PS;
  */
 struct sph_particle_data *SphP, /*!< holds SPH particle data on local processor */
     *DomainSphBuf;              /*!< buffer for SPH particle data in domain decomposition */
-
-/*new*/
-
-#ifdef BLACKHOLES
-struct bh_particle_data *BhP,
-    *DomainBhBuf;
-#endif 
-
-/*new*/
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE
 struct special_particle_data *PartSpecialListGlobal;

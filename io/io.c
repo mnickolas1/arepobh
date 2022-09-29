@@ -183,11 +183,6 @@ void init_field(enum iofields field, const char *label, const char *datasetname,
       IO_Fields[N_IO_Fields].offset = (size_t)pointer_to_field - (size_t)PS;
     }
 
-  else if(array == A_BH)
-    {
-      IO_Fields[N_IO_Fields].offset = (size_t)pointer_to_field - (size_t)BhP;
-    }
-
   IO_Fields[N_IO_Fields].io_func = io_func;
 
   // validate types
@@ -624,17 +619,6 @@ void fill_write_buffer(void *buffer, enum iofields blocknr, int *startindex, int
                     particle = pindex;
                     break;
                   case A_PS:
-
-/*new*/
-
-#ifdef BLACKHOLES
-                  case A_BH:
-                    particle = pindex;
-                    break;
-#endif
-
-/*new*/
-
                     terminate("Not good, trying to read into PS[]?\n");
                     break;
                   default:
@@ -694,16 +678,6 @@ void fill_write_buffer(void *buffer, enum iofields blocknr, int *startindex, int
                   case A_PS:
                     array_pos = PS + pindex;
                     break;
-
-/*new*/
-
-#ifdef BLACKHOLES
-                  case A_BH:
-                    array_pos = BhP + pindex;
-                    break;
-#endif
-
-/*new*/
 
                   default:
                     terminate("ERROR in fill_write_buffer: Array not found!\n");
@@ -965,7 +939,6 @@ int get_particles_in_block(enum iofields blocknr, int *typelist)
                       {
                         typelist[i] = 1;
                         npart += header.npart[i];
-
                       }
                     else
                       typelist[i] = 0;
@@ -1267,9 +1240,6 @@ void write_file(char *fname, int writeTask, int lastTask, int subbox_flag)
                       hdf5_grp[type] = my_H5Gcreate(hdf5_file, buf, 0);
                     }
                 }
-
-
-
 
               write_header_attributes_in_hdf5(hdf5_headergrp);
 
