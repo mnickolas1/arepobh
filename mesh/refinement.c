@@ -170,7 +170,7 @@ void move_collisionless_particle(int new_i, int old_i)
   P[new_i] = P[old_i];
 #ifdef BLACKHOLES
   if(P[new_i].Type==5)
-    BhP[P[new_i].BhID].PID = new_i;
+    BPP(new_i).PID = new_i;
 #endif
 
   if(P[old_i].Mass == 0 && P[old_i].ID == 0)

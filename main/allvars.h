@@ -1454,6 +1454,7 @@ MyIDType PID;
     *DomainBhBuf; 
 
 #define BPP(i) BhP[P[i].BhID]
+#define PPB(i) P[BhP[i].PID]
 #endif 
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE
@@ -1742,8 +1743,9 @@ enum iofields
   IO_TASK,
   IO_TIMEBIN_HYDRO,
 #ifdef BLACKHOLES
-  IO_BHTEMPERATURE,
+/*  IO_BHTEMPERATURE,*/
   IO_BHDENSITY,
+  IO_BHID,
 #endif  
   IO_LASTENTRY /* This should be kept - it signals the end of the list */
 };

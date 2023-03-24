@@ -264,7 +264,7 @@ void domain_exchange(void)
               P[NumGas - 1] = P[NumPart - 1];
 #ifdef BLACKHOLES
               if(P[NumPart-1].Type==5)
-                BhP[P[NumPart-1].BhID].PID = NumGas - 1;
+                BPP(NumPart-1).PID = NumGas - 1;
 #endif
               Key[n]          = Key[NumGas - 1];
               Key[NumGas - 1] = Key[NumPart - 1];
@@ -276,12 +276,12 @@ void domain_exchange(void)
 #ifdef BLACKHOLES
           if(P[n].Type == 5)
             {
-              BhP[P[n].BhID] = BhP[NumBh-1];
-              P[BhP[NumBh-1].PID].BhID = P[n].BhID; 
+              BPP(n) = BhP[NumBh-1];
+              PPB(NumBh-1).BhID = P[n].BhID; 
 
               P[n] = P[NumPart-1];
               if(P[NumPart-1].Type == 5)
-                BhP[P[NumPart-1].BhID].PID = n;
+                BPP(NumPart-1).PID = n;
 
               Key[n] = Key[NumPart - 1];
               
@@ -293,7 +293,7 @@ void domain_exchange(void)
               P[n]   = P[NumPart - 1];
 #ifdef BLACKHOLES
               if(P[NumPart-1].Type == 5)
-                BhP[P[NumPart-1].BhID].PID = n;
+                BPP(NumPart-1).PID = n;
 #endif
               Key[n] = Key[NumPart - 1];
             }
@@ -499,8 +499,8 @@ if(count_bh[target] > 0 || count_recv_bh[target] > 0)
     { 
       if(P[i].Type == 5)
         {
-          P[i].BhID = j;  
-          BhP[j].PID = i;
+          P[i].BhID = j+1;  
+          BhP[j].PID = i+1;
           j++;
         }
           
