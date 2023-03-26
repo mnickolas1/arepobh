@@ -243,7 +243,7 @@ void domain_exchange(void)
 #ifdef BLACKHOLES
           else if(P[n].Type == 5)
             {
-              bhBuf[offset_bh[target] + count_bh[target]] = BhP[P[n].BhID];
+              bhBuf[offset_bh[target] + count_bh[target]] = BPP(n);
               partBuf[offset[target] + count[target]] = P[n];
               keyBuf[offset[target] + count[target]]  = Key[n];
               
@@ -274,7 +274,7 @@ void domain_exchange(void)
               NumGas--;
             }
 #ifdef BLACKHOLES
-          if(P[n].Type == 5)
+          else if(P[n].Type == 5)
             {
               BPP(n) = BhP[NumBh-1];
               PPB(NumBh-1).BhID = P[n].BhID; 
