@@ -499,8 +499,8 @@ if(count_bh[target] > 0 || count_recv_bh[target] > 0)
     { 
       if(P[i].Type == 5)
         {
-          P[i].BhID = j+1;  
-          BhP[j].PID = i+1;
+          P[i].BhID = j;  
+          BhP[j].PID = i;
           j++;
         }
           
