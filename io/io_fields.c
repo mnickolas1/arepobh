@@ -768,7 +768,7 @@ void init_io_fields()
              BHS_ONLY);
   init_units(IO_BHTEMPERATURE, 0., 0., 0., 0., 0., 0);
   */
-  init_field(IO_BHID, "BhID  ", "BlackholeIDs", MEM_MY_ID_TYPE, FILE_MY_ID_TYPE, FILE_MY_ID_TYPE, 1, A_P, &P[0].BhID, 0, BHS_ONLY);
+  init_field(IO_BHID, "BhID  ", "BlackholeIDs", MEM_MY_ID_TYPE, FILE_MY_ID_TYPE, FILE_NONE, 1, A_P, &P[0].BhID, 0, BHS_ONLY);
   init_units(IO_BHID, 0, 0, 0, 0, 0, 0);
   init_snapshot_type(IO_BHID, SN_MINI);
   
