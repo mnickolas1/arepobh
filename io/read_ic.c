@@ -480,8 +480,8 @@ void read_ic(const char *fname, int readTypes)
     {
       if(P[i].Type == 5)
         {
-          P[i].BhID = j+1;
-          BhP[j].PID = i+1;
+          P[i].BhID = j;
+          BhP[j].PID = i;
           j++;
         }
     }
