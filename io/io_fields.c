@@ -772,7 +772,7 @@ void init_io_fields()
   init_units(IO_BHID, 0, 0, 0, 0, 0, 0);
   init_snapshot_type(IO_BHID, SN_MINI);
   
-  init_field(IO_BHDENSITY, "BHD ", "BlackHoleDensity", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_MY_IO_FLOAT, 1, A_BH, &BhP[0].Density, 0, BHS_ONLY);
+  init_field(IO_BHDENSITY, "BHD ", "BlackHoleDensity", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_NONE, 1, A_BH, &BhP[0].Density, 0, BHS_ONLY);
   init_units(IO_BHDENSITY, -3., 2., -3., 1., 0., All.UnitDensity_in_cgs);
   init_snapshot_type(IO_BHDENSITY, SN_MINI);
 #endif
