@@ -54,7 +54,7 @@ static int refine_criterion_volume(int i);
 #endif
 
 #ifdef REFINEMENT_MERGE_CELLS
-char *FlagDoNotRefine;
+extern char *FlagDoNotRefine;
 #endif /* #ifdef REFINEMENT_MERGE_CELLS */
 
 /*! \brief Should this cell be refined?
