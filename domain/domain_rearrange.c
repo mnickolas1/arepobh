@@ -103,7 +103,7 @@ void domain_rearrange_particle_sequence(void)
             Key[NumGas - 1] = Key[NumPart - 1];
 #ifdef BLACKHOLES
             if (P[NumGas - 1].Type == 5)
-              BhP[P[NumGas - 1].BhID].PID = NumGas - 1;
+              BPP(NumGas - 1).PID = NumGas - 1;
 #endif
 
             NumGas--;

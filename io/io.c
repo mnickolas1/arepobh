@@ -612,7 +612,12 @@ void fill_write_buffer(void *buffer, enum iofields blocknr, int *startindex, int
       /* SUBBOX_SNAPSHOTS specialized output */
 
       /* normal particle output */
+#ifndef BLACKHOLES
       if(P[pindex].Type == type)
+#endif
+#ifdef BLACKHOLES
+      if(P[pindex].Type == type || PPB(pindex).Type == type)
+#endif
         {
           if(IO_Fields[field].io_func)
             {
