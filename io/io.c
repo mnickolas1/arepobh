@@ -606,18 +606,97 @@ void fill_write_buffer(void *buffer, enum iofields blocknr, int *startindex, int
   float *floatp   = (float *)buffer;
 
   pindex = *startindex;
+  
+#ifdef BLACKHOLES
+  if(IO_Fields[field].array == A_BH)
+    {
+      for(n = 0; n < pc; pindex++)
+        {
+          if(PPB(pindex).Type == type)
+            {
+              int particle = pindex; 
+              void *array_pos = BhP + pindex;
+
+              for(k = 0; k < IO_Fields[field].values_per_block; k++)
+                  {
+                    double value = 0.;
+
+                    switch(IO_Fields[field].type_in_memory)
+                      {
+                        case MEM_INT:
+                          *intp = *((int *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(int)));
+                          intp++;
+                          break;
+
+                        case MEM_MY_ID_TYPE:
+                          *ip = *((MyIDType *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(MyIDType)));
+                          ip++;
+                          break;
+
+                        case MEM_FLOAT:
+                          value = *((float *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(float)));
+                          break;
+
+                        case MEM_DOUBLE:
+                          value = *((double *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(double)));
+                          break;
+
+                        case MEM_MY_SINGLE:
+                          value = *((MySingle *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(MySingle)));
+                          break;
+
+                        case MEM_MY_FLOAT:
+                          value = *((MyFloat *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(MyFloat)));
+                          break;
+
+                        case MEM_MY_DOUBLE:
+                          value = *((MyDouble *)((size_t)array_pos + IO_Fields[field].offset + k * sizeof(MyDouble)));
+                          break;
+
+                        case MEM_NONE:
+                          terminate("ERROR in fill_write_buffer: reached MEM_NONE with no io_func specified!\n");
+                          break;
+
+                        default:
+                          terminate("ERROR in fill_write_buffer: Type not found!\n");
+                          break;
+                      }
+
+                    switch(IO_Fields[field].type_in_file_output)
+                      {
+                        case FILE_MY_IO_FLOAT:
+                          *fp = value;
+                          fp++;
+                          break;
+
+                        case FILE_DOUBLE:
+                          *doublep = value;
+                          doublep++;
+                          break;
+
+                        case FILE_FLOAT:
+                          *floatp = value;
+                          floatp++;
+                          break;
+
+                        default:
+                          break;
+                      }
+                  }
+              n++;
+            }
+        }
+      *startindex = pindex;
+      return;    
+    }
+#endif
 
   for(n = 0; n < pc; pindex++)
     {
       /* SUBBOX_SNAPSHOTS specialized output */
 
       /* normal particle output */
-#ifndef BLACKHOLES
       if(P[pindex].Type == type)
-#endif
-#ifdef BLACKHOLES
-      if(P[pindex].Type == type || PPB(pindex).Type == type)
-#endif
         {
           if(IO_Fields[field].io_func)
             {
