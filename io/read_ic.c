@@ -618,10 +618,6 @@ void empty_read_buffer(enum iofields blocknr, int offset, int pc, int type)
               case A_P:
                 particle = offset + n;
                 break;
-#ifdef BLACKHOLES
-              case A_BH:
-                break;
-#endif
               case A_PS:
                 terminate("Not good, trying to read into PS[]?\n");
                 break;
@@ -673,7 +669,7 @@ void empty_read_buffer(enum iofields blocknr, int offset, int pc, int type)
                 break;
 #ifdef BLACKHOLES
               case A_BH:
-                array_pos = BhP + offset + n;
+                array_pos = BhP + n;
                 break;
 #endif
               case A_PS:
