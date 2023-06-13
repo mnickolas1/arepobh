@@ -158,7 +158,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   double h, h2, hinv, hinv3, hinv4, wk, dwk;
   double dx, dy, dz, r, r2, u;
   double dt; //dtime;
-  MyDouble bh_mass, ngbmass; 
+  MyDouble ngbmass; 
   MyDouble *pos, energyfeed;
 
   data_in local, *target_data;
@@ -264,8 +264,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           if(pos_x_angle <= theta)
             SphP[j].PositiveJet = 1;
 /*split kinetic and thermal feed*/                      
-          SphP[j].KineticFeed    += (1-All.Ftherm) * energyfeed/ngbmass_feed*P[j].Mass;
-          All.EnergyExchange[0]  += (1-All.Ftherm) * energyfeed/ngbmass_feed*P[j].Mass;
+          SphP[j].KineticFeed    += (1-All.Ftherm) * energyfeed/ngbmass*P[j].Mass;
+          All.EnergyExchange[0]  += (1-All.Ftherm) * energyfeed/ngbmass*P[j].Mass;
 
 /*set radial kick direction*/      
           SphP[j].BhKickVector[0] = -dx;
