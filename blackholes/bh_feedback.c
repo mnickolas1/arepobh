@@ -251,7 +251,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
       neg_x_angle = acos((vx*neg_x_axis[0] + vy*neg_x_axis[1] + vz*neg_x_axis[2]) / 
       (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(neg_x_axis[0], 2) + pow(neg_x_axis[1], 2) + pow(neg_x_axis[2], 2))));
 
-      if((pos_x_angle <= theta) || (neg_x_angle <= theta)) and (r2<h2)
+      if(((pos_x_angle <= theta) || (neg_x_angle <= theta)) && (r2<h2))
         {
           r = sqrt(r2);
 
