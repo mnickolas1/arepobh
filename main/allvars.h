@@ -1475,17 +1475,6 @@ extern struct bh_particle_data
   MyDouble Density;
   MyDouble NgbMass;
   MyDouble NgbMassFeed;
-#ifdef BONDI_ACCRETION
-  MyDouble VelocityGas[3];
-  MyDouble VelocityGasCircular[3];
-  MyDouble InternalEnergyGas;
-  MyDouble AccretionRate;
-  MyDouble MassToDrain;
-  MyDouble AngularMomentum[3];
-#endif
-#ifdef INFALL_ACCRETION
-  MyDouble Accretion;
-#endif
   integertime NgbMinStep;
   int IsBh;
   int DensityFlag;
