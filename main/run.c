@@ -397,10 +397,6 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
 #ifdef BLACKHOLES
   bh_density();
 
-#ifdef BONDI_ACCRETION
-  update_bh_accretion_rate();
-#endif
-
   update_bh_timesteps();
    
    if(All.Time >= All.FeedbackTime)

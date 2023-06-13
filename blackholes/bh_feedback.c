@@ -22,18 +22,7 @@ typedef struct
   MyDouble Pos[3];
   MyFloat Hsml;
   int Bin;
-  int IsBh;
-  MyDouble BhRho;
-  MyDouble BhMass;
   MyDouble NgbMass;
-  MyDouble NgbMassFeed;
-#ifdef BONDI_ACCRETION
-  MyDouble AccretionRate;
-  MyDouble MassToDrain;
-#endif
-#ifdef INFALL_ACCRETION
-  MyDouble Accretion;
-#endif
   int Firstnode;
 } data_in;
 
@@ -55,18 +44,8 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Pos[2]        = PPB(i).Pos[2];
   in->Hsml          = BhP[i].Hsml;
   in->Bin           = BhP[i].TimeBinBh;
-  in->IsBh          = BhP[i].IsBh;
-  in->BhRho         = BhP[i].Density;
-  in->BhMass        = PPB(i).Mass;
   in->NgbMass       = BhP[i].NgbMass;
-  in->NgbMassFeed   = BhP[i].NgbMassFeed;
-#ifdef BONDI_ACCRETION 
-  in->AccretionRate = BhP[i].AccretionRate;
-  in->MassToDrain   = BhP[i].MassToDrain;
-#endif
-#ifdef INFALL_ACCRETION
-  in->Accretion     = BhP[i].Accretion;
-#endif
+
   in->Firstnode     = firstnode;
 }
 
@@ -174,13 +153,13 @@ void bh_ngb_feedback(void)
 
 static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 {
-  int j, n, bin, isbh;
+  int j, n, bin;
   int numnodes, *firstnode;
   double h, h2, hinv, hinv3, hinv4, wk, dwk;
   double dx, dy, dz, r, r2, u;
   double dt; //dtime;
-  MyDouble bh_mass, ngbmass, ngbmass_feed; 
-  MyDouble *pos, bh_rho, energyfeed;
+  MyDouble bh_mass, ngbmass; 
+  MyDouble *pos, energyfeed;
 
   data_in local, *target_data;
   /*data_out out;*/
@@ -202,22 +181,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
   pos            = target_data->Pos;
   h              = target_data->Hsml;
-  isbh           = target_data->IsBh;
   bin            = target_data->Bin;
-  bh_rho         = target_data->BhRho;
-  bh_mass        = target_data->BhMass;
   ngbmass        = target_data->NgbMass;
-  ngbmass_feed   = target_data->NgbMassFeed;
-
-#ifdef BONDI_ACCRETION
-  MyDouble accretion_rate, mass_to_drain;
-  accretion_rate = target_data->AccretionRate;
-  mass_to_drain  = target_data->MassToDrain; 
-#endif
-#ifdef INFALL_ACCRETION
-  MyDouble accretion;
-  accretion      = target_data->Accretion;
-#endif
 
   h2   = h * h;
   hinv = 1.0 / h;
@@ -232,21 +197,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
       dt    = (bin ? (((integertime)1) << bin) : 0) * All.Timebase_interval;
     //dtime = All.cf_atime * dt / All.cf_time_hubble_a;
 
-  if(isbh)/*is bh->*/
-    {
-#ifdef BONDI_ACCRETION
-      energyfeed = All.Epsilon_f * All.Epsilon_r * accretion_rate * dt * (CLIGHT * CLIGHT / (All.UnitVelocity_in_cm_per_s * All.UnitVelocity_in_cm_per_s));
-#endif
-#ifdef INFALL_ACCRETION  
-      energyfeed = All.Epsilon_f * All.Epsilon_r * accretion * (CLIGHT * CLIGHT / (All.UnitVelocity_in_cm_per_s * All.UnitVelocity_in_cm_per_s));
-#endif
-    }
-  else if(!isbh)/*is star->*/
-    {
-      double EddingtonLuminosity = 4. * M_PI * GRAVITY * (bh_mass * All.UnitMass_in_g) * PROTONMASS * CLIGHT / THOMPSON;
-      EddingtonLuminosity *=  (All.UnitTime_in_s / (All.UnitMass_in_g*pow(All.UnitVelocity_in_cm_per_s,2)));
-      energyfeed = EddingtonLuminosity * dt;
-    }
+  energyfeed =  1.5*pow(10,13) * dt;
 
 /*jet axis and opening angle*/    
 
@@ -254,7 +205,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   double pos_x_axis[3] = {1, 0, 0};
   double neg_x_axis[3] = {-1, 0, 0};      
 /*jet angle*/
-  double theta = 0.35;
+  double theta = 0.2;
   double vx, vy, vz, pos_x_angle, neg_x_angle; 
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
@@ -288,85 +239,40 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 #endif /* #ifndef REFLECTIVE_Z */
       r2 = dx * dx + dy * dy + dz * dz;
 
-/*kernel*/
-      if(r2 < h2)
+/*double cone jet setup*/
+
+/*calculate vector to cone vertex*/
+      vx = -dx; // x-component of the vector from the vertex to the point
+      vy = -dy; // y-component of the vector from the vertex to the point
+      vz = -dz; // z-component of the vector from the vertex to the point
+/*calculate angles*/    
+      pos_x_angle = acos((vx*pos_x_axis[0] + vy*pos_x_axis[1] + vz*pos_x_axis[2]) / 
+      (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(pos_x_axis[0], 2) + pow(pos_x_axis[1], 2) +  pow(pos_x_axis[2], 2))));
+      neg_x_angle = acos((vx*neg_x_axis[0] + vy*neg_x_axis[1] + vz*neg_x_axis[2]) / 
+      (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(neg_x_axis[0], 2) + pow(neg_x_axis[1], 2) + pow(neg_x_axis[2], 2))));
+
+      if(((pos_x_angle <= theta) || (neg_x_angle <= theta)) and (r2<h2))
         {
           r = sqrt(r2);
 
           u = r * hinv;
 
+/*kernel*/
           kernel(u, hinv3, hinv4, &wk, &dwk);
 
-          if(isbh)/*particle is a bh*/
-            {
-              if(All.JetFeedback)
-                {
-/*double cone jet setup*/
-
-/*calculate vector to cone vertex*/
-                  vx = -dx; // x-component of the vector from the vertex to the point
-                  vy = -dy; // y-component of the vector from the vertex to the point
-                  vz = -dz; // z-component of the vector from the vertex to the point
-/*calculate angles*/    
-                  pos_x_angle = acos((vx*pos_x_axis[0] + vy*pos_x_axis[1] + vz*pos_x_axis[2]) / 
-                  (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(pos_x_axis[0], 2) + pow(pos_x_axis[1], 2) +  pow(pos_x_axis[2], 2))));
-                  neg_x_angle = acos((vx*neg_x_axis[0] + vy*neg_x_axis[1] + vz*neg_x_axis[2]) / 
-                  (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(neg_x_axis[0], 2) + pow(neg_x_axis[1], 2) + pow(neg_x_axis[2], 2))));
 /*set flag to 1 if gas particle is on the positive side of jet*/
-                  if(pos_x_angle <= theta)
-                    SphP[j].PositiveJet = 1;
-/*check if particle is inside the cone*/ 
-                  if((pos_x_angle <= theta) || (neg_x_angle <= theta))
-                    {
-/*split kinetic and thermal energy feed*/ 
-                      SphP[j].KineticFeed       += (1-All.Ftherm) * energyfeed/ngbmass_feed*P[j].Mass;
-                      All.EnergyExchange[0]     += (1-All.Ftherm) * energyfeed/ngbmass_feed*P[j].Mass;
+          if(pos_x_angle <= theta)
+            SphP[j].PositiveJet = 1;
+/*split kinetic and thermal feed*/                      
+          SphP[j].KineticFeed    += (1-All.Ftherm) * energyfeed/ngbmass_feed*P[j].Mass;
+          All.EnergyExchange[0]  += (1-All.Ftherm) * energyfeed/ngbmass_feed*P[j].Mass;
 
-/*only jet particles injected with thermal feedback if JetFeedback == 2, else isotropic*/             
-                      if(All.JetFeedback == 2)     
-                        {
-                          SphP[j].ThermalFeed   += All.Ftherm * energyfeed/ngbmass_feed*P[j].Mass;
-                          All.EnergyExchange[0] += All.Ftherm * energyfeed/ngbmass_feed*P[j].Mass;
-                        }
-                    }
-              
-                  if(All.JetFeedback == 1)
-                    {
-                      SphP[j].ThermalFeed   += All.Ftherm * energyfeed/ngbmass*P[j].Mass;
-                      All.EnergyExchange[0] += All.Ftherm * energyfeed/ngbmass*P[j].Mass;
-                    } 
-            
-                }
-/*else All.JetFeedback == 0 i.e. isotropic thermal + kinetic injection*/
-              else
-                {
-                  SphP[j].KineticFeed   += (1-All.Ftherm) * energyfeed/ngbmass*P[j].Mass;
-                  All.EnergyExchange[0] += (1-All.Ftherm) * energyfeed/ngbmass*P[j].Mass;
-                  SphP[j].ThermalFeed   += All.Ftherm * energyfeed/ngbmass*P[j].Mass;
-                  All.EnergyExchange[0] += All.Ftherm * energyfeed/ngbmass*P[j].Mass;
-                }
-#ifdef BONDI_ACCRETION
-/*set drain mass flag*/
-              SphP[j].MassDrain = accretion_rate*dt/ngbmass*P[j].Mass + mass_to_drain/ngbmass*P[j].Mass;
-#endif
 /*set radial kick direction*/      
-              SphP[j].BhKickVector[0] = -dx;
-              SphP[j].BhKickVector[1] = -dy;
-              SphP[j].BhKickVector[2] = -dz;
-            }
-          
-          if(!isbh) /*particle is a star*/
-            {
-/*set radial momentum kick*/
-              SphP[j].MomentumFeed  += All.Lambda * energyfeed / (CLIGHT / All.UnitVelocity_in_cm_per_s) * P[j].Mass / bh_rho * wk;
-              All.EnergyExchange[2] += All.Lambda * energyfeed / (CLIGHT / All.UnitVelocity_in_cm_per_s) * P[j].Mass / bh_rho * wk;
-
-              SphP[j].MomentumKickVector[0] = -dx;
-              SphP[j].MomentumKickVector[1] = -dy;
-              SphP[j].MomentumKickVector[2] = -dz;
-            }
+          SphP[j].BhKickVector[0] = -dx;
+          SphP[j].BhKickVector[1] = -dy;
+          SphP[j].BhKickVector[2] = -dz;
         }
-    }
+    }    
   return 0;
 }
   /* Now collect the result at the right place 
