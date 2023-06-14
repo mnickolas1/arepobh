@@ -197,7 +197,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
       dt    = (bin ? (((integertime)1) << bin) : 0) * All.Timebase_interval;
     //dtime = All.cf_atime * dt / All.cf_time_hubble_a;
 
-  energyfeed =  1.5*pow(10,13) * dt;
+  energyfeed =  1.5*pow(10,10) * dt;
 
 /*jet axis and opening angle*/    
 
