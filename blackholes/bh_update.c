@@ -290,17 +290,15 @@ void perform_end_of_step_bh_physics(void)
         if(All.FeedbackFlag > 0)
           {
             int queue = 0;
-            int queue_tot = 0;
+            int queue_all = 0;
             for(i = 0; i < NumGas; i++)
               {
-                if(SphP[i].PositiveJet) //PositiveJet is 1 for cone particles and 0 for regular gas cells
-                  {
-                    if(SphP[i].JetQueue > queue) //JetQueue gives the priority list for cone particles
-                      queue = SphP[i].JetQueue;
-                  }
-            MPI_Allreduce(&queue, &queue_tot, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
-            MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
+                if(SphP[i].JetQueue > queue) //JetQueue gives the priority list for cone particles
+                  queue = SphP[i].JetQueue;
               }
+            MPI_Allreduce(&queue, &queue_all, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+            MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
+              
             struct pv_update_data pvd;
             if(All.ComovingIntegrationOn)
               {
@@ -313,7 +311,7 @@ void perform_end_of_step_bh_physics(void)
 /*kick the particles*/            
             for(i = 0; i < NumGas; i++)
               {
-                if(SphP[i].JetQueue == queue_tot)
+                if(SphP[i].JetQueue == queue_all)
                   {  
                     kick_vector[0] = SphP[i].BhKickVector[0];
                     kick_vector[1] = SphP[i].BhKickVector[1];
