@@ -288,24 +288,31 @@ void perform_end_of_step_bh_physics(void)
 
 /*inject feedback to ngb cells*/
     if(All.Time >= All.FeedbackTime)
-    {   
-      if(All.FeedbackFlag > 0)
-        {
-          struct pv_update_data pvd;
-          if(All.ComovingIntegrationOn)
-            {
-              pvd.atime    = All.Time;
-              pvd.hubble_a = hubble_function(All.Time);
-              pvd.a3inv    = 1 / (All.Time * All.Time * All.Time);
-            }
-          else
-            pvd.atime = pvd.hubble_a = pvd.a3inv = 1.0;
+      {   
+        if(All.FeedbackFlag > 0)
+          {
+            int queue = 0;
+            int queue_tot = 0;
+            for(i = 0; i < NumGas; i++)
+              {
+                if(SphP[i].PositiveJet)
+                  {
+                    if(SphP[i].JetQueue > queue)
+                      queue = SphP[i].JetQueue;
+                  }
+            MPI_Allreduce(&queue, &queue_tot, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+            MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
 
-          for(idx = 0; idx < TimeBinsHydro.NActiveParticles; idx++)
-            {
-              i = TimeBinsHydro.ActiveParticleList[idx];
-              if(i < 0)
-              continue;
+            for(i = 0; i < NumGas; i++)
+              {
+                if(SphP[i].JetQueue == queue_tot)
+                  {  
+                  //kick
+                  }
+              }
+
+
+
 
 /*dump energy and momentum injected by bh*/
               if(SphP[i].KineticFeed > 0)

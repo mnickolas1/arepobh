@@ -1456,12 +1456,8 @@ extern struct sph_particle_data
     
 #ifdef BLACKHOLES
   int PositiveJet;
-  MyDouble MassDrain;
-  MyDouble ThermalFeed;
-  MyDouble KineticFeed;
+  int JetQueue;
   MyDouble BhKickVector[3];
-  MyDouble MomentumFeed;
-  MyDouble MomentumKickVector[3];
 #endif
 
 } * SphP,          /*!< holds SPH particle data on local processor */

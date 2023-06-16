@@ -393,7 +393,7 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
 #if defined(COOLING) && defined(USE_SFR)
   sfr_create_star_particles();
 #endif /* #if defined(COOLING) && defined(USE_SFR) */
-
+/*
 #ifdef BLACKHOLES
   bh_density();
 
@@ -404,6 +404,7 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
       bh_ngb_feedback();
     }
 #endif
+*/
 }
 
 /*! \brief Calls extra modules at the end of the run loop.
