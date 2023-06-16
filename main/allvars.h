@@ -662,9 +662,6 @@ extern MyDouble boxSize_Z, boxHalf_Z;
 
 extern int TimeBinSynchronized[TIMEBINS];
 extern struct TimeBinData TimeBinsHydro, TimeBinsGravity;
-#ifdef BLACKHOLES
-extern struct TimeBinData TimeBinsBh;
-#endif
 
 #ifdef USE_SFR
 extern double TimeBinSfr[TIMEBINS];
@@ -1755,13 +1752,7 @@ enum iofields
   IO_TIMEBIN_HYDRO,
 #ifdef BLACKHOLES
 /*  IO_BHTEMPERATURE,*/
-  IO_ISBH,
   IO_BHID,
-  IO_BHHSML,
-  IO_BHDENSITY,
-  IO_BH_NGBMASS,
-  IO_TIMEBIN_BH,
-  IO_TSTP_BH,
 #endif  
   IO_LASTENTRY /* This should be kept - it signals the end of the list */
 };
