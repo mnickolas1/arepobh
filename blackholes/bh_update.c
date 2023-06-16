@@ -319,7 +319,7 @@ void perform_end_of_step_bh_physics(void)
                     kick_vector[1] = SphP[i].BhKickVector[1];
                     kick_vector[2] = SphP[i].BhKickVector[2];
 
-                    pj = P[i].Mass * All.Vjet; 
+                    pj = P[i].Mass * All.VJet; 
 
                     /*update momentum*/
                     SphP[i].Momentum[0] = kick_vector[0] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
@@ -344,12 +344,12 @@ void perform_end_of_step_bh_physics(void)
 #endif
 #ifdef BURST_MODE
         All.FeedbackFlag = -1;
-#endif      
+        All.LastFeedbackTime = All.Time;
+#endif
           }
       }
-
 #ifdef BURST_MODE
-  if(All.EnergyExchangeTot[0] - All.EnergyExchangeTot[1] > 10)  
+  if(All.PJet * (All.Time - All.LastFeedbackTime) >= All.MJet * All.VJet*All.VJet)  
     All.FeedbackFlag = 1;
 #endif   
 }

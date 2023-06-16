@@ -1219,19 +1219,13 @@ extern struct global_data_all_processes
   double GlobalDisplacementVector[3];
 
 #ifdef BLACKHOLES
-  double EnergyExchange[4];
-  double EnergyExchangeTot[4];
   int FeedbackFlag;
 
   /*for parameter file*/
-  int BhDesNumNgb;
-  int BhMaxNumNgbDeviation;
   double FeedbackTime;
-  double JetFeedback;
-  double Ftherm;
-  double Epsilon_r;
-  double Epsilon_f;
-  double Lambda;
+  double PJet;
+  double VJet;
+  double MJet;
 #endif
 } All;
 
@@ -1467,14 +1461,6 @@ extern struct sph_particle_data
 extern struct bh_particle_data
 {
   MyIDType PID;
-  MyDouble Hsml;
-  MyDouble Density;
-  MyDouble NgbMass;
-  MyDouble NgbMassFeed;
-  integertime NgbMinStep;
-  int IsBh;
-  int DensityFlag;
-  signed char TimeBinBh;
 }  *BhP,          
     *DomainBhBuf; 
 
