@@ -510,6 +510,18 @@ void read_parameter_file(char *fname)
       strcpy(tag[nt], "FeedbackTime");
       addr[nt] = &All.FeedbackTime;
       id[nt++] = REAL;
+
+      strcpy(tag[nt], "JetPower");
+      addr[nt] = &All.PJet;
+      id[nt++] = REAL;
+
+      strcpy(tag[nt], "JetVelocity");
+      addr[nt] = &All.VJet;
+      id[nt++] = REAL;
+
+      strcpy(tag[nt], "JetParticleMass");
+      addr[nt] = &All.MJet;
+      id[nt++] = REAL;
 #endif
 
       if((fd = fopen(fname, "r")))

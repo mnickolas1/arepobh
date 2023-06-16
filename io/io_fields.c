@@ -791,31 +791,20 @@ void init_io_fields()
   init_units(IO_BHEF, 0., 0., -1., 1., 3., All.UnitEnergy_in_cgs / All.UnitTime_in_s);
   init_snapshot_type(IO_BHEF, SN_MINI);
   */
-  init_field(IO_ISBH, "ISBH", "IsBh", MEM_INT, FILE_INT , FILE_INT, 1, A_BH, &BhP[0].IsBh, 0, BHS_ONLY);
-  init_units(IO_ISBH, 0, 0, 0, 0, 0, 0);
- 
 
   init_field(IO_BHID, "BHID  ", "BlackholeIDs", MEM_MY_ID_TYPE, FILE_MY_ID_TYPE, FILE_NONE, 1, A_P, &P[0].BhID, 0, BHS_ONLY);
   init_units(IO_BHID, 0, 0, 0, 0, 0, 0);
   init_snapshot_type(IO_BHID, SN_MINI);
 
+  init_field(IO_JET, "JET ", "Jet", MEM_INT, FILE_INT , FILE_INT, 1, A_SPHP, &SphP[0].Jet, 0, GAS_ONLY);
+  init_units(IO_JET, 0, 0, 0, 0, 0, 0);
 
-  init_field(IO_BHHSML, "BHHS", "BlackholeHsml", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_MY_IO_FLOAT, 1, A_BH, &BhP[0].Hsml, 0, BHS_ONLY);
-  init_units(IO_BHHSML, 1., -1., 1., 0., 0., All.UnitLength_in_cm);
-  init_snapshot_type(IO_BHHSML, SN_MINI);
+  init_field(IO_JETQUEUE, "JQ  ", "JetQueue", MEM_INT, FILE_INT , FILE_INT, 1, A_SPHP, &SphP[0].JetQueue, 0, GAS_ONLY);
+  init_units(IO_JETQUEUE, 0, 0, 0, 0, 0, 0);
 
 
-  init_field(IO_BHDENSITY, "BHD ", "BlackHoleDensity", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_NONE, 1, A_BH, &BhP[0].Density, 0, BHS_ONLY);
-  init_units(IO_BHDENSITY, -3., 2., -3., 1., 0., All.UnitDensity_in_cgs);
-  init_snapshot_type(IO_BHDENSITY, SN_MINI);
+  init_field(IO_BHKICKVECTOR, "BHKV", "BlackholeKickVector", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_MY_IO_FLOAT, 1, A_SPHP, &SphPP[0].BhKickVector, 0, GAS_ONLY);
+  init_units(IO_BHKICKVECTOR, 1., -1., 1., 0., 0., All.UnitLength_in_cm); /*check this*/
 
-  init_field(IO_BH_NGBMASS, "BNM ", "BlackHoleNgbMass", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_NONE, 1, A_BH, &BhP[0].NgbMass, 0, BHS_ONLY);
-  init_units(IO_BH_NGBMASS, 0., -1., 0., 1., 0., All.UnitMass_in_g);
-  init_snapshot_type(IO_BH_NGBMASS, SN_MINI);
-  
-#ifdef OUTPUT_TIMEBIN_BH
-  init_field(IO_TIMEBIN_BH, "TBBH", "TimebinBh", MEM_INT, FILE_INT, FILE_NONE, 1, A_BH, &BhP[0].TimeBinBh, 0, BHS_ONLY);
-  init_units(IO_TIMEBIN_BH, 0., 0., 0., 0., 0., 0.0);
-#endif 
 #endif
 }

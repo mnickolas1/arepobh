@@ -1446,7 +1446,7 @@ extern struct sph_particle_data
 #endif /* #ifdef ADDBACKGROUNDGRID */
     
 #ifdef BLACKHOLES
-  int PositiveJet;
+  int Jet;
   int JetQueue;
   MyDouble BhKickVector[3];
 #endif
@@ -1753,6 +1753,9 @@ enum iofields
 #ifdef BLACKHOLES
 /*  IO_BHTEMPERATURE,*/
   IO_BHID,
+  IO_JET,
+  IO_JETQUEUE,
+  IO_BHKICKVECTOR,
 #endif  
   IO_LASTENTRY /* This should be kept - it signals the end of the list */
 };
