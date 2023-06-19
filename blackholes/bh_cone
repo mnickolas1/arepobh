@@ -1,0 +1,44 @@
+#include <gsl/gsl_math.h>
+#include <math.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../main/allvars.h"
+#include "../main/proto.h"
+
+
+void bh_cone_particles(void)
+{
+  int idx, i;
+  double dx,dy,dz,r2;
+  double r2cone, BhPos[3];
+
+  r2cone = 100;
+  BhPos[0] = 450;
+  BhPos[1] = 150;
+  BhPos[2] = 150;
+
+  
+
+  for(int idx = 0; idx < TimeBinsHydro.NActiveParticles; idx++)
+    {
+      int i = TimeBinsHydro.ActiveParticleList[idx];
+
+      if(i < 0)
+        continue;
+      if(SphP[i].Jet)
+        {
+          dx = P[i].Pos[0] - BhPos[0];
+          dy = P[i].Pos[1] - BhPos[1];
+          dz = P[i].Pos[2] - BhPos[2];
+
+          r2 = dx*dx + dy*dy + dz*dz;
+
+          if(r2 < r2cone)
+          
+        }
+                            
+    }
+}

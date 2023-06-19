@@ -244,13 +244,8 @@ void run(void)
           make_list_of_active_particles();
 
 #ifdef BLACKHOLES
-          for(int idx = 0; idx < TimeBinsHydro.NActiveParticles; idx++)
-            {
-             int i = TimeBinsHydro.ActiveParticleList[idx];
-
-              if(i < 0)
-                continue;
-            }
+/*make cone particles inactive until they have cleared the cone region*/
+          bh_cone_particles();
 #endif
 
           output_log_messages(); /* write some info to log-files */
