@@ -243,6 +243,16 @@ void run(void)
 
           make_list_of_active_particles();
 
+#ifdef BLACKHOLES
+          for(int idx = 0; idx < TimeBinsHydro.NActiveParticles; idx++)
+            {
+             int i = TimeBinsHydro.ActiveParticleList[idx];
+
+              if(i < 0)
+                continue;
+            }
+#endif
+
           output_log_messages(); /* write some info to log-files */
 
 #if !defined(VORONOI_STATIC_MESH)

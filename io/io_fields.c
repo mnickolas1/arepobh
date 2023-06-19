@@ -120,24 +120,6 @@ static void io_func_timestep(int particle, int components, void *out_buffer, int
 }
 #endif /* #ifdef OUTPUTTIMESTEP */
 
-/*
-#ifdef BLACKHOLES
-#ifdef OUTPUT_TIMEBIN_BH 
-static void io_func_timebin_bh(int particle, int components, void *out_buffer, int mode)
-{
-  ((int *)out_buffer)[0] = P[particle].TimeBinBh;
-}
-#endif
-#ifdef OUTPUTTIMESTEP_BH
-static void io_func_timestep_bh(int particle, int components, void *out_buffer, int mode)
-{
-  ((MyOutputFloat *)out_buffer)[0] =
-      (P[particle].TimeBinBh ? (((integertime)1) << P[particle].TimeBinBh) : 0) * All.Timebase_interval;
-}
-#endif
-#endif
-*/
-
 #ifdef OUTPUT_SOFTENINGS
 /*! \brief Output function of the force softening.
  *  \param[in] particle Index of particle/cell.
@@ -505,6 +487,52 @@ static void io_func_bfield(int particle, int components, void *out_buffer, int m
 }
 #endif /* #ifdef MHD */
 
+#ifdef BLACKHOLES
+void io_func_bh_kick_vector(int particle, int components, void *buffer, int mode)
+{
+  int k;
+
+  if(mode == 0)
+    {
+      if(DumpFlag != 3)  // TODO: clean up this code duplication
+        {
+#ifdef OUTPUT_COORDINATES_IN_DOUBLEPRECISION
+          double *pp = buffer;
+#else  /* #ifdef OUTPUT_COORDINATES_IN_DOUBLEPRECISION */
+          MyOutputFloat *pp = buffer;
+#endif /* #ifdef OUTPUT_COORDINATES_IN_DOUBLEPRECISION #else */
+
+          for(k = 0; k < 3; k++)
+            {
+              pp[k] = SphP[particle].BhKickVector[k];
+            }
+        }
+      else
+        {
+          MyOutputFloat *pp = buffer;
+
+          for(k = 0; k < 3; k++)
+            {
+               pp[k] = SphP[particle].BhKickVector[k];
+            }
+        }
+    }
+  else
+    {
+#ifdef READ_COORDINATES_IN_DOUBLE
+      double *in_buffer = buffer;
+#else  /* #ifdef READ_COORDINATES_IN_DOUBLE */
+      MyInputFloat *in_buffer = buffer;
+#endif /* #ifdef READ_COORDINATES_IN_DOUBLE #else */
+
+      for(k = 0; k < components; k++)
+        {
+          SphP[particle].BhKickVector[k] = in_buffer[k];
+        }
+    }
+}
+#endif
+
 /*! \brief Function for field registering.
  *
  *  For init_field arguments read the description of init_field.
@@ -802,9 +830,7 @@ void init_io_fields()
   init_field(IO_JETQUEUE, "JQ  ", "JetQueue", MEM_INT, FILE_INT , FILE_INT, 1, A_SPHP, &SphP[0].JetQueue, 0, GAS_ONLY);
   init_units(IO_JETQUEUE, 0, 0, 0, 0, 0, 0);
 
-
-  init_field(IO_BHKICKVECTOR, "BHKV", "BlackholeKickVector", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, FILE_MY_IO_FLOAT, 1, A_SPHP, &SphPP[0].BhKickVector, 0, GAS_ONLY);
-  init_units(IO_BHKICKVECTOR, 1., -1., 1., 0., 0., All.UnitLength_in_cm); /*check this*/
-
+  init_field(IO_BHKICKVECTOR, "BHKV", "BhKickVector", MEM_MY_DOUBLE, pos_out, pos_in, 3, A_NONE, 0, io_func_bh_kick_vector, GAS_ONLY);
+  init_units(IO_BHKICKVECTOR, 1., -1., 1., 0., 0., All.UnitLength_in_cm);
 #endif
 }
