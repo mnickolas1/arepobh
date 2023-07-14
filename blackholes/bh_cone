@@ -11,34 +11,43 @@
 
 void bh_cone_particles(void)
 {
-  int idx, i;
-  double dx,dy,dz,r2;
-  double r2cone, BhPos[3];
+  //decide how to spawn particles
 
-  r2cone = 100;
-  BhPos[0] = 450;
-  BhPos[1] = 150;
-  BhPos[2] = 150;
-
-  
-
-  for(int idx = 0; idx < TimeBinsHydro.NActiveParticles; idx++)
+  if(virtual_particles)
     {
-      int i = TimeBinsHydro.ActiveParticleList[idx];
+      /* need to assign new unique IDs to the spawned particles */
 
-      if(i < 0)
-        continue;
-      if(SphP[i].Jet)
+      int *list;
+
+      if(All.MaxID == 0) /* MaxID not calculated yet */
+        calculate_maxid();
+
+      list = mymalloc("list", NTask * sizeof(int));
+
+      MPI_Allgather(&altogether_spawned, 1, MPI_INT, list, 1, MPI_INT, MPI_COMM_WORLD);
+
+      MyIDType newid = All.MaxID + 1;
+
+      for(i = 0; i < ThisTask; i++)
+        newid += list[i];
+
+      myfree(list);
+
+      for(i = 0; i < altogether_spawned; i++)
         {
-          dx = P[i].Pos[0] - BhPos[0];
-          dy = P[i].Pos[1] - BhPos[1];
-          dz = P[i].Pos[2] - BhPos[2];
+          P[NumPart + i].ID = newid;
 
-          r2 = dx*dx + dy*dy + dz*dz;
-
-          if(r2 < r2cone)
-          
+          newid++;
         }
-                            
+
+      All.MaxID += tot_altogether_spawned;
+    }
+
+  /* Note: New tree construction can be avoided because of  `force_add_star_to_tree()' */
+  if(tot_stars_spawned > 0 || tot_stars_converted > 0)
+    {
+      All.TotNumPart += tot_stars_spawned;
+      All.TotNumGas -= tot_stars_converted;
+      NumPart += stars_spawned;
     }
 }
