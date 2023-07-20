@@ -12,6 +12,10 @@
 void bh_cone_particles(void)
 {
   //decide how to spawn particles
+  int particles_spawned = 0;
+  int tot_particles_spawned = 2;
+  if(ThisTask < tot_particles_spawned)
+    particles_spanwed = 1;
 
   if(virtual_particles)
     {
@@ -24,7 +28,7 @@ void bh_cone_particles(void)
 
       list = mymalloc("list", NTask * sizeof(int));
 
-      MPI_Allgather(&altogether_spawned, 1, MPI_INT, list, 1, MPI_INT, MPI_COMM_WORLD);
+      MPI_Allgather(&particles_spawned, 1, MPI_INT, list, 1, MPI_INT, MPI_COMM_WORLD);
 
       MyIDType newid = All.MaxID + 1;
 
@@ -33,21 +37,20 @@ void bh_cone_particles(void)
 
       myfree(list);
 
-      for(i = 0; i < altogether_spawned; i++)
+      for(i = 0; i < particles_spawned; i++)
         {
           P[NumPart + i].ID = newid;
 
           newid++;
         }
 
-      All.MaxID += tot_altogether_spawned;
+      All.MaxID += tot_particles_spawned;
     }
 
   /* Note: New tree construction can be avoided because of  `force_add_star_to_tree()' */
-  if(tot_stars_spawned > 0 || tot_stars_converted > 0)
+  if(virtual_particles)
     {
-      All.TotNumPart += tot_stars_spawned;
-      All.TotNumGas -= tot_stars_converted;
-      NumPart += stars_spawned;
+      All.TotNumPart += tot_particles_spawned;
+      NumPart += particles_spawned;
     }
 }
