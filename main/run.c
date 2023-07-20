@@ -233,20 +233,15 @@ void run(void)
 
           find_next_sync_point(); /* find next synchronization time */
 
-#ifdef BLACKHOLES
-/*limit timestep before first energy injection*/
+/*#ifdef BLACKHOLES
+limit timestep before first energy injection
           if(All.MaxSizeTimestep > 1e-5 && All.FeedbackTime - All.Time > 0 && All.FeedbackTime - All.Time <= All.MaxSizeTimestep)
             All.MaxSizeTimestep *= 0.1;
           if(All.FeedbackTime - All.Time < 0)
             All.MaxSizeTimestep = 1e-6;
-#endif
+#endif*/
 
           make_list_of_active_particles();
-
-#ifdef BLACKHOLES
-/*make cone particles inactive until they have cleared the cone region*/
-          bh_cone_particles();
-#endif
 
           output_log_messages(); /* write some info to log-files */
 
@@ -398,18 +393,9 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
 #if defined(COOLING) && defined(USE_SFR)
   sfr_create_star_particles();
 #endif /* #if defined(COOLING) && defined(USE_SFR) */
-/*
 #ifdef BLACKHOLES
-  bh_density();
-
-  update_bh_timesteps();
-   
-   if(All.Time >= All.FeedbackTime)
-    {   
-      bh_ngb_feedback();
-    }
+  bh_cone();
 #endif
-*/
 }
 
 /*! \brief Calls extra modules at the end of the run loop.
@@ -421,10 +407,6 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
  */
 void calculate_non_standard_physics_end_of_step(void)
 {
-#ifdef BLACKHOLES
-  perform_end_of_step_bh_physics();
-#endif 
-
 #ifdef COOLING
 #ifdef USE_SFR
   cooling_and_starformation();

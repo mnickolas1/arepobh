@@ -1,4 +1,4 @@
-#include <gsl/gsl_math.h>
+mb#include <gsl/gsl_math.h>
 #include <math.h>
 #include <mpi.h>
 #include <stdio.h>
@@ -11,16 +11,14 @@
 
 void bh_cone_particles(void)
 {
-  //decide how to spawn particles
-  int particles_spawned = 0;
-  int tot_particles_spawned = 2;
-  if(ThisTask < tot_particles_spawned)
-    particles_spanwed = 1;
-
-  if(virtual_particles)
+  if(All.FeedbackFlag > 0)
     {
-      /* need to assign new unique IDs to the spawned particles */
-
+//decide how to spawn particles
+      int particles_spawned = 0;
+      int tot_particles_spawned = 2;
+      if(ThisTask < tot_particles_spawned)
+        particles_spanwed = 1;
+      
       int *list;
 
       if(All.MaxID == 0) /* MaxID not calculated yet */
@@ -39,18 +37,38 @@ void bh_cone_particles(void)
 
       for(i = 0; i < particles_spawned; i++)
         {
+/* Assign new unique IDs to the spawned particles */
           P[NumPart + i].ID = newid;
 
           newid++;
+           
+/* Assign properties to the spawned particles */          
+          P[NumPart + i].Mass = 0.01;
+          P[NumPart + i].Pos[0] = 0.1;
+          P[NumPart + i].Pos[1] = 0;
+          P[NumPart + i].Pos[2] = 0;
+          P[NumPart + i].Vel[0] = 1;
+          P[NumPart + i].Vel[0] = 0;
+          P[NumPart + i].Vel[0] = 0;
+          P[NumPart + i].GravAccel[0] = 0;
+          P[NumPart + i].GravAccel[1] = 0;
+          P[NumPart + i].GravAccel[2] = 0;
+
+          P[NumPart + i].Type = 3;
         }
 
       All.MaxID += tot_particles_spawned;
-    }
-
-  /* Note: New tree construction can be avoided because of  `force_add_star_to_tree()' */
-  if(virtual_particles)
-    {
       All.TotNumPart += tot_particles_spawned;
       NumPart += particles_spawned;
+
+#ifdef BURST_MODE
+        All.FeedbackFlag = -1;
+        All.LastFeedbackTime = All.Time;
+#endif
     }
+
+#ifdef BURST_MODE
+  if(All.PJet * (All.Time - All.LastFeedbackTime) >= All.MJet * All.VJet*All.VJet)  
+    All.FeedbackFlag = 1;
+#endif   
 }
