@@ -49,8 +49,8 @@ void bh_cone(void)
           P[NumPart + i].Pos[1] = 0;
           P[NumPart + i].Pos[2] = 0;
           P[NumPart + i].Vel[0] = 1;
-          P[NumPart + i].Vel[0] = 0;
-          P[NumPart + i].Vel[0] = 0;
+          P[NumPart + i].Vel[1] = 0;
+          P[NumPart + i].Vel[2] = 0;
           P[NumPart + i].GravAccel[0] = 0;
           P[NumPart + i].GravAccel[1] = 0;
           P[NumPart + i].GravAccel[2] = 0;
