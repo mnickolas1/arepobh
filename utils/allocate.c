@@ -147,7 +147,7 @@ void reallocate_memory_maxpartbh(void)
   mpi_printf("ALLOCATE: Changing to MaxPartBh= %d\n", All.MaxPartBh);
 
   BhP = (struct bh_particle_data *)myrealloc_movable(BhP, All.MaxPartBh * sizeof(struct bh_particle_data));
-  timebins_reallocate(&TimeBinsBh);
+  //timebins_reallocate(&TimeBinsBh);
 }
 #endif
 
