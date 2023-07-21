@@ -815,11 +815,7 @@ void calculate_maxid(void)
     if(tmp[i] > maxid)
       maxid = tmp[i];
 
-#ifdef BLACKHOLES
-  All.MaxID = maxid;
-#endif
-
-#if defined(REFINEMENT_SPLIT_CELLS) || defined(USE_SFR)
+#if defined(REFINEMENT_SPLIT_CELLS) || defined(USE_SFR) || defined(BLACKHOLES)
   All.MaxID = maxid;
 #endif /* #if defined(REFINEMENT_SPLIT_CELLS) || defined(USE_SFR) */
 
