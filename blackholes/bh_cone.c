@@ -9,15 +9,16 @@
 #include "../main/proto.h"
 
 
-void bh_cone_particles(void)
+void bh_cone(void)
 {
   if(All.FeedbackFlag > 0)
     {
 //decide how to spawn particles
+      int i;
       int particles_spawned = 0;
       int tot_particles_spawned = 2;
       if(ThisTask < tot_particles_spawned)
-        particles_spanwed = 1;
+        particles_spawned = 1;
       
       int *list;
 
