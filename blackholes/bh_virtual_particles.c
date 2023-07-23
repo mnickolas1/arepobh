@@ -9,7 +9,7 @@
 #include "../main/proto.h"
 
 
-void bh_cone(void)
+void create_particles(void)
 {
   if(All.FeedbackFlag > 0)
     {
@@ -72,4 +72,32 @@ void bh_cone(void)
   if(All.PJet * (All.Time - All.LastFeedbackTime) >= All.MJet * All.VJet*All.VJet)  
     All.FeedbackFlag = 1;
 #endif   
+}
+
+void destroy_particles(void)
+{
+ int i;
+ int Radius = 10;
+
+ for(i=0; i<NumPart; i++)
+   {
+    if(P[i].Type == 3)
+      {
+        if(P[i].Pos[0] > Radius)
+          P[i].DestroyFlag = 1;
+      }
+   }
+}
+
+void (void)
+{
+  int i;
+
+   for(i=0; i<NumPart; i++)
+   {
+    if(P[i].DestroFlag > 0)
+      {
+        
+      }
+   }
 }

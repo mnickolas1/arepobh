@@ -1293,6 +1293,7 @@ extern struct particle_data
   signed char TimeBinHydro;
 #ifdef BLACKHOLES
   MyIDType BhID;
+  int DestroyFlag;
 #endif
 } * P,              /*!< holds particle data on local processor */
     *DomainPartBuf; /*!< buffer for particle data used in domain decomposition */

@@ -394,7 +394,9 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
   sfr_create_star_particles();
 #endif /* #if defined(COOLING) && defined(USE_SFR) */
 #ifdef BLACKHOLES
-  bh_cone();
+  create_particles();
+  destroy_particles();
+  deposit();
 #endif
 }
 

@@ -565,6 +565,10 @@ int init(void)
 /*initialize bh feedback flag*/
 #ifdef BLACKHOLES
   All.FeedbackFlag = 1;
+
+/*initialize virtual particle destroy flag*/  
+  for(i=0; i<NumPart; i++)
+    P[i].DestroyFlag = -1;
 #endif
 
   return -1;  // return -1 means we ran to completion, i.e. not an endrun code
