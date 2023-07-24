@@ -89,7 +89,7 @@ void destroy_particles(void)
    }
 }
 
-void (void)
+void jet_inject_properties(void)
 {
   int i;
 
