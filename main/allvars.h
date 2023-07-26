@@ -1217,6 +1217,7 @@ extern struct global_data_all_processes
 
 #ifdef BLACKHOLES
   int FeedbackFlag;
+  int NumVirtualPart;
 
   /*for parameter file*/
   double FeedbackTime;
@@ -1294,6 +1295,7 @@ extern struct particle_data
 #ifdef BLACKHOLES
   MyIDType BhID;
   int DestroyFlag;
+  int Hsml;
 #endif
 } * P,              /*!< holds particle data on local processor */
     *DomainPartBuf; /*!< buffer for particle data used in domain decomposition */

@@ -13,7 +13,7 @@ void create_particles(void)
 {
   if(All.FeedbackFlag > 0)
     {
-//decide how to spawn particles
+
       int i;
       int particles_spawned = 0;
       int tot_particles_spawned = 2;
@@ -22,7 +22,7 @@ void create_particles(void)
       
       int *list;
 
-      if(All.MaxID == 0) /* MaxID not calculated yet */
+      if(All.MaxID == 0) 
         calculate_maxid();
 
       list = mymalloc("list", NTask * sizeof(int));
@@ -56,6 +56,8 @@ void create_particles(void)
           P[NumPart + i].GravAccel[2] = 0;
 
           P[NumPart + i].Type = 3;
+          
+          P[NumPart + i].Hsml = 5;
         }
 
       All.MaxID += tot_particles_spawned;
