@@ -55,14 +55,18 @@ void create_particles(void)
           P[NumPart + i].GravAccel[1] = 0;
           P[NumPart + i].GravAccel[2] = 0;
 
-          P[NumPart + i].Type = 3;
+          P[NumPart + i].Type = 5;
           
-          P[NumPart + i].Hsml = 5;
+          P[NumPart + i].BhID = NumBh + i;
+          BhP[NumBh + i].PID  = NumPart + i
+          BhP[NumBh + i].Hsml = 5;
         }
 
-      All.MaxID += tot_particles_spawned;
+      All.MaxID      += tot_particles_spawned;
       All.TotNumPart += tot_particles_spawned;
-      NumPart += particles_spawned;
+      All.TotNumBh   += tot_particles_spawned;
+      NumPart        += particles_spawned;
+      NumBh          += particles_spawned;
 
 #ifdef BURST_MODE
         All.FeedbackFlag = -1;
@@ -81,25 +85,9 @@ void destroy_particles(void)
  int i;
  int Radius = 10;
 
- for(i=0; i<NumPart; i++)
+ for(i=0; i<NumBh; i++)
    {
-    if(P[i].Type == 3)
-      {
-        if(P[i].Pos[0] > Radius)
-          P[i].DestroyFlag = 1;
-      }
-   }
-}
-
-void jet_inject_properties(void)
-{
-  int i;
-
-   for(i=0; i<NumPart; i++)
-   {
-    if(P[i].DestroFlag > 0)
-      {
-        
-      }
+     if(PPB(i).Pos[0] > Radius)
+       BhP[i].DestroyFlag = 1;
    }
 }

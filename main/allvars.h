@@ -1217,7 +1217,6 @@ extern struct global_data_all_processes
 
 #ifdef BLACKHOLES
   int FeedbackFlag;
-  int NumVirtualPart;
 
   /*for parameter file*/
   double FeedbackTime;
@@ -1294,8 +1293,6 @@ extern struct particle_data
   signed char TimeBinHydro;
 #ifdef BLACKHOLES
   MyIDType BhID;
-  int DestroyFlag;
-  int Hsml;
 #endif
 } * P,              /*!< holds particle data on local processor */
     *DomainPartBuf; /*!< buffer for particle data used in domain decomposition */
@@ -1449,9 +1446,7 @@ extern struct sph_particle_data
 #endif /* #ifdef ADDBACKGROUNDGRID */
     
 #ifdef BLACKHOLES
-  int Jet;
-  int JetQueue;
-  MyDouble BhKickVector[3];
+
 #endif
 
 } * SphP,          /*!< holds SPH particle data on local processor */
@@ -1461,6 +1456,8 @@ extern struct sph_particle_data
 extern struct bh_particle_data
 {
   MyIDType PID;
+  int DestroyFlag;
+  int Hsml;
 }  *BhP,          
     *DomainBhBuf; 
 
