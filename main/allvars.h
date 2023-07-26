@@ -1458,6 +1458,8 @@ extern struct bh_particle_data
   MyIDType PID;
   int DestroyFlag;
   int Hsml;
+  MyDouble NgbMass
+  integertime NgbMinStep
 }  *BhP,          
     *DomainBhBuf; 
 
