@@ -398,7 +398,7 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
   destroy_particles();
   update_bh_timesteps();
   bh_density();
-  bh_feedback();
+  bh_ngb_feedback();
 
 #endif
 }
