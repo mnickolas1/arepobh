@@ -75,18 +75,9 @@ static void out2particle(data_out *out, int i, int mode)
 {
   if(mode == MODE_LOCAL_PARTICLES) /* initial store */
     {
-      BhDhsmlDensityFactor[i]          = out->DhsmlDensity;
-      BhNumNgb[i]                      = out->Ngb;
-      BhP[i].NgbMass                   = out->Mass;
-      BhP[i].NgbMinStep                = out->NgbMinStep;
     }
   else /* combine */
     {
-      BhDhsmlDensityFactor[i]          += out->DhsmlDensity;
-      BhNumNgb[i]                      += out->Ngb;
-      BhP[i].NgbMass                   += out->Mass;
-      if(out->NgbMinStep < BhP[i].NgbMinStep)
-        BhP[i].NgbMinStep               = out->NgbMinStep;
     }
 }
 
@@ -280,7 +271,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
     }
     
 /*compute bh timestep based on min ngb timestep*/
-  if(bin == 0)
+/*  if(bin == 0)
     ngb_min_step = 0;
   else
     ngb_min_step   = (((integertime)1) << bin);
@@ -288,13 +279,13 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   out.DhsmlDensity            = dhsmlrho;
   out.Ngb                     = weighted_numngb;
   out.Mass                    = mass;
-  out.NgbMinStep              = ngb_min_step;
+  out.NgbMinStep              = ngb_min_step;*/
 
   /* now collect the result at the right place */
-  if(mode == MODE_LOCAL_PARTICLES)
+ /*if(mode == MODE_LOCAL_PARTICLES)
     out2particle(&out, target, MODE_LOCAL_PARTICLES);
   else
     DataResult[target] = out;
-
+*/
   return 0;
 }
