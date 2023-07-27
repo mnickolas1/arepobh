@@ -1463,8 +1463,8 @@ extern struct bh_particle_data
   int DestroyFlag;
   signed char TimeBinBh;
   int Hsml;
-  MyDouble NgbMass
-  integertime NgbMinStep
+  MyDouble NgbMass;
+  integertime NgbMinStep;
 }  *BhP,          
     *DomainBhBuf; 
 
@@ -1760,9 +1760,6 @@ enum iofields
 #ifdef BLACKHOLES
 /*  IO_BHTEMPERATURE,*/
   IO_BHID,
-  IO_JET,
-  IO_JETQUEUE,
-  IO_BHKICKVECTOR,
 #endif  
   IO_LASTENTRY /* This should be kept - it signals the end of the list */
 };

@@ -823,14 +823,5 @@ void init_io_fields()
   init_field(IO_BHID, "BHID  ", "BlackholeIDs", MEM_MY_ID_TYPE, FILE_MY_ID_TYPE, FILE_NONE, 1, A_P, &P[0].BhID, 0, BHS_ONLY);
   init_units(IO_BHID, 0, 0, 0, 0, 0, 0);
   init_snapshot_type(IO_BHID, SN_MINI);
-
-  init_field(IO_JET, "JET ", "Jet", MEM_INT, FILE_INT , FILE_INT, 1, A_SPHP, &SphP[0].Jet, 0, GAS_ONLY);
-  init_units(IO_JET, 0, 0, 0, 0, 0, 0);
-
-  init_field(IO_JETQUEUE, "JQ  ", "JetQueue", MEM_INT, FILE_INT , FILE_INT, 1, A_SPHP, &SphP[0].JetQueue, 0, GAS_ONLY);
-  init_units(IO_JETQUEUE, 0, 0, 0, 0, 0, 0);
-
-  init_field(IO_BHKICKVECTOR, "BHKV", "BhKickVector", MEM_MY_DOUBLE, pos_out, pos_in, 3, A_NONE, 0, io_func_bh_kick_vector, GAS_ONLY);
-  init_units(IO_BHKICKVECTOR, 1., -1., 1., 0., 0., All.UnitLength_in_cm);
 #endif
 }
