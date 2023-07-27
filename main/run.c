@@ -396,7 +396,9 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
 #ifdef BLACKHOLES
   create_particles();
   destroy_particles();
-  jet_inject_properties();
+  update_bh_timesteps();
+  bh_density();
+  bh_feedback();
 #endif
 }
 

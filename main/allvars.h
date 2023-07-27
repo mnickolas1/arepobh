@@ -662,6 +662,10 @@ extern MyDouble boxSize_Z, boxHalf_Z;
 
 extern int TimeBinSynchronized[TIMEBINS];
 extern struct TimeBinData TimeBinsHydro, TimeBinsGravity;
+#ifdef BLACKHOLES
+extern struct TimeBinData TimeBinsBh;
+#endif
+
 
 #ifdef USE_SFR
 extern double TimeBinSfr[TIMEBINS];
@@ -1457,6 +1461,7 @@ extern struct bh_particle_data
 {
   MyIDType PID;
   int DestroyFlag;
+  signed char TimeBinBh;
   int Hsml;
   MyDouble NgbMass
   integertime NgbMinStep

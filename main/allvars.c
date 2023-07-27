@@ -104,6 +104,10 @@ int TagOffset;
 
 int TimeBinSynchronized[TIMEBINS];
 struct TimeBinData TimeBinsHydro, TimeBinsGravity;
+#ifdef BLACKHOLES
+struct TimeBinData TimeBinsBh;
+#endif
+
 
 
 #ifdef USE_SFR

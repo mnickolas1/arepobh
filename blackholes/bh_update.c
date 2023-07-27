@@ -8,6 +8,86 @@
 #include "../main/allvars.h"
 #include "../main/proto.h"
 
+/*update bh-timestep at prior_mesh_construction*/
+void update_bh_timesteps(void)
+{
+  int i, bin;
+  integertime ti_step;
+
+  for(i = 0; i < NumBh; i++)
+    { 
+      if(BhP[i].DestroyFlag > 0)
+        BhP[i].TimeBinBh = 0;
+      else
+        BhP[i].TimeBinBh = 29;
+    }
+  reconstruct_bh_timebins();
+  update_list_of_active_bh_particles();
+}
+
+/*call this function as the reconstruct_timebins() bh version*/
+void reconstruct_bh_timebins(void)
+{
+  int i, bin;
+
+  for(bin = 0; bin < TIMEBINS; bin++)
+    {
+      TimeBinsBh.TimeBinCount[bin]   = 0;
+      TimeBinsBh.FirstInTimeBin[bin] = -1;
+      TimeBinsBh.LastInTimeBin[bin]  = -1;
+    }
+  
+  for(i = 0; i < NumBh; i++)
+    {
+      
+      bin = BhP[i].TimeBinBh;
+
+      if(TimeBinsBh.TimeBinCount[bin] > 0)
+        {
+          TimeBinsBh.PrevInTimeBin[i]                                  = TimeBinsBh.LastInTimeBin[bin];
+          TimeBinsBh.NextInTimeBin[i]                                  = -1;
+          TimeBinsBh.NextInTimeBin[TimeBinsBh.LastInTimeBin[bin]]      = i;
+          TimeBinsBh.LastInTimeBin[bin]                                = i;
+        }
+      else
+        {
+          TimeBinsBh.FirstInTimeBin[bin] = TimeBinsBh.LastInTimeBin[bin] = i;
+          TimeBinsBh.PrevInTimeBin[i] = TimeBinsBh.NextInTimeBin[i] = -1;
+        }
+      TimeBinsBh.TimeBinCount[bin]++;
+    }
+}
+
+/*call this function after updating the bh-timebin to the ngb condition*/
+void update_list_of_active_bh_particles(void)
+{
+  int i, n;
+  TimeBinsBh.NActiveParticles = 0;
+  for(n = 0; n < TIMEBINS; n++)
+    {
+      if(TimeBinSynchronized[n]) 
+        {
+          for(i = TimeBinsBh.FirstInTimeBin[n]; i >= 0; i = TimeBinsBh.NextInTimeBin[i])
+            {
+              TimeBinsBh.ActiveParticleList[TimeBinsBh.NActiveParticles] = i;
+              TimeBinsBh.NActiveParticles++;  
+            }
+        }
+    }
+
+    mysort(TimeBinsBh.ActiveParticleList, TimeBinsBh.NActiveParticles, sizeof(int), int_compare);
+
+  /*n = 1;
+  int in;
+  long long out;
+
+  in = TimeBinsBh.NActiveParticles;
+
+  sumup_large_ints(n, &in, &out);
+
+  TimeBinsBh.GlobalNActiveParticles = out;*/
+}
+
 void perform_end_of_step_bh_physics(void)
 {
   int i;
