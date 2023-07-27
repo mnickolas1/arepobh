@@ -11,8 +11,7 @@
 #include "../domain/domain.h"
 
 
-static int bh_density_evaluate(int target, int mode, int threadid);
-static int bh_density_isactive(int n);
+static int bh_ngb_feedback_evaluate(int target, int mode, int threadid);
 
 static MyFloat *BhNumNgb, *BhDhsmlDensityFactor;
 
@@ -155,150 +154,12 @@ static void kernel_imported(void)
   }
 }
 
-/*! \brief Main function of SPH density calculation.
- *
- *  This function computes the local density for each active SPH particle and
- *  the number of weighted neighbors in the current smoothing radius. If a
- *  particle with its smoothing region is fully inside the local domain, it is
- *  not exported to the other processors. The function also detects particles
- *  that have a number of neighbors outside the allowed tolerance range. For
- *  these particles, the smoothing length is adjusted accordingly, and the
- *  computation is called again.
- *
- *  \return void
- */
-void bh_density(void)
+void bh_ngb_feedback(void)
 {
-  MyFloat *Left, *Right;
-  int i, npleft, iter = 0;
-  long long ntot;
-  double desnumngb, t0, t1;
-
-  CPU_Step[CPU_MISC] += measure_time();
-
-  BhNumNgb             = (MyFloat *)mymalloc("BhNumNgb", NumBh * sizeof(MyFloat));
-  BhDhsmlDensityFactor = (MyFloat *)mymalloc("BhDhsmlDensityFactor", NumBh * sizeof(MyFloat));
-  Left               = (MyFloat *)mymalloc("Left", NumBh * sizeof(MyFloat));
-  Right              = (MyFloat *)mymalloc("Right", NumBh * sizeof(MyFloat));
-
-  for(i = 0; i < NumBh; i++)
-    {
-      if(bh_density_isactive(i))
-        {
-          Left[i] = Right[i] = 0;
-        }
-    }
-
   generic_set_MaxNexport();
 
-  desnumngb = All.BhDesNumNgb;
-
-  /* we will repeat the whole thing for those particles where we didn't find enough neighbours */
-  do
-    {
-      t0 = second();
-
-      generic_comm_pattern(TimeBinsBh.NActiveParticles, kernel_local, kernel_imported);
-
-      for(i=0, npleft=0; i<NumBh; i++)
-        {
-          if(bh_density_isactive(i))
-            {
-              if(BhP[i].Density > 0)
-                {
-                  BhDhsmlDensityFactor[i] *= BhP[i].Hsml / (NUMDIMS * BhP[i].Density);
-                  if(BhDhsmlDensityFactor[i] > -0.9) /* note: this would be -1 if only a single particle at zero lag is found */
-                      BhDhsmlDensityFactor[i] = 1 / (1 + BhDhsmlDensityFactor[i]);
-                  else
-                      BhDhsmlDensityFactor[i] = 1;
-                }
-            } 
-        
-
-          if(BhP[i].NgbMass < (desnumngb - All.BhMaxNumNgbDeviation) || BhP[i].NgbMass > (desnumngb + All.BhMaxNumNgbDeviation))
-          {
-                  /* need to redo this particle */
-            npleft++;
-
-            if(Left[i] > 0 && Right[i] > 0)
-              {
-                if((Right[i] - Left[i]) < 1.0e-3 * Left[i])
-                  {
-                        /* this one should be ok */
-                    npleft--;
-                    BhP[i].DensityFlag = -1; /* Mark as inactive */
-                    continue;
-                }
-              } 
-
-            if(BhP[i].NgbMass < (desnumngb - All.BhMaxNumNgbDeviation))
-              Left[i] = dmax(BhP[i].Hsml, Left[i]);
-            else
-              {
-                if(Right[i] != 0)
-                  {
-                    if(BhP[i].Hsml < Right[i])
-                        Right[i] = BhP[i].Hsml;
-                  }
-                    else
-                        Right[i] = BhP[i].Hsml;
-              }
-
-            if(Right[i] > 0 && Left[i] > 0)
-                BhP[i].Hsml = pow(0.5 * (pow(Left[i], 3) + pow(Right[i], 3)), 1.0 / 3);
-            else
-              {
-                if(Right[i] == 0 && Left[i] == 0)
-                    terminate("should not occur");
-
-                if(Right[i] == 0 && Left[i] > 0)
-                  {
-                    BhP[i].Hsml *= 1.26;
-                  }
-
-                if(Right[i] > 0 && Left[i] == 0)
-                  {
-                    BhP[i].Hsml /= 1.26;
-                  }
-              }
-          }
-        else
-             BhP[i].DensityFlag = -1; /* Mark as inactive */ 
-        }
-
-      sumup_large_ints(1, &npleft, &ntot);
-
-      t1 = second();
-
-      if(ntot > 0)
-        {
-          iter++;
-
-          if(iter > 0)
-            mpi_printf("BH_DENSITY: ngb iteration %3d: need to repeat for %12lld particles. (took %g sec)\n", iter, ntot,
-                       timediff(t0, t1));
-
-          if(iter > MAXITER)
-            terminate("failed to converge in neighbour iteration in bh_density()\n");
-        }
-    }
-  while(ntot > 0);
-
-
-  myfree(Right);
-  myfree(Left);
-  myfree(BhDhsmlDensityFactor);
-  myfree(BhNumNgb);
-
-  /* mark as active again */
-for(i = 0; i < NumBh; i++)
-    {
-     BhP[i].DensityFlag = 1;
-    }
-  /* collect some timing information */
-  CPU_Step[CPU_INIT] += measure_time();
+  generic_comm_pattern(TimeBinsBh.NActiveParticles, kernel_local, kernel_imported);
 }
-
 /*! \brief Inner function of the SPH density calculation
  *
  *  This function represents the core of the SPH density computation. The
@@ -311,7 +172,7 @@ for(i = 0; i < NumBh; i++)
  *
  *  \return 0
  */
-static int bh_density_evaluate(int target, int mode, int threadid)
+static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 {
   int j, n;
   int numngb, numnodes, *firstnode;
@@ -436,18 +297,4 @@ static int bh_density_evaluate(int target, int mode, int threadid)
     DataResult[target] = out;
 
   return 0;
-}
-
-/* \brief Determines if a BhP is active in current timestep.
- *
- *  \param[in] n Index of BhP in Particle array
- *
- *  \return 1: BhP active; 0: BhP not active.
- */
-int bh_density_isactive(int n)
-{
-  if(BhP[n].DensityFlag < 0)
-    return 0;
-
-  return 1;
 }
