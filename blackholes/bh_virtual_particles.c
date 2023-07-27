@@ -58,7 +58,7 @@ void create_particles(void)
           P[NumPart + i].Type = 5;
           
           P[NumPart + i].BhID = NumBh + i;
-          BhP[NumBh + i].PID  = NumPart + i
+          BhP[NumBh + i].PID  = NumPart + i;
           BhP[NumBh + i].Hsml = 5;
         }
 

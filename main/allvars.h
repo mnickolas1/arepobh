@@ -1224,9 +1224,12 @@ extern struct global_data_all_processes
 
   /*for parameter file*/
   double FeedbackTime;
+  double LastFeedbackTime;
   double PJet;
   double VJet;
   double MJet;
+  double BhDesNumNgb;
+  double BhMaxNumNgbDeviation;
 #endif
 } All;
 
@@ -1465,6 +1468,9 @@ extern struct bh_particle_data
   int Hsml;
   MyDouble NgbMass;
   integertime NgbMinStep;
+  MyDouble Density;
+  int DensityFlag;
+  
 }  *BhP,          
     *DomainBhBuf; 
 

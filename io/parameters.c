@@ -522,6 +522,15 @@ void read_parameter_file(char *fname)
       strcpy(tag[nt], "JetParticleMass");
       addr[nt] = &All.MJet;
       id[nt++] = REAL;
+
+      strcpy(tag[nt], "BhDesNumNgb");
+      addr[nt] = &All.BhDesNumNgb;
+      id[nt++] = REAL;
+      
+      strcpy(tag[nt], "BhMaxNumNgbDeviation");
+      addr[nt] = &All.BhMaxNumNgbDeviation;
+      id[nt++] = REAL;
+
 #endif
 
       if((fd = fopen(fname, "r")))

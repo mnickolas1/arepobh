@@ -487,52 +487,6 @@ static void io_func_bfield(int particle, int components, void *out_buffer, int m
 }
 #endif /* #ifdef MHD */
 
-#ifdef BLACKHOLES
-void io_func_bh_kick_vector(int particle, int components, void *buffer, int mode)
-{
-  int k;
-
-  if(mode == 0)
-    {
-      if(DumpFlag != 3)  // TODO: clean up this code duplication
-        {
-#ifdef OUTPUT_COORDINATES_IN_DOUBLEPRECISION
-          double *pp = buffer;
-#else  /* #ifdef OUTPUT_COORDINATES_IN_DOUBLEPRECISION */
-          MyOutputFloat *pp = buffer;
-#endif /* #ifdef OUTPUT_COORDINATES_IN_DOUBLEPRECISION #else */
-
-          for(k = 0; k < 3; k++)
-            {
-              pp[k] = SphP[particle].BhKickVector[k];
-            }
-        }
-      else
-        {
-          MyOutputFloat *pp = buffer;
-
-          for(k = 0; k < 3; k++)
-            {
-               pp[k] = SphP[particle].BhKickVector[k];
-            }
-        }
-    }
-  else
-    {
-#ifdef READ_COORDINATES_IN_DOUBLE
-      double *in_buffer = buffer;
-#else  /* #ifdef READ_COORDINATES_IN_DOUBLE */
-      MyInputFloat *in_buffer = buffer;
-#endif /* #ifdef READ_COORDINATES_IN_DOUBLE #else */
-
-      for(k = 0; k < components; k++)
-        {
-          SphP[particle].BhKickVector[k] = in_buffer[k];
-        }
-    }
-}
-#endif
-
 /*! \brief Function for field registering.
  *
  *  For init_field arguments read the description of init_field.
