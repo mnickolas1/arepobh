@@ -189,12 +189,13 @@ void kernel(double u, double hinv3, double hinv4, double *wk, double *dwk)
   *wk *= NORM * hinv3;
 }
 /*THIS PART ADAPTED FROM GADGET4*/
+
 static int int_compare(const void *a, const void *b);
+
 /*update bh-timestep at prior_mesh_construction*/
 void update_bh_timesteps(void)
 {
-  int i, bin;
-  integertime ti_step;
+  int i;
 
   for(i = 0; i < NumBh; i++)
     { 
