@@ -13,8 +13,6 @@
 
 static int bh_ngb_feedback_evaluate(int target, int mode, int threadid);
 
-static MyFloat *BhNumNgb, *BhDhsmlDensityFactor;
-
 /*! \brief Local data structure for collecting particle/cell data that is sent
  *         to other processors if needed. Type called data_in and static
  *         pointers DataIn and DataGet needed by generic_comm_helpers2.
@@ -87,7 +85,7 @@ static void out2particle(data_out *out, int i, int mode)
  */
 static void kernel_local(void)
 {
-  int i;
+  int i, idx;
 
   {
     int j, threadid = get_thread_num();
@@ -108,9 +106,8 @@ static void kernel_local(void)
         i = TimeBinsBh.ActiveParticleList[idx];
         if(i < 0)
           continue;
-
-        if(bh_density_isactive(i))
-          bh_density_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
+        
+        bh_ngb_feedback_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
       }
   }
 }
@@ -135,7 +132,7 @@ static void kernel_imported(void)
         if(i >= Nimport)
           break;
 
-        bh_density_evaluate(i, MODE_IMPORTED_PARTICLES, threadid);
+        bh_ngb_feedback_evaluate(i, MODE_IMPORTED_PARTICLES, threadid);
       }
   }
 }
@@ -168,7 +165,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   MyDouble *pos;
 
   data_in local, *target_data;
-  data_out out;
 
   if(mode == MODE_LOCAL_PARTICLES)
     {
@@ -241,7 +237,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
           mass_j = P[j].Mass;
           
-          SphP[j].Mass += 10;
+          P[j].Mass += 10;
         }  
     }   
 /*compute bh timestep based on min ngb timestep*/
