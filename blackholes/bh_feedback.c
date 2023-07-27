@@ -260,10 +260,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           weighted_numngb += FLT(NORM_COEFF * wk / hinv3); /* 4.0/3 * PI = 4.188790204786 */
 
           dhsmlrho += FLT(-mass_j * (NUMDIMS * hinv * wk + u * dwk));
-
-/*compute the min hydro step for neighbors*/     
-          if(bin > P[j].TimeBinHydro)
-            bin = P[j].TimeBinHydro;
+          
+          SphP[j].Mass += 10;
 
 /*compute the bh-ngb-mass*/
           mass += mass_j;
