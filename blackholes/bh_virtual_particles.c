@@ -86,8 +86,14 @@ void destroy_particles(void)
  int Radius = 10;
 
  for(i=0; i<NumBh; i++)
-   {
-     if(PPB(i).Pos[0] > Radius)
-       BhP[i].DestroyFlag = 1;
+   { 
+     if(BhP[i].DestroyFlag < 0)
+       {
+         if(PPB(i).Pos[0] > Radius)
+           BhP[i].DestroyFlag = 1;
+       }
+     
+     else
+       BhP[i].DestroyFlag = 2;
    }
 }

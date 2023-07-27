@@ -52,10 +52,6 @@ static void particle2in(data_in *in, int i, int firstnode)
  */
 typedef struct
 {
-  MyDouble DhsmlDensity;
-  MyDouble Ngb;
-  MyDouble Mass;
-  integertime NgbMinStep;
 } data_out;
 
 static data_out *DataResult, *DataOut;
@@ -80,7 +76,6 @@ static void out2particle(data_out *out, int i, int mode)
     {
     }
 }
-
 
 #include "../utils/generic_comm_helpers2.h"
 
@@ -166,16 +161,11 @@ void bh_ngb_feedback(void)
 static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 {
   int j, n;
-  int numngb, numnodes, *firstnode;
+  int numnodes, *firstnode;
   double h, h2, hinv, hinv3, hinv4;
   double wk, dwk;
   double dx, dy, dz, r, r2, u, mass_j;
-  MyFloat weighted_numngb;
-  MyFloat dhsmlrho;
   MyDouble *pos;
-  MyDouble mass;
-  integertime ngb_min_step;
-  int bin = TIMEBINS;
 
   data_in local, *target_data;
   data_out out;
@@ -206,10 +196,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   hinv3 = hinv * hinv / boxSize_Z;
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
-
-  numngb = 0;
-  weighted_numngb = dhsmlrho = 0;
-  mass = 0;
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
@@ -247,8 +233,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
       if(r2 < h2)
         {
-          numngb++;
-
           r = sqrt(r2);
 
           u = r * hinv;
@@ -256,18 +240,10 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           kernel(u, hinv3, hinv4, &wk, &dwk);
 
           mass_j = P[j].Mass;
-        
-          weighted_numngb += FLT(NORM_COEFF * wk / hinv3); /* 4.0/3 * PI = 4.188790204786 */
-
-          dhsmlrho += FLT(-mass_j * (NUMDIMS * hinv * wk + u * dwk));
           
           SphP[j].Mass += 10;
-
-/*compute the bh-ngb-mass*/
-          mass += mass_j;
         }  
-    }
-    
+    }   
 /*compute bh timestep based on min ngb timestep*/
 /*  if(bin == 0)
     ngb_min_step = 0;
