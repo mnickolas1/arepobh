@@ -146,9 +146,9 @@ void begrun1(void)
 
   timebins_init(&TimeBinsHydro, "Hydro", &All.MaxPartSph);
   timebins_init(&TimeBinsGravity, "Gravity", &All.MaxPart);
-#ifdef BLACKHOLES 
+/*#ifdef BLACKHOLES 
   timebins_init(&TimeBinsBh, "Bh", &All.MaxPartBh);
-#endif
+#endif*/
 
 #if defined(COOLING)
   All.Time = All.TimeBegin;

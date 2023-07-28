@@ -104,11 +104,6 @@ int TagOffset;
 
 int TimeBinSynchronized[TIMEBINS];
 struct TimeBinData TimeBinsHydro, TimeBinsGravity;
-#ifdef BLACKHOLES
-struct TimeBinData TimeBinsBh;
-#endif
-
-
 
 #ifdef USE_SFR
 double TimeBinSfr[TIMEBINS];
@@ -136,6 +131,10 @@ int NumPart; /*!< number of particles on the LOCAL processor */
 int NumGas;  /*!< number of gas particles on the LOCAL processor  */
 #ifdef BLACKHOLES
 int NumBh;
+#endif
+
+#ifdef BLACKHOLES
+struct ActiveVirtualPart ActiveVirtualPart;
 #endif
 
 gsl_rng *random_generator;     /*!< a random number generator  */

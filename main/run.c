@@ -396,7 +396,8 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
 #ifdef BLACKHOLES
   create_particles();
   destroy_particles();
-  update_bh_timesteps();
+  //update_bh_timesteps();
+  active_virtual_part_set(&ActiveVirtualPart);
   bh_density();
   bh_ngb_feedback();
 

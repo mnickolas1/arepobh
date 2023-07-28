@@ -662,10 +662,6 @@ extern MyDouble boxSize_Z, boxHalf_Z;
 
 extern int TimeBinSynchronized[TIMEBINS];
 extern struct TimeBinData TimeBinsHydro, TimeBinsGravity;
-#ifdef BLACKHOLES
-extern struct TimeBinData TimeBinsBh;
-#endif
-
 
 #ifdef USE_SFR
 extern double TimeBinSfr[TIMEBINS];
@@ -1477,6 +1473,15 @@ extern struct bh_particle_data
 #define BPP(i) BhP[P[i].BhID]
 #define PPB(i) P[BhP[i].PID]
 #endif 
+
+#ifdef BLACKHOLES
+extern struct ActiveVirtualPart 
+{
+  int NActiveParticles;
+  int *ActiveParticleList;
+  int *MaxPart;
+};
+#endif
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE
 extern struct special_particle_data

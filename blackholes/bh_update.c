@@ -190,10 +190,10 @@ void kernel(double u, double hinv3, double hinv4, double *wk, double *dwk)
 }
 /*THIS PART ADAPTED FROM GADGET4*/
 
-static int int_compare(const void *a, const void *b);
+/*static int int_compare(const void *a, const void *b);*/
 
 /*update bh-timestep at prior_mesh_construction*/
-void update_bh_timesteps(void)
+/*void update_bh_timesteps(void)
 {
   int i;
 
@@ -206,10 +206,10 @@ void update_bh_timesteps(void)
     }
   reconstruct_bh_timebins();
   update_list_of_active_bh_particles();
-}
+}*/
 
 /*call this function as the reconstruct_timebins() bh version*/
-void reconstruct_bh_timebins(void)
+/*void reconstruct_bh_timebins(void)
 {
   int i, bin;
 
@@ -239,10 +239,10 @@ void reconstruct_bh_timebins(void)
         }
       TimeBinsBh.TimeBinCount[bin]++;
     }
-}
+}*/
 
 /*call this function after updating the bh-timebin to the ngb condition*/
-void update_list_of_active_bh_particles(void)
+/*void update_list_of_active_bh_particles(void)
 {
   int i, n;
   TimeBinsBh.NActiveParticles = 0;
@@ -258,7 +258,7 @@ void update_list_of_active_bh_particles(void)
         }
     }
 
-    mysort(TimeBinsBh.ActiveParticleList, TimeBinsBh.NActiveParticles, sizeof(int), int_compare);
+    mysort(TimeBinsBh.ActiveParticleList, TimeBinsBh.NActiveParticles, sizeof(int), int_compare);*/
 
   /*n = 1;
   int in;
@@ -271,6 +271,30 @@ void update_list_of_active_bh_particles(void)
   TimeBinsBh.GlobalNActiveParticles = out;*/
 }
 
+void active_virtual_part_init_alloc(struct ActiveVirtualPart *AVP, const char *name, int *MaxPart)
+{
+  AVP->NActiveParticles   = 0;
+  AVP->ActiveParticleList = 0;
+  AVP->MaxPart  = MaxPart;
+
+  char Identifier[200];
+  Identifier[199] = 0;
+
+  snprintf(Identifier, 199, "NextActiveParticle%s", AVP->Name);
+  AVP->ActiveParticleList = (int *)mymalloc_movable(&AVP->ActiveParticleList, Identifier, *(AVP->MaxPart) * sizeof(int));
+}
+
+void active_virtual_part_set(struct ActiveVirtualPart *AVP)
+{
+  for(int i=0; i<NumBh; i++)
+    if(BhP[i].DestroyFlag == 1)
+      {
+        AVP[AVP->NActiveParticles] = i;
+        AVP->NActiveParticles++;
+      }
+}
+
+/*
 static int int_compare(const void *a, const void *b)
 {
   if(*((int *)a) < *((int *)b))
@@ -280,4 +304,4 @@ static int int_compare(const void *a, const void *b)
     return +1;
 
   return 0;
-}
+}*/

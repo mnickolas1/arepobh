@@ -100,12 +100,10 @@ static void kernel_local(void)
 
         idx = NextParticle++;
 
-        if(idx >= TimeBinsBh.NActiveParticles)
+        if(idx >= ActiveVirtualPart.NActiveParticles)
           break;
 
-        i = TimeBinsBh.ActiveParticleList[idx];
-        if(i < 0)
-          continue;
+        i = ActiveVirtualPart.ActiveParticleList[idx];
         
         bh_ngb_feedback_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
       }
@@ -141,7 +139,7 @@ void bh_ngb_feedback(void)
 {
   generic_set_MaxNexport();
 
-  generic_comm_pattern(TimeBinsBh.NActiveParticles, kernel_local, kernel_imported);
+  generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
 }
 /*! \brief Inner function of the SPH density calculation
  *

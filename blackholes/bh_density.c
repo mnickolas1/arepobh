@@ -117,12 +117,10 @@ static void kernel_local(void)
 
         idx = NextParticle++;
 
-        if(idx >= TimeBinsBh.NActiveParticles)
+        if(idx >= ActiveVirtualPart.NActiveParticles)
           break;
 
-        i = TimeBinsBh.ActiveParticleList[idx];
-        if(i < 0)
-          continue;
+        i = ActiveVirtualPart.ActiveParticleList[idx];
 
         if(bh_density_isactive(i))
           bh_density_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
@@ -198,7 +196,7 @@ void bh_density(void)
     {
       t0 = second();
 
-      generic_comm_pattern(TimeBinsBh.NActiveParticles, kernel_local, kernel_imported);
+      generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
 
       for(i=0, npleft=0; i<NumBh; i++)
         {
