@@ -1457,7 +1457,7 @@ extern struct bh_particle_data
   int DestroyFlag;
   int DensityFlag;
   int Hsml;
-  integetime NgbMinStep;
+  integertime NgbMinStep;
   MyDouble NgbMass;
   MyDouble Density;
 }  *BhP,          
@@ -1468,7 +1468,7 @@ extern struct bh_particle_data
 #endif 
 
 #ifdef BLACKHOLES
-extern struct ActiveVirtualPart 
+struct ActiveVirtualPart 
 {
   int NActiveParticles;
   int *ActiveParticleList;
