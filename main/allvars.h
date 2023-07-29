@@ -1447,11 +1447,6 @@ extern struct sph_particle_data
 #ifdef ADDBACKGROUNDGRID
   MyFloat Weight;
 #endif /* #ifdef ADDBACKGROUNDGRID */
-    
-#ifdef BLACKHOLES
-
-#endif
-
 } * SphP,          /*!< holds SPH particle data on local processor */
     *DomainSphBuf; /*!< buffer for SPH particle data in domain decomposition */
 
@@ -1460,13 +1455,11 @@ extern struct bh_particle_data
 {
   MyIDType PID;
   int DestroyFlag;
-  signed char TimeBinBh;
-  int Hsml;
-  MyDouble NgbMass;
-  integertime NgbMinStep;
-  MyDouble Density;
   int DensityFlag;
-  
+  int Hsml;
+  integetime NgbMinStep;
+  MyDouble NgbMass;
+  MyDouble Density;
 }  *BhP,          
     *DomainBhBuf; 
 
