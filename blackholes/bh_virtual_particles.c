@@ -56,6 +56,7 @@ void create_particles(void)
           P[NumPart + i].GravAccel[2] = 0;
 
           P[NumPart + i].Type = 5;
+          P[NumPart + i].Ti_Current = All.Ti_Current;
           
           P[NumPart + i].BhID = NumBh + i;
           BhP[NumBh + i].PID  = NumPart + i;
