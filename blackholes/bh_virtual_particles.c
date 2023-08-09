@@ -85,7 +85,7 @@ void create_particles(void)
 void destroy_particles(void)
 {
  int i;
- int Radius = 10;
+ double Radius = 0.25;
 
  for(i=0; i<NumBh; i++)
    { 

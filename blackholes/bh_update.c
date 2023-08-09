@@ -205,6 +205,8 @@ void active_virtual_part_init_alloc(struct ActiveVirtualPart *AVP, const char *n
 
 void active_virtual_part_set(struct ActiveVirtualPart *AVP)
 {
+  AVP->NActiveParticles = 0;
+  
   for(int i=0; i<NumBh; i++)
     if(BhP[i].DestroyFlag == 1)
       {
