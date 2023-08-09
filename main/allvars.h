@@ -1473,7 +1473,10 @@ struct ActiveVirtualPart
   int NActiveParticles;
   int *ActiveParticleList;
   int *MaxPart;
+  char Name[100];
 };
+
+extern struct ActiveVirtualPart ActiveVirtualPart;
 #endif
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE

@@ -208,7 +208,7 @@ void active_virtual_part_set(struct ActiveVirtualPart *AVP)
   for(int i=0; i<NumBh; i++)
     if(BhP[i].DestroyFlag == 1)
       {
-        AVP[AVP->NActiveParticles] = i;
+        AVP->ActiveParticleList[AVP->NActiveParticles] = i;
         AVP->NActiveParticles++;
       }
 }
