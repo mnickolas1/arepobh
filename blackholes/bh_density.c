@@ -38,10 +38,8 @@ static data_in *DataIn, *DataGet;
  *
  *  \return void
  */
-static void particle2in(data_in *in, int idx, int firstnode)
+static void particle2in(data_in *in, int i, int firstnode)
 {
-  int i = ActiveVirtualPart.ActiveParticleList[idx];
-
   in->Pos[0]        = PPB(i).Pos[0];
   in->Pos[1]        = PPB(i).Pos[1];
   in->Pos[2]        = PPB(i).Pos[2];
@@ -74,10 +72,8 @@ static data_out *DataResult, *DataOut;
  *
  *  \return void
  */
-static void out2particle(data_out *out, int idx, int mode)
+static void out2particle(data_out *out, int i, int mode)
 {
-  int i = ActiveVirtualPart.ActiveParticleList[idx];
-
   if(mode == MODE_LOCAL_PARTICLES) /* initial store */
     {
       BhDhsmlDensityFactor[i]          = out->DhsmlDensity;
@@ -107,7 +103,6 @@ static void out2particle(data_out *out, int idx, int mode)
 static void kernel_local(void)
 {
   int i, idx;
-
   {
     int j, threadid = get_thread_num();
 
@@ -172,7 +167,7 @@ static void kernel_imported(void)
 void bh_density(void)
 {
   MyFloat *Left, *Right;
-  int i, npleft, iter = 0;
+  int idx, i, npleft, iter = 0;
   long long ntot;
   double desnumngb, t0, t1;
 
@@ -202,8 +197,9 @@ void bh_density(void)
 
       generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
 
-      for(i=0, npleft=0; i<ActiveVirtualPart.NActiveParticles; i++)
+      for(idx=0, npleft=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
         {
+          i = ActiveVirtualPart.ActiveParticleList[idx];
           if(bh_density_isactive(i))
             {
               if(BhP[i].Density > 0)
