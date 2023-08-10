@@ -7,6 +7,9 @@
 
 #include "../main/allvars.h"
 #include "../main/proto.h"
+#include <time.h>
+
+#define DEG_TO_RAD(deg) ((deg) * M_PI / 180.0)
 
 
 void create_particles(void)
@@ -42,24 +45,50 @@ void create_particles(void)
           P[NumPart + i].ID = newid;
 
           newid++;
-           
-/* Assign properties to the spawned particles */          
+
+/* Assign properties to the spawned particles */       
+          srand(time(NULL));
+
+          // Generate random angles for phi (azimuthal angle) and theta (polar angle)
+          double phi = DEG_TO_RAD(rand() % 360);
+          double theta = DEG_TO_RAD(rand() % 20);  // 20 degrees cone angle
+
+          // Calculate x, y, and z components
+          double x = cos(phi) * sin(theta);
+          double y = sin(phi) * sin(theta);
+          double z = cos(theta);
+
+          //assign mass
           P[NumPart + i].Mass = 0.01;
-          P[NumPart + i].Pos[0] = 0.1;
+          //assign pos
+          P[NumPart + i].Pos[0] = 0;
           P[NumPart + i].Pos[1] = 0;
           P[NumPart + i].Pos[2] = 0;
-          P[NumPart + i].Vel[0] = 1;
-          P[NumPart + i].Vel[1] = 0;
-          P[NumPart + i].Vel[2] = 0;
+          //assign vel 
+          if(ThisTask == 0)
+            {
+              P[NumPart + i].Vel[0] = x;
+              P[NumPart + i].Vel[1] = y;
+              P[NumPart + i].Vel[2] = z;
+            }
+          else
+            {
+              P[NumPart + i].Vel[0] = -x;
+              P[NumPart + i].Vel[1] = -y;
+              P[NumPart + i].Vel[2] = -z;
+            }
+          //assign acc
           P[NumPart + i].GravAccel[0] = 0;
           P[NumPart + i].GravAccel[1] = 0;
           P[NumPart + i].GravAccel[2] = 0;
-
+          //assign type
           P[NumPart + i].Type = 5;
+          //assign ti_current
           P[NumPart + i].Ti_Current = All.Ti_Current;
-          
+          //assign bh_ids
           P[NumPart + i].BhID = NumBh + i;
           BhP[NumBh + i].PID  = NumPart + i;
+          //assing density loop properties
           BhP[NumBh + i].Hsml = 5;
           BhP[NumBh + i].DestroyFlag = -1;
           BhP[NumBh + i].DensityFlag = 1;
