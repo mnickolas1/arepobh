@@ -20,6 +20,10 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid);
 typedef struct
 {
   MyDouble Pos[3];
+  MyDouble Vel[3];
+  MyDouble Mass;
+
+  MyDouble NgbMass;
   MyFloat Hsml;
   int Firstnode;
 } data_in;
@@ -40,6 +44,12 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Pos[0]        = PPB(i).Pos[0];
   in->Pos[1]        = PPB(i).Pos[1];
   in->Pos[2]        = PPB(i).Pos[2];
+  in->Vel[0]        = PPB(i).Vel[0];
+  in->Vel[1]        = PPB(i).Vel[1];
+  in->Vel[2]        = PPB(i).Vel[2];
+  in->Mass          = PPB(i).Mass;
+
+  in->NgbMass       = BhP[i].NgbMass;
   in->Hsml          = BhP[i].Hsml;
   in->Firstnode     = firstnode;
 }  
@@ -86,7 +96,6 @@ static void out2particle(data_out *out, int i, int mode)
 static void kernel_local(void)
 {
   int i, idx;
-
   {
     int j, threadid = get_thread_num();
 
@@ -160,7 +169,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   double h, h2, hinv, hinv3, hinv4;
   double wk, dwk;
   double dx, dy, dz, r, r2, u, mass_j;
-  MyDouble *pos;
+  MyDouble *pos, *vel;
+  MyDouble mass, ngbmass;
 
   data_in local, *target_data;
 
@@ -179,8 +189,12 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
       generic_get_numnodes(target, &numnodes, &firstnode);
     }
 
-  pos  = target_data->Pos;
-  h    = target_data->Hsml;
+  pos     = target_data->Pos;
+  vel     = target_data->Vel;
+  mass    = target_data->Mass;
+  ngbmass = target_data->NgbMass;
+
+  h       = target_data->Hsml;
 
   h2   = h * h;
   hinv = 1.0 / h;
@@ -235,7 +249,11 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
           mass_j = P[j].Mass;
           
-          P[j].Mass += 10;
+/*add virtual particle feedback*/
+          SphP[j].FMomentum[0] += vel[0] * mass_j/ngbmass;
+          SphP[j].FMomentum[1] += vel[1] * mass_j/ngbmass;
+          SphP[j].FMomentum[2] += vel[2] * mass_j/ngbmass;
+          SphP[j].FMass        += Mass * mass_j/ngbmass;
         }  
     }   
 /*compute bh timestep based on min ngb timestep*/

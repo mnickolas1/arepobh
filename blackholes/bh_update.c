@@ -214,3 +214,47 @@ void active_virtual_part_set(struct ActiveVirtualPart *AVP)
         AVP->NActiveParticles++;
       }
 }
+
+void virtual_part_feedback(void)
+{
+  int idx, i;
+
+  struct pv_update_data pvd;
+  if(All.ComovingIntegrationOn)
+    {
+      pvd.atime    = All.Time;
+      pvd.hubble_a = hubble_function(All.Time);
+      pvd.a3inv    = 1 / (All.Time * All.Time * All.Time);
+    }
+  else
+    pvd.atime = pvd.hubble_a = pvd.a3inv = 1.0;
+
+  for(idx = 0; idx < TimeBinsHydro.NActiveParticles; idx++)
+    {
+      i = TimeBinsHydro.ActiveParticleList[idx];
+      if(i < 0)
+      continue;
+  
+      SphP[i].Momentum[0] += SphP[i].FMomentum[0];
+      SphP[i].Momentum[1] += SphP[i].FMomentum[1];
+      SphP[i].Momentum[2] += SphP[i].FMomentum[2];
+      P[i].Mass           += SphP[i].FMass;
+      
+      /*update velocities*/
+      update_primitive_variables_single(P, SphP, i, &pvd);
+      /*update total energy*/
+      SphP[i].Energy = SphP[i].Utherm * P[i].Mass + 0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
+      /*update internal energy*/
+      update_internal_energy(P, SphP, i, &pvd);
+      /*update pressure*/
+      set_pressure_of_cell_internal(P, SphP, i);
+      /*set feed flags to zero*/
+      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].FMass = 0;
+      
+#ifdef PASSIVE_SCALARS                 
+      /*tracer field advected passively*/
+      SphP[i].PScalars[0] = 1;
+      SphP[i].PConservedScalars[0] = P[i].Mass;
+#endif
+    }
+}

@@ -1447,6 +1447,13 @@ extern struct sph_particle_data
 #ifdef ADDBACKGROUNDGRID
   MyFloat Weight;
 #endif /* #ifdef ADDBACKGROUNDGRID */
+
+/*feedback flags*/
+#ifdef BLACKHOLES
+  MyDouble FVel[3];
+  MyDouble FMass;
+#endif
+
 } * SphP,          /*!< holds SPH particle data on local processor */
     *DomainSphBuf; /*!< buffer for SPH particle data in domain decomposition */
 
