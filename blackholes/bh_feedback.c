@@ -254,6 +254,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].FMomentum[1] += vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] += vel[2] * mass_j/ngbmass;
           SphP[j].FMass        += mass * mass_j/ngbmass;
+          SphP[j].F             = 1;
         }  
     }   
 /*compute bh timestep based on min ngb timestep*/

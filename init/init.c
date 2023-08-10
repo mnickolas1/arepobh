@@ -562,8 +562,11 @@ int init(void)
 
   free_mesh();
 
-/*initialize bh feedback flag*/
+/*initialize feedback flags*/
 #ifdef BLACKHOLES
+  for(i=0; i<NumGas; i++)
+    SphP[i].F = -1;
+  
   All.FeedbackFlag = 1;
 #endif
 

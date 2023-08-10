@@ -1450,6 +1450,7 @@ extern struct sph_particle_data
 
 /*feedback flags*/
 #ifdef BLACKHOLES
+  int F;
   MyDouble FMomentum[3];
   MyDouble FMass;
 #endif

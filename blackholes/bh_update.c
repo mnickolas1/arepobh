@@ -234,6 +234,8 @@ void virtual_part_feedback(void)
       i = TimeBinsHydro.ActiveParticleList[idx];
       if(i < 0)
       continue;
+      if(SphP[i].F < 0)
+      continue;
   
       SphP[i].Momentum[0] += SphP[i].FMomentum[0];
       SphP[i].Momentum[1] += SphP[i].FMomentum[1];
@@ -248,13 +250,14 @@ void virtual_part_feedback(void)
       update_internal_energy(P, SphP, i, &pvd);
       /*update pressure*/
       set_pressure_of_cell_internal(P, SphP, i);
-      /*set feed flags to zero*/
-      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].FMass = 0;
-      
+
 #ifdef PASSIVE_SCALARS                 
       /*tracer field advected passively*/
       SphP[i].PScalars[0] = 1;
       SphP[i].PConservedScalars[0] = P[i].Mass;
 #endif
+      /*set feed flags to zero*/
+      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].FMass = 0;
+      SphP[i].F = -1;
     }
 }
