@@ -198,7 +198,7 @@ void bh_density(void)
 
       generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
 
-      for(i=0, npleft=0; i<NumBh; i++)
+      for(i=0, npleft=0; i<ActiveVirtualPart.NActiveParticles; i++)
         {
           if(bh_density_isactive(i))
             {
