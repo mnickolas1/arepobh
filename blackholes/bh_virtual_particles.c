@@ -49,10 +49,14 @@ void create_particles(void)
 /* Assign properties to the spawned particles */       
           srand(time(NULL));
 
-          // Generate random angles for phi (azimuthal angle) and theta (polar angle)
-          double phi = DEG_TO_RAD(rand() % 360);
-          double theta = DEG_TO_RAD(rand() % 20);  // 20 degrees cone angle
+          double phi, theta;
 
+          // Generate random angles for phi (azimuthal angle) and theta (polar angle)
+          phi = DEG_TO_RAD(rand() % 360);
+          if(rand() % 2 == 0)
+            theta = DEG_TO_RAD(rand() % 41 - 20);
+          else
+            theta = DEG_TO_RAD(rand() % 41 + 160);
           // Calculate x, y, and z components
           double x = cos(phi) * sin(theta);
           double y = sin(phi) * sin(theta);
@@ -61,9 +65,9 @@ void create_particles(void)
           //assign mass
           P[NumPart + i].Mass = 0.01;
           //assign pos
-          P[NumPart + i].Pos[0] = 0;
-          P[NumPart + i].Pos[1] = 0;
-          P[NumPart + i].Pos[2] = 0;
+          P[NumPart + i].Pos[0] = 150;
+          P[NumPart + i].Pos[1] = 150;
+          P[NumPart + i].Pos[2] = 150;
           //assign vel 
           if(ThisTask == 0)
             {
