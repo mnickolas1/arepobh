@@ -63,7 +63,7 @@ void create_particles(void)
           double z = cos(theta);
 
           //assign mass
-          P[NumPart + i].Mass = 0.01;
+          P[NumPart + i].Mass = All.MJet;
           //assign pos
           P[NumPart + i].Pos[0] = 150;
           P[NumPart + i].Pos[1] = 150;
@@ -71,15 +71,15 @@ void create_particles(void)
           //assign vel 
           if(ThisTask == 0)
             {
-              P[NumPart + i].Vel[0] = x;
-              P[NumPart + i].Vel[1] = y;
-              P[NumPart + i].Vel[2] = z;
+              P[NumPart + i].Vel[0] = x*All.VJet;
+              P[NumPart + i].Vel[1] = y*All.VJet;
+              P[NumPart + i].Vel[2] = z*All.VJet;
             }
           else
             {
-              P[NumPart + i].Vel[0] = -x;
-              P[NumPart + i].Vel[1] = -y;
-              P[NumPart + i].Vel[2] = -z;
+              P[NumPart + i].Vel[0] = -x*All.VJet;
+              P[NumPart + i].Vel[1] = -y*All.VJet;
+              P[NumPart + i].Vel[2] = -z*All.VJet;
             }
           //assign acc
           P[NumPart + i].GravAccel[0] = 0;
