@@ -119,13 +119,20 @@ void create_particles(void)
 void destroy_particles(void)
 {
  int i;
+ double x, y, z, r2;
  double Radius = 0.25;
 
  for(i=0; i<NumBh; i++)
    { 
      if(BhP[i].DestroyFlag < 0)
        {
-         if(PPB(i).Pos[0]*PPB(i).Pos[0] + PPB(i).Pos[1]*PPB(i).Pos[1] + PPB(i).Pos[2]*PPB(i).Pos[2] > Radius*Radius)
+         x = PPB(i).Pos[0] - 150;
+         y = PPB(i).Pos[1] - 150;
+         z = PPB(i).Pos[2] - 150;
+
+         r2 = x*x + y+y + z*z
+
+         if(r2 > Radius*Radius)
            BhP[i].DestroyFlag = 1;
        }
      
