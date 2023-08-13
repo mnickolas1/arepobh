@@ -250,10 +250,10 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           mass_j = P[j].Mass;
           
 /*add virtual particle feedback*/
-          SphP[j].FMomentum[0] += vel[0] * mass_j/ngbmass;
-          SphP[j].FMomentum[1] += vel[1] * mass_j/ngbmass;
-          SphP[j].FMomentum[2] += vel[2] * mass_j/ngbmass;
-          SphP[j].FMass        += mass * mass_j/ngbmass;
+          SphP[j].FMomentum[0] += All.VJet*All.MJet * mass_j/ngbmass;
+          SphP[j].FMomentum[1] += All.VJet*All.MJet * mass_j/ngbmass;
+          SphP[j].FMomentum[2] += All.VJet*All.MJet * mass_j/ngbmass;
+          SphP[j].FMass        += All.MJet * mass_j/ngbmass;
           SphP[j].F             = 1;
         }  
     }   
