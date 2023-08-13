@@ -130,7 +130,7 @@ void destroy_particles(void)
          y = PPB(i).Pos[1] - 150;
          z = PPB(i).Pos[2] - 150;
 
-         r2 = x*x + y+y + z*z;
+         r2 = x*x + y*y + z*z;
 
          if(r2 > Radius*Radius)
            BhP[i].DestroyFlag = 1;
