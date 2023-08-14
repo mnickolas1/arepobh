@@ -14,6 +14,11 @@
 
 void create_particles(void)
 {
+#ifdef BURST_MODE
+  if((All.PJet * (All.Time - All.LastFeedbackTime) >= All.MJet * All.VJet*All.VJet) && (All.FeedbackFlag < 0))  
+    All.FeedbackFlag = 1;
+#endif 
+  
   if(All.FeedbackFlag > 0)
     {
 
@@ -108,12 +113,7 @@ void create_particles(void)
         All.FeedbackFlag = -1;
         All.LastFeedbackTime = All.Time;
 #endif
-    }
-
-#ifdef BURST_MODE
-  if(All.PJet * (All.Time - All.LastFeedbackTime) >= All.MJet * All.VJet*All.VJet)  
-    All.FeedbackFlag = 1;
-#endif   
+    }  
 }
 
 void destroy_particles(void)
