@@ -1464,7 +1464,7 @@ extern struct bh_particle_data
   MyIDType PID;
   int DestroyFlag;
   int DensityFlag;
-  int Hsml;
+  MyDouble Hsml;
   integertime NgbMinStep;
   MyDouble NgbMass;
   MyDouble Density;

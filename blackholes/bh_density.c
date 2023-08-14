@@ -178,8 +178,9 @@ void bh_density(void)
   Left               = (MyFloat *)mymalloc("Left", NumBh * sizeof(MyFloat));
   Right              = (MyFloat *)mymalloc("Right", NumBh * sizeof(MyFloat));
 
-  for(i = 0; i < NumBh; i++)
+  for(idx=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
     {
+      i = ActiveVirtualPart.ActiveParticleList[idx];
       if(bh_density_isactive(i))
         {
           Left[i] = Right[i] = 0;
