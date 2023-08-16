@@ -773,8 +773,12 @@ void init_io_fields()
   init_units(IO_BHEF, 0., 0., -1., 1., 3., All.UnitEnergy_in_cgs / All.UnitTime_in_s);
   init_snapshot_type(IO_BHEF, SN_MINI);
   */
+  
+  init_field(IO_BHFLAG, "BHFL", "BlackholeFlag", MEM_MY_INT, FILE_INT, FILE_INT, 1, A_BH, &BhP[0].DestroyFlag, 0, BHS_ONLY);
+  init_units(IO_BHFLAG, 0, 0, 0, 0, 0, 0);
+  init_snapshot_type(IO_BHFLAG, SN_MINI);
 
-  init_field(IO_BHID, "BHID  ", "BlackholeIDs", MEM_MY_ID_TYPE, FILE_MY_ID_TYPE, FILE_NONE, 1, A_P, &P[0].BhID, 0, BHS_ONLY);
+  init_field(IO_BHID, "BHID", "BlackholeIDs", MEM_MY_ID_TYPE, FILE_MY_ID_TYPE, FILE_NONE, 1, A_P, &P[0].BhID, 0, BHS_ONLY);
   init_units(IO_BHID, 0, 0, 0, 0, 0, 0);
   init_snapshot_type(IO_BHID, SN_MINI);
 #endif
