@@ -114,12 +114,17 @@ static void kernel_local(void)
         if(Thread[threadid].ExportSpace < MinSpace)
           break;
 
-        idx = NextParticle++;
+        //idx = NextParticle++;
 
-        if(idx >= ActiveVirtualPart.NActiveParticles)
-          break;
+        //if(idx >= ActiveVirtualPart.NActiveParticles)
+          //break;
 
-        i = ActiveVirtualPart.ActiveParticleList[idx];
+        //i = ActiveVirtualPart.ActiveParticleList[idx];
+
+          i = NextParticle++;
+          
+          if(i >= NumBh)
+            break;
 
         if(bh_density_isactive(i))
           bh_density_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
@@ -178,13 +183,18 @@ void bh_density(void)
   Left               = (MyFloat *)mymalloc("Left", NumBh * sizeof(MyFloat));
   Right              = (MyFloat *)mymalloc("Right", NumBh * sizeof(MyFloat));
 
-  for(idx=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
+  /*for(idx=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
     {
       i = ActiveVirtualPart.ActiveParticleList[idx];
       if(bh_density_isactive(i))
         {
           Left[i] = Right[i] = 0;
         }
+    }*/
+
+  for(i = 0; i<NumBh; i++)
+    {
+      Left[i] = Right[i] = 0;
     }
 
   generic_set_MaxNexport();
@@ -196,11 +206,12 @@ void bh_density(void)
     {
       t0 = second();
 
-      generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
+      generic_comm_pattern(NumBh, kernel_local, kernel_imported);
 
-      for(idx=0, npleft=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
+      //for(idx=0, npleft=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
+      for(i=0; i<NumBh; i++)
         {
-          i = ActiveVirtualPart.ActiveParticleList[idx];
+          //i = ActiveVirtualPart.ActiveParticleList[idx];
           if(bh_density_isactive(i))
             {
               if(BhP[i].Density > 0)

@@ -120,7 +120,7 @@ void destroy_particles(void)
 {
  int i;
  double x, y, z, r2;
- double Radius = 0.25;
+ double Radius = 10;
 
  for(i=0; i<NumBh; i++)
    { 
@@ -132,10 +132,9 @@ void destroy_particles(void)
 
          r2 = x*x + y*y + z*z;
 
-         if(r2 > Radius*Radius)
+         if(r2 > Radius*Radius && BhP[i].Hsml < 5)
            BhP[i].DestroyFlag = 1;
        }
-     
      else
        BhP[i].DestroyFlag = 2;
    }
