@@ -59,9 +59,9 @@ void create_particles(void)
           // Generate random angles for phi (azimuthal angle) and theta (polar angle)
           phi = DEG_TO_RAD(rand() % 360);
           if(rand() % 2 == 0)
-            theta = DEG_TO_RAD(rand() % 41 - 20);
+            theta = DEG_TO_RAD(rand() % 21 - 10);
           else
-            theta = DEG_TO_RAD(rand() % 41 + 160);
+            theta = DEG_TO_RAD(rand() % 21 + 170);
           // Calculate x, y, and z components
           double x = cos(phi) * sin(theta);
           double y = sin(phi) * sin(theta);

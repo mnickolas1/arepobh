@@ -1774,7 +1774,7 @@ enum iofields
   IO_TIMEBIN_HYDRO,
 #ifdef BLACKHOLES
 /*  IO_BHTEMPERATURE,*/
-  IO_BHFLAG,
+  //IO_BHFLAG,
   IO_BHID,
 #endif  
   IO_LASTENTRY /* This should be kept - it signals the end of the list */
