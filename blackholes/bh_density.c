@@ -174,7 +174,7 @@ void bh_density(void)
   MyFloat *Left, *Right;
   int idx, i, npleft, iter = 0;
   long long ntot;
-  double desnumngb, t0, t1;
+  double bh_des_ngb_mass, t0, t1;
 
   CPU_Step[CPU_MISC] += measure_time();
 
@@ -199,7 +199,7 @@ void bh_density(void)
 
   generic_set_MaxNexport();
 
-  desnumngb = All.BhDesNumNgb;
+  bh_des_ngb_mass = All.BhDesNgbMass;
 
   /* we will repeat the whole thing for those particles where we didn't find enough neighbours */
   do
@@ -225,7 +225,7 @@ void bh_density(void)
             } 
         
 
-          if(BhP[i].NgbMass < (desnumngb - All.BhMaxNumNgbDeviation) || BhP[i].NgbMass > (desnumngb + All.BhMaxNumNgbDeviation))
+          if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation) || BhP[i].NgbMass > (bh_des_ngb_mass + All.BhMaxNgbMassDeviation))
           {
                   /* need to redo this particle */
             npleft++;
@@ -241,7 +241,7 @@ void bh_density(void)
                 }
               } 
 
-            if(BhP[i].NgbMass < (desnumngb - All.BhMaxNumNgbDeviation))
+            if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation))
               Left[i] = dmax(BhP[i].Hsml, Left[i]);
             else
               {

@@ -1224,8 +1224,8 @@ extern struct global_data_all_processes
   double PJet;
   double VJet;
   double MJet;
-  double BhDesNumNgb;
-  double BhMaxNumNgbDeviation;
+  double BhDesNgbMass;
+  double BhMaxNgbMassDeviation;
 #endif
 } All;
 

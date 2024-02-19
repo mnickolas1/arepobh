@@ -523,12 +523,12 @@ void read_parameter_file(char *fname)
       addr[nt] = &All.MJet;
       id[nt++] = REAL;
 
-      strcpy(tag[nt], "BhDesNumNgb");
-      addr[nt] = &All.BhDesNumNgb;
+      strcpy(tag[nt], "BhDesNgbMass");
+      addr[nt] = &All.BhDesNgbMass;
       id[nt++] = REAL;
       
-      strcpy(tag[nt], "BhMaxNumNgbDeviation");
-      addr[nt] = &All.BhMaxNumNgbDeviation;
+      strcpy(tag[nt], "BhMaxNgbMassDeviation");
+      addr[nt] = &All.BhMaxNgbMassDeviation;
       id[nt++] = REAL;
 
 #endif
