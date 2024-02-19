@@ -567,7 +567,7 @@ int init(void)
   for(i=0; i<NumGas; i++)
     SphP[i].F = -1;
   
-  All.FeedbackFlag = 1;
+  All.FeedbackFlag = 0;
 #endif
 
   return -1;  // return -1 means we ran to completion, i.e. not an endrun code
