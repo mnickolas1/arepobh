@@ -14,8 +14,14 @@
 
 void create_particles(void)
 {
+  double Pj, Mj, Vj; 
+  
+  Pj = All.PJet / (All.UnitEnergy_in_cgs / All.UnitTime_in_s);
+  Mj = All.Mjet; /// (All.UnitMass_in_g);
+  Vj = All.Vjet; /// (All.UnitVelocity_in_cm_per_s);
+
 #ifdef BURST_MODE
-  if((All.PJet * (All.Time - All.LastFeedbackTime) >= All.MJet * All.VJet*All.VJet) && (All.FeedbackFlag < 0))  
+  if((Pj * (All.Time - All.LastFeedbackTime) >= Mj * Vj*Vj) && (All.FeedbackFlag < 0))  
     All.FeedbackFlag = 1;
 #endif 
   
@@ -68,7 +74,7 @@ void create_particles(void)
           double z = cos(theta);
 
           //assign mass
-          P[NumPart + i].Mass = All.MJet;
+          P[NumPart + i].Mass = Mj;
           //assign pos
           P[NumPart + i].Pos[0] = 150;
           P[NumPart + i].Pos[1] = 150;
@@ -76,15 +82,15 @@ void create_particles(void)
           //assign vel 
           if(ThisTask == 0)
             {
-              P[NumPart + i].Vel[0] = x*All.VJet;
-              P[NumPart + i].Vel[1] = y*All.VJet;
-              P[NumPart + i].Vel[2] = z*All.VJet;
+              P[NumPart + i].Vel[0] = x*Vj;
+              P[NumPart + i].Vel[1] = y*Vj;
+              P[NumPart + i].Vel[2] = z*Vj;
             }
           else
             {
-              P[NumPart + i].Vel[0] = -x*All.VJet;
-              P[NumPart + i].Vel[1] = -y*All.VJet;
-              P[NumPart + i].Vel[2] = -z*All.VJet;
+              P[NumPart + i].Vel[0] = -x*Vj;
+              P[NumPart + i].Vel[1] = -y*Vj;
+              P[NumPart + i].Vel[2] = -z*Vj;
             }
           //assign acc
           P[NumPart + i].GravAccel[0] = 0;
