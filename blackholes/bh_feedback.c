@@ -23,6 +23,7 @@ typedef struct
   MyDouble Vel[3];
   MyDouble Mass;
 
+  MyDouble BhRho;
   MyDouble NgbMass;
   MyFloat Hsml;
   int Firstnode;
@@ -48,7 +49,8 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Vel[1]        = PPB(i).Vel[1];
   in->Vel[2]        = PPB(i).Vel[2];
   in->Mass          = PPB(i).Mass;
-
+  
+  in->BhRho         = BhP[i].Density;
   in->NgbMass       = BhP[i].NgbMass;
   in->Hsml          = BhP[i].Hsml;
   in->Firstnode     = firstnode;
@@ -170,7 +172,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   double wk, dwk;
   double dx, dy, dz, r, r2, u, mass_j;
   MyDouble *pos, *vel;
-  MyDouble mass, ngbmass;
+  MyDouble mass, bh_rho, ngbmass;
 
   data_in local, *target_data;
 
@@ -192,6 +194,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   pos     = target_data->Pos;
   vel     = target_data->Vel;
   mass    = target_data->Mass;
+  bh_rho  = target_data->BhRho;
   ngbmass = target_data->NgbMass;
 
   h       = target_data->Hsml;
@@ -250,11 +253,17 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           mass_j = P[j].Mass;
           
 /*add virtual particle feedback*/
+          SphP[j].FMomentum[0] += mass*vel[0] * mass_j/bh_rho * wk;
+          SphP[j].FMomentum[1] += mass*vel[1] * mass_j/bh_rho * wk;
+          SphP[j].FMomentum[2] += mass*vel[2] * mass_j/bh_rho * wk;
+          SphP[j].FMass        += mass * mass_j/bh_rho * wk;
+          SphP[j].F             = 1;
+          /*
           SphP[j].FMomentum[0] += mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] += mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] += mass*vel[2] * mass_j/ngbmass;
           SphP[j].FMass        += mass * mass_j/ngbmass;
-          SphP[j].F             = 1;
+          SphP[j].F             = 1;*/
         }  
     }   
 /*compute bh timestep based on min ngb timestep*/
