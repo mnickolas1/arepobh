@@ -76,9 +76,9 @@ void create_particles(void)
           //assign mass
           P[NumPart + i].Mass = Mj;
           //assign pos
-          P[NumPart + i].Pos[0] = 450;
+          P[NumPart + i].Pos[0] = 150;
           P[NumPart + i].Pos[1] = 150;
-          P[NumPart + i].Pos[2] = 150;
+          P[NumPart + i].Pos[2] = 450;
           //assign vel 
           if(ThisTask == 0)
             {
