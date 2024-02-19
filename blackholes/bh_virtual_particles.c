@@ -17,8 +17,8 @@ void create_particles(void)
   double Pj, Mj, Vj; 
   
   Pj = All.PJet / (All.UnitEnergy_in_cgs / All.UnitTime_in_s);
-  Mj = All.Mjet; /// (All.UnitMass_in_g);
-  Vj = All.Vjet; /// (All.UnitVelocity_in_cm_per_s);
+  Mj = All.MJet; /// (All.UnitMass_in_g);
+  Vj = All.VJet; /// (All.UnitVelocity_in_cm_per_s);
 
 #ifdef BURST_MODE
   if((Pj * (All.Time - All.LastFeedbackTime) >= Mj * Vj*Vj) && (All.FeedbackFlag < 0))  
