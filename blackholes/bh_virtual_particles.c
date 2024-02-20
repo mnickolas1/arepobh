@@ -136,11 +136,11 @@ void destroy_particles(void)
        {
          x = PPB(i).Pos[0] - 150;
          y = PPB(i).Pos[1] - 150;
-         z = PPB(i).Pos[2] - 150;
+         z = PPB(i).Pos[2] - 450;
 
          r2 = x*x + y*y + z*z;
 
-         if(r2 > Radius*Radius && BhP[i].Hsml < 5)
+         if(r2 > Radius*Radius && BhP[i].Hsml < 10)
            {
              BhP[i].DestroyFlag = 1;
              printf("\nJETS: Destroying Particles\n");
