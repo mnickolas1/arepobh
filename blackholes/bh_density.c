@@ -55,6 +55,7 @@ typedef struct
 {
   MyDouble DhsmlDensity;
   MyDouble Ngb;
+  MyDouble Rho;
   MyDouble Mass;
   integertime NgbMinStep;
 } data_out;
@@ -78,6 +79,7 @@ static void out2particle(data_out *out, int i, int mode)
     {
       BhDhsmlDensityFactor[i]          = out->DhsmlDensity;
       BhNumNgb[i]                      = out->Ngb;
+      BhP[i].Density                   = out->Rho;
       BhP[i].NgbMass                   = out->Mass;
       BhP[i].NgbMinStep                = out->NgbMinStep;
     }
@@ -85,6 +87,7 @@ static void out2particle(data_out *out, int i, int mode)
     {
       BhDhsmlDensityFactor[i]          += out->DhsmlDensity;
       BhNumNgb[i]                      += out->Ngb;
+      BhP[i].Density                   += out->Rho;
       BhP[i].NgbMass                   += out->Mass;
       if(out->NgbMinStep < BhP[i].NgbMinStep)
         BhP[i].NgbMinStep               = out->NgbMinStep;
@@ -327,7 +330,7 @@ static int bh_density_evaluate(int target, int mode, int threadid)
   int numngb, numnodes, *firstnode;
   double h, h2, hinv, hinv3, hinv4;
   double wk, dwk;
-  double dx, dy, dz, r, r2, u, mass_j;
+  double dx, dy, dz, r, r2, u, mass_j, rho;
   MyFloat weighted_numngb;
   MyFloat dhsmlrho;
   MyDouble *pos;
@@ -365,7 +368,7 @@ static int bh_density_evaluate(int target, int mode, int threadid)
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
 
-  numngb = 0;
+  numngb = rho = 0;
   weighted_numngb = dhsmlrho = 0;
   mass = 0;
 
@@ -414,6 +417,9 @@ static int bh_density_evaluate(int target, int mode, int threadid)
           kernel(u, hinv3, hinv4, &wk, &dwk);
 
           mass_j = P[j].Mass;
+
+/*compute bh density*/
+          rho += FLT(mass_j * wk);
         
           weighted_numngb += FLT(NORM_COEFF * wk / hinv3); /* 4.0/3 * PI = 4.188790204786 */
 
@@ -436,6 +442,7 @@ static int bh_density_evaluate(int target, int mode, int threadid)
   
   out.DhsmlDensity            = dhsmlrho;
   out.Ngb                     = weighted_numngb;
+  out.Rho                     = rho;
   out.Mass                    = mass;
   out.NgbMinStep              = ngb_min_step;
 
