@@ -80,7 +80,7 @@ void create_particles(void)
           //assign pos
           P[NumPart + i].Pos[0] = 150;
           P[NumPart + i].Pos[1] = 150;
-          P[NumPart + i].Pos[2] = 450;
+          P[NumPart + i].Pos[2] = 300;
           //assign vel 
           if(ThisTask == 0)
             {
@@ -136,11 +136,11 @@ void destroy_particles(void)
        {
          x = PPB(i).Pos[0] - 150;
          y = PPB(i).Pos[1] - 150;
-         z = PPB(i).Pos[2] - 450;
+         z = PPB(i).Pos[2] - 300;
 
          r2 = x*x + y*y + z*z;
 
-         if(r2 > Radius*Radius && BhP[i].Hsml < 10)
+         if(r2 > Radius*Radius && BhP[i].Hsml < 40)
            {
              BhP[i].DestroyFlag = 1;
              printf("\nJETS: Destroying Particles\n");
