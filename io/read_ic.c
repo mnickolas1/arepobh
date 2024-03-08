@@ -477,7 +477,7 @@ void read_ic(const char *fname, int readTypes)
 
 #ifdef BLACKHOLES
   int j =0;
-  for(int i = 0; i<= NumPart; i++)
+  for(int i = 0; i<NumPart; i++)
     {
       if(P[i].Type == 5)
         {
