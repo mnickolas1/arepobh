@@ -279,6 +279,14 @@ void domain_exchange(void)
               BPP(n) = BhP[NumBh-1];
               PPB(NumBh-1).BhID = P[n].BhID; 
 
+              if(n == NumPart-1)
+                { 
+                  NumBh--;
+                  NumPart--;
+                  n--;
+                  continue; 
+                }  
+              
               P[n] = P[NumPart-1];
               if(P[NumPart-1].Type == 5)
                 BPP(NumPart-1).PID = n;
