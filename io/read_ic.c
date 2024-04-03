@@ -236,7 +236,7 @@ void read_ic(const char *fname, int readTypes)
           All.MaxPartSph = max_sphload / (1.0 - 2 * ALLOC_TOLERANCE);
 #ifdef BLACKHOLES
           
-          All.MaxPartBh = 1000;//max_bhload / (1.0-2*ALLOC_TOLERANCE);
+          All.MaxPartBh = max_bhload / (1.0-2*ALLOC_TOLERANCE);
 #endif
 
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE

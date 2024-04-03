@@ -140,7 +140,7 @@ void destroy_particles(void)
 
          r2 = x*x + y*y + z*z;
 
-         if(r2 > Radius*Radius && BhP[i].Hsml < 40)
+         if(r2 > Radius*Radius)
            {
              BhP[i].DestroyFlag = 1;
              printf("\nJETS: Destroying Particles\n");
