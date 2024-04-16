@@ -1258,13 +1258,8 @@ static void contents_restart_file(int modus)
       byten(&BhP[0], NumBh * sizeof(struct bh_particle_data), modus);
     }
 
-  in(&TimeBinsBh.NActiveParticles, modus);
-  byten(TimeBinsBh.ActiveParticleList, TimeBinsBh.NActiveParticles * sizeof(int), modus);
-  byten(TimeBinsBh.NextInTimeBin, NumBh * sizeof(int), modus);
-  byten(TimeBinsBh.PrevInTimeBin, NumBh * sizeof(int), modus);
-  byten(TimeBinsBh.TimeBinCount, TIMEBINS * sizeof(int), modus);
-  byten(TimeBinsBh.FirstInTimeBin, TIMEBINS * sizeof(int), modus);
-  byten(TimeBinsBh.LastInTimeBin, TIMEBINS * sizeof(int), modus);
+  in(ActiveVirtualPart.NActiveParticles, modus);
+  byten(ActiveVirtualPart.NActiveParticles.ActiveParticleList, TimeBinsBh.NActiveParticles * sizeof(int), modus);
 #endif
 
   polling(modus);
