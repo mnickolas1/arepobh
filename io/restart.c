@@ -1257,9 +1257,6 @@ static void contents_restart_file(int modus)
       /* Bh-Particle data  */
       byten(&BhP[0], NumBh * sizeof(struct bh_particle_data), modus);
     }
-
-  in(ActiveVirtualPart.NActiveParticles, modus);
-  byten(ActiveVirtualPart.ActiveParticleList, ActiveVirtualPart.NActiveParticles * sizeof(int), modus);
 #endif
 
   polling(modus);
