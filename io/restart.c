@@ -1249,6 +1249,24 @@ static void contents_restart_file(int modus)
   in(&Stars_converted, modus);
 #endif
 
+#ifdef BLACKHOLES 
+  in(&NumBh, modus);
+  
+    if(NumBh > 0)
+    {
+      /* Bh-Particle data  */
+      byten(&BhP[0], NumBh * sizeof(struct bh_particle_data), modus);
+    }
+
+  in(&TimeBinsBh.NActiveParticles, modus);
+  byten(TimeBinsBh.ActiveParticleList, TimeBinsBh.NActiveParticles * sizeof(int), modus);
+  byten(TimeBinsBh.NextInTimeBin, NumBh * sizeof(int), modus);
+  byten(TimeBinsBh.PrevInTimeBin, NumBh * sizeof(int), modus);
+  byten(TimeBinsBh.TimeBinCount, TIMEBINS * sizeof(int), modus);
+  byten(TimeBinsBh.FirstInTimeBin, TIMEBINS * sizeof(int), modus);
+  byten(TimeBinsBh.LastInTimeBin, TIMEBINS * sizeof(int), modus);
+#endif
+
   polling(modus);
 
   /* now store relevant data for tree */
