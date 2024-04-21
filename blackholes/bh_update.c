@@ -220,7 +220,7 @@ void virtual_part_feedback(void)
   int idx, i;
   double Ftherm;
 
-  Ftherm  = pow(10,7.2)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7.2 K
+  Ftherm  = pow(10,7)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7 K
   Ftherm /= (All.UnitEnergy_in_cgs / All.UnitMass_in_g);  
 
   struct pv_update_data pvd;
