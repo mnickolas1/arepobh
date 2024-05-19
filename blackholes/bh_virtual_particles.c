@@ -34,7 +34,7 @@ void create_particles(void)
       if(ThisTask < tot_particles_spawned)
         particles_spawned = 1;
       if(ThisTask == 0)
-        printf("\nJETS: Kicking Particles\n");      
+        printf("\n\nJETS: Kicking Particles\n\n");      
       
       int *list;
 
@@ -143,7 +143,7 @@ void destroy_particles(void)
          if(r2 > Radius*Radius)
            {
              BhP[i].DestroyFlag = 1;
-             printf("\nJETS: Destroying Particles\n");
+             printf("\n\nJETS: Destroying Particles\n\n");
            }
        }
      else
