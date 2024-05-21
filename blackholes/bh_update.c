@@ -218,10 +218,6 @@ void active_virtual_part_set(struct ActiveVirtualPart *AVP)
 void virtual_part_feedback(void)
 {
   int idx, i;
-  double Ftherm;
-
-  Ftherm  = pow(10,7)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7 K
-  Ftherm /= (All.UnitEnergy_in_cgs / All.UnitMass_in_g);  
 
   struct pv_update_data pvd;
   if(All.ComovingIntegrationOn)
@@ -249,7 +245,7 @@ void virtual_part_feedback(void)
       /*update velocities*/
       update_primitive_variables_single(P, SphP, i, &pvd);
       /*update total energy*/
-      SphP[i].Energy = (SphP[i].Utherm + Ftherm) * P[i].Mass + 0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
+      SphP[i].Energy = (SphP[i].Utherm + SphP[i].Ftherm) * P[i].Mass + 0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
       /*update internal energy*/
       update_internal_energy(P, SphP, i, &pvd);
       /*update pressure*/
@@ -261,7 +257,7 @@ void virtual_part_feedback(void)
       SphP[i].PConservedScalars[0] = P[i].Mass;
 #endif
       /*set feed flags to zero*/
-      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].FMass = 0;
+      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].Ftherm = SphP[i].FMass = 0;
       SphP[i].F = -1;
     }
 }

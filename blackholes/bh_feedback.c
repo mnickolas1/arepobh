@@ -169,10 +169,9 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   int j, n;
   int numnodes, *firstnode;
   double h, h2, hinv, hinv3, hinv4;
-  double wk, dwk;
-  double dx, dy, dz, r, r2, u, mass_j;
+  double wk, dwk, dx, dy, dz, r, r2, u;
   MyDouble *pos, *vel;
-  MyDouble mass, bh_rho, ngbmass;
+  MyDouble mass_j, mass, bh_rho, ngbmass, ftherm;
 
   data_in local, *target_data;
 
@@ -207,6 +206,9 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   hinv3 = hinv * hinv / boxSize_Z;
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
+
+  ftherm  = pow(10,7)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7 K
+  ftherm /= (All.UnitEnergy_in_cgs / All.UnitMass_in_g);  
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
@@ -262,6 +264,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].FMomentum[0] += mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] += mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] += mass*vel[2] * mass_j/ngbmass;
+          SphP[j].Ftherm       += ftherm * mass_j/ngbmass;
           SphP[j].FMass        += mass * mass_j/ngbmass;
           SphP[j].F             = 1;
         }  
