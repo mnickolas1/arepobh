@@ -258,6 +258,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           /*SphP[j].FMomentum[0] += mass*vel[0] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[1] += mass*vel[1] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[2] += mass*vel[2] * mass_j/bh_rho * wk;
+          SphP[j].Ftherm       += ftherm * mass_j/bh_rho * wk;
           SphP[j].FMass        += mass * mass_j/bh_rho * wk;
           SphP[j].F             = 1;*/
           
