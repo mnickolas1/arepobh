@@ -206,8 +206,9 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   hinv3 = hinv * hinv / boxSize_Z;
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
-
-  ftherm  = pow(10,7)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7 K
+  
+  //momentum jets -no thermal injection
+  ftherm  = 0;//pow(10,7)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7 K 
   ftherm /= (All.UnitEnergy_in_cgs / All.UnitMass_in_g);  
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
