@@ -245,7 +245,8 @@ void virtual_part_feedback(void)
       /*update velocities*/
       update_primitive_variables_single(P, SphP, i, &pvd);
       /*update total energy*/
-      SphP[i].Energy = (SphP[i].Utherm + SphP[i].Ftherm) * P[i].Mass + 0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
+      SphP[i].Energy = (SphP[i].Utherm + SphP[i].Ftherm) * P[i].Mass + 
+        0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
       /*update internal energy*/
       update_internal_energy(P, SphP, i, &pvd);
       /*update pressure*/
