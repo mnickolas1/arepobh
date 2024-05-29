@@ -6,8 +6,6 @@
 BLACKHOLES
 WENDLAND_C2_KERNEL
 BURST_MODE
-#OUTPUT_TIMEBIN_BH
-#OUTPUTTIMESTEP_BH
 #--------------------------------------- Basic operation mode of code; default: 3d with 6 particle types; type 0: gas >0: only gravitationally interacting
 #NTYPES=6                      # number of particle types
 #TWODIMS                       # 2d simulation
