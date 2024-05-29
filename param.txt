@@ -1,0 +1,113 @@
+%% system options
+MaxMemSize                                2500
+CpuTimeBetRestartFile                     10000
+TimeLimitCPU                              90000
+
+%% initial conditions
+InitCondFile                              ./IC
+ICFormat                                  3
+
+%% output options
+OutputDir                                 ./output/
+SnapshotFileBase                          snap
+SnapFormat                                3
+NumFilesPerSnapshot                       1
+NumFilesWrittenInParallel                 1
+
+%% resubmit opitions
+ResubmitOn                                0
+ResubmitCommand                           my-scriptfile
+OutputListFilename                        ol
+OutputListOn                              0
+
+%% simulation mode
+CoolingOn                                 0
+StarformationOn                           0
+PeriodicBoundariesOn                      0
+ComovingIntegrationOn                     0
+%TreecoolFile                          TREECOOL_ep
+
+%% Cosmological parameters
+Omega0                                    0.0
+OmegaBaryon                               0.0
+OmegaLambda                               0.0
+HubbleParam                               1.0
+
+%% Simulation parameters
+BoxSize                                   300
+TimeOfFirstSnapshot                       0.0
+TimeBetStatistics                         0.01
+TimeBegin                                 0.0
+TimeMax                                   0.115
+TimeBetSnapshot                           1e-3
+
+%% Units
+UnitVelocity_in_cm_per_s                  1e5   1km/s
+UnitLength_in_cm                          3e21  1kpc
+UnitMass_in_g                             2e39  10^6solar
+GravityConstantInternal                   0.0
+
+%% settings for gravity
+ErrTolIntAccuracy                         0.1
+ErrTolTheta                               0.1
+ErrTolForceAcc                            0.1
+
+%% timestepping
+MaxSizeTimestep                           1e-4
+MinSizeTimestep                           1e-10
+TypeOfTimestepCriterion                   0
+
+%% moving mesh
+CellShapingSpeed                          0.5
+CellMaxAngleFactor                        2.25
+TypeOfOpeningCriterion                    1
+
+%% hydrodynamics
+CourantFac                                0.3
+LimitUBelowThisDensity                    0.0
+LimitUBelowCertainDensityToThisValue      0.0
+DesNumNgb                                 64
+MaxNumNgbDeviation                        2
+InitGasTemp                               0.0
+MinGasTemp                                0.0
+MinEgySpec                                0.0
+MinimumDensityOnStartUp                   0.0
+
+%% domain decomposition
+MultipleDomains                           2
+TopNodeFactor                             4
+ActivePartFracForNewDomainDecomp          0.01
+
+ReferenceGasPartMass                     91
+TargetGasMassFactor                       1
+RefinementCriterion                       1
+DerefinementCriterion                     1
+
+%% gravitational softening
+GasSoftFactor                             0.01
+SofteningComovingType0                    0.01
+SofteningComovingType1                    0.1
+SofteningComovingType2                    0.1
+SofteningComovingType3                    0.1
+SofteningComovingType4                    0.1
+SofteningComovingType5                    0.1
+SofteningMaxPhysType0                     0.1
+SofteningMaxPhysType1                     0.1
+SofteningMaxPhysType2                     0.1
+SofteningMaxPhysType3                     0.1
+SofteningMaxPhysType4                     0.1
+SofteningMaxPhysType5                     0.1
+SofteningTypeOfPartType0                  0
+SofteningTypeOfPartType1                  0
+SofteningTypeOfPartType2                  0
+SofteningTypeOfPartType3                  0
+SofteningTypeOfPartType4                  0
+SofteningTypeOfPartType5                  0
+
+BhDesNgbMass                              910
+BhMaxNgbMassDeviation                     182
+FeedbackTime                              0
+
+JetPower                                  1e46   in erg/s (1.5e13)
+JetVelocity                               1.5e4  in km/s
+JetParticleMass                           91    in 10^6 Solar Masses
