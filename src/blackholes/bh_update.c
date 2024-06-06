@@ -236,6 +236,26 @@ void virtual_part_feedback(void)
       continue;
       if(SphP[i].F < 0)
       continue;
+
+    /*calculate momentum feed exactly so energy is conserved*/
+                  /*-> we need to do this here so that particle properties don't change between loading the buffer and emptying it*/
+                  kick_vector[0] = SphP[i].BhKickVector[0];
+                  kick_vector[1] = SphP[i].BhKickVector[1];
+                  kick_vector[2] = SphP[i].BhKickVector[2];
+
+                  p0 = sqrt(pow(SphP[i].Momentum[0], 2) + pow(SphP[i].Momentum[1], 2) + pow(SphP[i].Momentum[2], 2));
+              
+                  if(p0 < pow(10,-10)) //protect against p0 = 0;
+                    cos_theta = 1;
+                  else 
+                    cos_theta = (SphP[i].Momentum[0]*kick_vector[0] + SphP[i].Momentum[1]*kick_vector[1] + SphP[i].Momentum[2]*kick_vector[2]) / 
+                    (p0*sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)));       
+          
+                  pj = -p0*cos_theta + sqrt(p0*p0 * cos_theta*cos_theta + 2*P[i].Mass*SphP[i].KineticFeed);
+
+                  bh_momentum_kick[0] = kick_vector[0] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
+                  bh_momentum_kick[1] = kick_vector[1] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
+                  bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
   
       SphP[i].Momentum[0] += SphP[i].FMomentum[0];
       SphP[i].Momentum[1] += SphP[i].FMomentum[1];
