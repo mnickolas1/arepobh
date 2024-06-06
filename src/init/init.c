@@ -568,6 +568,7 @@ int init(void)
     SphP[i].F = -1;
   
   All.FeedbackFlag = -1;
+  All.EnergyExchange[0] = All.EnergyExchange[1] = 0;
 #endif
 
   return -1;  // return -1 means we ran to completion, i.e. not an endrun code

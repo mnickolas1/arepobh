@@ -241,6 +241,8 @@ void virtual_part_feedback(void)
       SphP[i].Momentum[1] += SphP[i].FMomentum[1];
       SphP[i].Momentum[2] += SphP[i].FMomentum[2];
       P[i].Mass           += SphP[i].FMass;
+
+      All.EnergyExchange[0] += SphP[i].MomentumFeed;  
       
       /*update velocities*/
       update_primitive_variables_single(P, SphP, i, &pvd);
@@ -260,5 +262,11 @@ void virtual_part_feedback(void)
       /*set feed flags to zero*/
       SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].Ftherm = SphP[i].FMass = 0;
       SphP[i].F = -1;
+      All.EnergyExchange[1] += SphP[i].ThermalFeed + SphP[i].KineticFeed;
     }
+
+  MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
+  mpi_printf("JETS: Energy given by JETS = %e, Energy taken up by gas particles = %e \n", 
+  All.EnergyExchangeTot[0] * All.UnitEnergy_in_cgs, All.EnergyExchangeTot[1] * All.UnitEnergy_in_cgs);
 }
