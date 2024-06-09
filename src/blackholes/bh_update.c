@@ -243,10 +243,21 @@ void virtual_part_feedback(void)
       P[i].Mass           += SphP[i].FMass;
   
 #ifdef MOMENTUM_JET
-      /*update momentum for momentum jet*/
+      /*update momentum*/
       SphP[i].Momentum[0] += SphP[i].FMomentum[0];
       SphP[i].Momentum[1] += SphP[i].FMomentum[1];
       SphP[i].Momentum[2] += SphP[i].FMomentum[2];
+      /*update velocities*/
+      update_primitive_variables_single(P, SphP, i, &pvd);
+      /*update total energy*/
+      SphP[i].Energy = (SphP[i].Utherm) * P[i].Mass + 
+        0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
+      /*update internal energy*/
+      update_internal_energy(P, SphP, i, &pvd);
+      /*update pressure*/
+      set_pressure_of_cell_internal(P, SphP, i);
+      
+      All.EnergyExchange[0] += SphP[i].F;
 #endif
 
 #ifdef ENERGY_JET
@@ -269,24 +280,21 @@ void virtual_part_feedback(void)
       bh_momentum_kick[0] = kick_vector[0] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
       bh_momentum_kick[1] = kick_vector[1] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
       bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
-#endif
-      /*update momentum for energy jet*/
+
+      /*update total energy*/
+      SphP[i].Energy += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
+      /*update momentum*/
       SphP[i].Momentum[0] += bh_momentum_kick[0];
       SphP[i].Momentum[1] += bh_momentum_kick[1];
       SphP[i].Momentum[2] += bh_momentum_kick[2];
-
-      All.EnergyExchange[0] += SphP[i].MomentumFeed;  
-      
       /*update velocities*/
       update_primitive_variables_single(P, SphP, i, &pvd);
-      /*update total energy*/
-      SphP[i].Energy = (SphP[i].Utherm) * P[i].Mass + 
-        0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
       /*update internal energy*/
       update_internal_energy(P, SphP, i, &pvd);
       /*update pressure*/
       set_pressure_of_cell_internal(P, SphP, i);
-
+#endif  
+      
 #ifdef PASSIVE_SCALARS                 
       /*tracer field advected passively*/
       SphP[i].PScalars[0] = 1;
@@ -295,7 +303,7 @@ void virtual_part_feedback(void)
       /*set feed flags to zero*/
       SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].Fkin = SphP[i].FMass = 0;
       SphP[i].F = -1;
-      All.EnergyExchange[1] += SphP[i].ThermalFeed + SphP[i].KineticFeed;
+      All.EnergyExchange[1] +=  SphP[i].KineticFeed;
     }
 
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);

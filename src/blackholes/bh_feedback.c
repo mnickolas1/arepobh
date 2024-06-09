@@ -207,9 +207,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
 
-  double Mj = All.MJet; /// (All.UnitMass_in_g);
-  double Vj = All.VJet; /// (All.UnitVelocity_in_cm_per_s);
-  double fkin = 1 /2 * Mj * Vj * Vj; 
+  double fkin = 1 / 2 * mass * (vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]); 
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
