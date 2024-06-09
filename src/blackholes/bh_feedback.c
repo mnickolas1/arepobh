@@ -207,7 +207,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
 
-  double fkin = 1 / 2 * mass * (vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]); 
+  double v2 = vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2];
+  double fkin = 1 / 2 * mass * v2; 
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
@@ -271,9 +272,9 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
 #ifdef ENERGY_JET
 /*add momentum at end of step*/
-          SphP[j].FMomentum[0] = -dx; 
-          SphP[j].FMomentum[1] = -dy; 
-          SphP[j].FMomentum[2] = -dz; 
+          SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
+          SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
+          SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
           SphP[j].Fkin         = fkin * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
           SphP[j].F            = 1;

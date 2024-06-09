@@ -250,6 +250,7 @@ void virtual_part_feedback(void)
       /*update velocities*/
       update_primitive_variables_single(P, SphP, i, &pvd);
       /*update total energy*/
+      double old_energy = SphP[i].Energy;
       SphP[i].Energy = (SphP[i].Utherm) * P[i].Mass + 
         0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
       /*update internal energy*/
@@ -257,7 +258,10 @@ void virtual_part_feedback(void)
       /*update pressure*/
       set_pressure_of_cell_internal(P, SphP, i);
       
-      All.EnergyExchange[0] += SphP[i].F;
+      All.EnergyExchange[0] += sqrt(SphP[i].FMomentum[0]*SphP[i].FMomentum[0] + 
+        SphP[i].FMomentum[1]*SphP[i].FMomentum[1] + 
+          SphP[i].FMomentum[2]*SphP[i].FMomentum[2]);
+      All.EnergyExchange[1] += SphP[i].Energy - old_energy;
 #endif
 
 #ifdef ENERGY_JET
@@ -269,7 +273,8 @@ void virtual_part_feedback(void)
 
       p0 = sqrt(pow(SphP[i].Momentum[0], 2) + pow(SphP[i].Momentum[1], 2) + pow(SphP[i].Momentum[2], 2));
               
-      if(p0 < pow(10,-10)) //protect against p0 = 0;
+      //protect against p0 = 0
+      if(p0 < pow(10,-10))
         cos_theta = 1;
       else 
         cos_theta = (SphP[i].Momentum[0]*kick_vector[0] + SphP[i].Momentum[1]*kick_vector[1] + SphP[i].Momentum[2]*kick_vector[2]) / 
@@ -283,6 +288,9 @@ void virtual_part_feedback(void)
 
       /*update total energy*/
       SphP[i].Energy += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
+      
+      All.EnergyExchange[0] += pj;
+      All.EnergyExchange[1] += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
       /*update momentum*/
       SphP[i].Momentum[0] += bh_momentum_kick[0];
       SphP[i].Momentum[1] += bh_momentum_kick[1];
@@ -308,6 +316,6 @@ void virtual_part_feedback(void)
 
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
-  mpi_printf("JETS: Energy given by JETS = %e, Energy taken up by gas particles = %e \n", 
-  All.EnergyExchangeTot[0] * All.UnitEnergy_in_cgs, All.EnergyExchangeTot[1] * All.UnitEnergy_in_cgs);
+  mpi_printf("JETS: Momentum given by jets = %e, Energy given by jets = %e \n", 
+  All.EnergyExchangeTot[0] * All.UnitMass_in_g * All.UnitVelocity_in_cm_per_s, All.EnergyExchangeTot[1] * All.UnitEnergy_in_cgs);
 }
