@@ -257,23 +257,25 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           
 /*add virtual particle feedback*/
 #ifdef MOMENTUM_JET
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
+/*use kernel weighting*/
+          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
           SphP[j].Ftherm       = ftherm * mass_j/bh_rho * wk;
           SphP[j].FMass        = mass * mass_j/bh_rho * wk;
           SphP[j].F            = 1;
-          /*
+          */
+/*use mass weighting*/
           SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
           SphP[j].Ftherm       = ftherm * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;*/
+          SphP[j].F            = 1;
 #endif
 
 #ifdef ENERGY_JET
-          /*add momentum at end of step*/
+/*add momentum at end of step*/
           SphP[j].FMomentum[0] = -dx; 
           SphP[j].FMomentum[1] = -dy; 
           SphP[j].FMomentum[2] = -dz; 
