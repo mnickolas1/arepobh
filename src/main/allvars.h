@@ -1454,7 +1454,7 @@ extern struct sph_particle_data
 #ifdef BLACKHOLES
   int F;
   MyDouble FMomentum[3];
-  MyDouble Ftherm;
+  MyDouble Fkin;
   MyDouble FMass;
 #endif
 

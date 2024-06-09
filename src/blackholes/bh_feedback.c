@@ -171,7 +171,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   double h, h2, hinv, hinv3, hinv4;
   double wk, dwk, dx, dy, dz, r, r2, u;
   MyDouble *pos, *vel;
-  MyDouble mass_j, mass, bh_rho, ngbmass, ftherm;
+  MyDouble mass_j, mass, bh_rho, ngbmass;
 
   data_in local, *target_data;
 
@@ -206,17 +206,16 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   hinv3 = hinv * hinv / boxSize_Z;
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
-  
-  //momentum jets -no thermal injection
-  ftherm  = 0;//pow(10,7)*BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6; //add thermal energy ~ 10^7 K 
-  ftherm /= (All.UnitEnergy_in_cgs / All.UnitMass_in_g);  
+
+  double Mj = All.MJet; /// (All.UnitMass_in_g);
+  double Vj = All.VJet; /// (All.UnitVelocity_in_cm_per_s);
+  double fkin = 1 /2 * Mj * Vj * Vj; 
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
   for(n = 0; n < nfound; n++)
     {
       j = Thread[threadid].Ngblist[n];
-
 
       dx = pos[0] - P[j].Pos[0];
       dy = pos[1] - P[j].Pos[1];
@@ -261,7 +260,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
-          SphP[j].Ftherm       = ftherm * mass_j/bh_rho * wk;
           SphP[j].FMass        = mass * mass_j/bh_rho * wk;
           SphP[j].F            = 1;
           */
@@ -269,7 +267,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
-          SphP[j].Ftherm       = ftherm * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
           SphP[j].F            = 1;
 #endif
@@ -279,7 +276,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].FMomentum[0] = -dx; 
           SphP[j].FMomentum[1] = -dy; 
           SphP[j].FMomentum[2] = -dz; 
-          SphP[j].Ftherm       = ftherm * mass_j/ngbmass;
+          SphP[j].Fkin         = fkin * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
           SphP[j].F            = 1;
 #endif 

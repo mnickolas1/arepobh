@@ -218,6 +218,8 @@ void active_virtual_part_set(struct ActiveVirtualPart *AVP)
 void virtual_part_feedback(void)
 {
   int idx, i;
+  double pj, p0, cos_theta;
+  double kick_vector[3], bh_momentum_kick[3];
 
   struct pv_update_data pvd;
   if(All.ComovingIntegrationOn)
@@ -237,8 +239,19 @@ void virtual_part_feedback(void)
       if(SphP[i].F < 0)
       continue;
 
-      /*calculate momentum feed exactly so energy is conserved*/
-      /*-> we need to do this here so that particle properties don't change between loading the buffer and emptying it*/
+      /*update mass*/
+      P[i].Mass           += SphP[i].FMass;
+  
+#ifdef MOMENTUM_JET
+      /*update momentum for momentum jet*/
+      SphP[i].Momentum[0] += SphP[i].FMomentum[0];
+      SphP[i].Momentum[1] += SphP[i].FMomentum[1];
+      SphP[i].Momentum[2] += SphP[i].FMomentum[2];
+#endif
+
+#ifdef ENERGY_JET
+/*calculate momentum feed exactly so energy is conserved*/
+/*-> we need to do this here so that particle properties don't change between loading the buffer and emptying it*/
       kick_vector[0] = SphP[i].FMomentum[0];
       kick_vector[1] = SphP[i].FMomentum[1];
       kick_vector[2] = SphP[i].FMomentum[2];
@@ -251,23 +264,23 @@ void virtual_part_feedback(void)
         cos_theta = (SphP[i].Momentum[0]*kick_vector[0] + SphP[i].Momentum[1]*kick_vector[1] + SphP[i].Momentum[2]*kick_vector[2]) / 
                     (p0*sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)));       
           
-      pj = -p0*cos_theta + sqrt(p0*p0 * cos_theta*cos_theta + 2*P[i].Mass*SphP[i].KineticFeed);
+      pj = -p0*cos_theta + sqrt(p0*p0 * cos_theta*cos_theta + 2*P[i].Mass*SphP[i].Fkin);
 
       bh_momentum_kick[0] = kick_vector[0] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
       bh_momentum_kick[1] = kick_vector[1] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
       bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
-  
-      SphP[i].Momentum[0] += SphP[i].FMomentum[0];
-      SphP[i].Momentum[1] += SphP[i].FMomentum[1];
-      SphP[i].Momentum[2] += SphP[i].FMomentum[2];
-      P[i].Mass           += SphP[i].FMass;
+#endif
+      /*update momentum for energy jet*/
+      SphP[i].Momentum[0] += bh_momentum_kick[0];
+      SphP[i].Momentum[1] += bh_momentum_kick[1];
+      SphP[i].Momentum[2] += bh_momentum_kick[2];
 
       All.EnergyExchange[0] += SphP[i].MomentumFeed;  
       
       /*update velocities*/
       update_primitive_variables_single(P, SphP, i, &pvd);
       /*update total energy*/
-      SphP[i].Energy = (SphP[i].Utherm + SphP[i].Ftherm) * P[i].Mass + 
+      SphP[i].Energy = (SphP[i].Utherm) * P[i].Mass + 
         0.5 * P[i].Mass * (pow(P[i].Vel[0], 2) + pow(P[i].Vel[1], 2) + pow(P[i].Vel[2], 2)); 
       /*update internal energy*/
       update_internal_energy(P, SphP, i, &pvd);
@@ -280,7 +293,7 @@ void virtual_part_feedback(void)
       SphP[i].PConservedScalars[0] = P[i].Mass;
 #endif
       /*set feed flags to zero*/
-      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].Ftherm = SphP[i].FMass = 0;
+      SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].Fkin = SphP[i].FMass = 0;
       SphP[i].F = -1;
       All.EnergyExchange[1] += SphP[i].ThermalFeed + SphP[i].KineticFeed;
     }
