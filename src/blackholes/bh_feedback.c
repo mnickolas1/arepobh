@@ -273,10 +273,12 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 #endif
 
 #ifdef ENERGY_JET
-          SphP[j].FMomentum[0] = -dx;
-          SphP[j].FMomentum[1] = -dy;
-          SphP[j].FMomentum[2] = -dz;
-          SphP[j].FMass        = mass * mass_j/bh_rho * wk;
+          /*add momentum at end of step*/
+          SphP[j].FMomentum[0] = -dx; 
+          SphP[j].FMomentum[1] = -dy; 
+          SphP[j].FMomentum[2] = -dz; 
+          SphP[j].Ftherm       = ftherm * mass_j/ngbmass;
+          SphP[j].FMass        = mass * mass_j/ngbmass;
           SphP[j].F            = 1;
 #endif 
         }  
