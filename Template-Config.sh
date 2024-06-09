@@ -7,12 +7,14 @@
 #BONDI_ACCRETION
 #INFALL_ACCRETION
 #BURST_MODE
-#OUTPUT_TIMEBIN_BH
-#OUTPUTTIMESTEP_BH
+#MOMENTUM_JET
+#ENERGY_JET
 #CUBIC_SPLINE_KERNEL
 #WENDLAND_C2_KERNEL
 #WENDLAND_C4_KERNEL
 #WENDLAND_C6_KERNEL
+
+
 #THREEDIMS
 --------------------------------------- Basic operation mode of code; default: 3d with 6 particle types; type 0: gas >0: only gravitationally interacting
 #NTYPES=6                      # number of particle types
