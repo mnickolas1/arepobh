@@ -289,9 +289,9 @@ void virtual_part_feedback(void)
 
       pj = sqrt(2 * P[i].Mass * (SphP[i].Energy - P[i].Mass * SphP[i].Utherm)) - p0;
 
-      bh_momentum_kick[0] = kick_vector[0] * pj; / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
-      bh_momentum_kick[1] = kick_vector[1] * pj; / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
-      bh_momentum_kick[2] = kick_vector[2] * pj; / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
+      bh_momentum_kick[0] = kick_vector[0] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
+      bh_momentum_kick[1] = kick_vector[1] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
+      bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
       
       All.EnergyExchange[0] += pj;
       All.EnergyExchange[1] += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
