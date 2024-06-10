@@ -33,8 +33,7 @@ void create_particles(void)
       int tot_particles_spawned = 2;
       if(ThisTask < tot_particles_spawned)
         particles_spawned = 1;
-      if(ThisTask == 0)
-        printf("\n\nJETS: Kicking Particles\n\n");      
+      mpi_printf("JETS: Kicking Particles");      
       
       int *list;
 

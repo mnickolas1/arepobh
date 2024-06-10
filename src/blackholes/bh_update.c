@@ -311,7 +311,6 @@ void virtual_part_feedback(void)
       /*set feed flags to zero*/
       SphP[i].FMomentum[0] = SphP[i].FMomentum[1] = SphP[i].FMomentum[2] = SphP[i].Fkin = SphP[i].FMass = 0;
       SphP[i].F = -1;
-      All.EnergyExchange[1] +=  SphP[i].KineticFeed;
     }
 
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
