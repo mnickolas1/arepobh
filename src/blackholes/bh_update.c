@@ -316,5 +316,5 @@ void virtual_part_feedback(void)
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
   mpi_printf("JETS: Momentum given by jets = %e, Energy given by jets = %e \n", 
-  All.EnergyExchangeTot[0] * All.UnitMass_in_g * All.UnitVelocity_in_cm_per_s, All.EnergyExchangeTot[1] * All.UnitEnergy_in_cgs);
+  All.EnergyExchangeTot[0], All.EnergyExchangeTot[1]);
 }
