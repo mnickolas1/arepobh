@@ -267,12 +267,17 @@ void virtual_part_feedback(void)
 #ifdef ENERGY_JET
 /*calculate momentum feed exactly so energy is conserved*/
 /*-> we need to do this here so that particle properties don't change between loading the buffer and emptying it*/
+
+      /*update total energy*/
+      SphP[i].Energy += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
+
       kick_vector[0] = SphP[i].FMomentum[0];
       kick_vector[1] = SphP[i].FMomentum[1];
       kick_vector[2] = SphP[i].FMomentum[2];
 
       p0 = sqrt(pow(SphP[i].Momentum[0], 2) + pow(SphP[i].Momentum[1], 2) + pow(SphP[i].Momentum[2], 2));
-              
+
+      /* exactly valid when dm = 0        
       //protect against p0 = 0
       if(p0 < pow(10,-10))
         cos_theta = 1;
@@ -280,14 +285,13 @@ void virtual_part_feedback(void)
         cos_theta = (SphP[i].Momentum[0]*kick_vector[0] + SphP[i].Momentum[1]*kick_vector[1] + SphP[i].Momentum[2]*kick_vector[2]) / 
                     (p0*sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)));       
           
-      pj = -p0*cos_theta + sqrt(p0*p0 * cos_theta*cos_theta + 2*P[i].Mass*SphP[i].Fkin);
+      pj = -p0*cos_theta + sqrt(p0*p0 * cos_theta*cos_theta + 2*P[i].Mass*SphP[i].Fkin);*/
 
-      bh_momentum_kick[0] = kick_vector[0] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
-      bh_momentum_kick[1] = kick_vector[1] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
-      bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
+      pj = sqrt(2 * P[i].Mass * (SphP[i].Energy - P[i].Mass * SphP[i].Utherm)) - p0;
 
-      /*update total energy*/
-      SphP[i].Energy += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
+      bh_momentum_kick[0] = kick_vector[0] * pj; / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
+      bh_momentum_kick[1] = kick_vector[1] * pj; / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
+      bh_momentum_kick[2] = kick_vector[2] * pj; / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
       
       All.EnergyExchange[0] += pj;
       All.EnergyExchange[1] += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
