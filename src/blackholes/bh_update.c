@@ -294,7 +294,7 @@ void virtual_part_feedback(void)
       bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
       
       All.EnergyExchange[0] += pj;
-      All.EnergyExchange[1] += SphP[i].FMass*SphP[i].Utherm + SphP[i].Fkin;
+      All.EnergyExchange[1] += SphP[i].Fkin;
       /*update momentum*/
       SphP[i].Momentum[0] += bh_momentum_kick[0];
       SphP[i].Momentum[1] += bh_momentum_kick[1];
