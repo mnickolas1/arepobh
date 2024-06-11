@@ -33,7 +33,7 @@ void create_particles(void)
       int tot_particles_spawned = 2;
       if(ThisTask < tot_particles_spawned)
         particles_spawned = 1;
-      mpi_printf("\nJETS: Kicking Particles\n\n");      
+      mpi_printf("\nJETS: Kicking Particles -> FeedbackCount:%d\n\n", All.FeedbackCount);      
       
       int *list;
 
@@ -142,7 +142,7 @@ void destroy_particles(void)
          if(r2 > Radius*Radius)
            {
              BhP[i].DestroyFlag = 1;
-             printf("\nJETS: Destroying Particles\n\n");
+             printf("\nJETS: Destroying Particles -> FeedbackCount:%d\n\n", All.FeedbackCount);
            }
        }
      else
