@@ -21,7 +21,7 @@ void create_particles(void)
   Vj = All.VJet; /// (All.UnitVelocity_in_cm_per_s);
 
 #ifdef BURST_MODE
-  if((Pj * (All.Time - All.LastFeedbackTime) >= Mj * Vj*Vj) && (All.FeedbackFlag < 0))  
+  if((Pj * (All.Time) >= All.FeedbackCount * Mj * Vj*Vj) && (All.FeedbackFlag < 0))  
     All.FeedbackFlag = 1;
 #endif 
   
@@ -33,7 +33,7 @@ void create_particles(void)
       int tot_particles_spawned = 2;
       if(ThisTask < tot_particles_spawned)
         particles_spawned = 1;
-      mpi_printf("\n\nJETS: Kicking Particles\n\n");      
+      mpi_printf("\nJETS: Kicking Particles\n\n");      
       
       int *list;
 
@@ -118,7 +118,7 @@ void create_particles(void)
 
 #ifdef BURST_MODE
         All.FeedbackFlag = -1;
-        All.LastFeedbackTime = All.Time;
+        All.FeedbackCount++;
 #endif
     }  
 }
@@ -142,7 +142,7 @@ void destroy_particles(void)
          if(r2 > Radius*Radius)
            {
              BhP[i].DestroyFlag = 1;
-             printf("\n\nJETS: Destroying Particles\n\n");
+             printf("\nJETS: Destroying Particles\n\n");
            }
        }
      else

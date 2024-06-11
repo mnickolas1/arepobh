@@ -566,8 +566,8 @@ int init(void)
 #ifdef BLACKHOLES
   for(i=0; i<NumGas; i++)
     SphP[i].F = -1;
-  
-  All.FeedbackFlag = -1;
+  All.FeedbackCount = 1;
+  All.FeedbackFlag  = -1;
   All.EnergyExchange[0] = All.EnergyExchange[1] = 0;
 #endif
 
