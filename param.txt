@@ -74,8 +74,8 @@ MinEgySpec                                0.0
 MinimumDensityOnStartUp                   0.0
 
 %% domain decomposition
-MultipleDomains                           2
-TopNodeFactor                             4
+MultipleDomains                           8
+TopNodeFactor                             2.5
 ActivePartFracForNewDomainDecomp          0.01
 
 ReferenceGasPartMass                     20
