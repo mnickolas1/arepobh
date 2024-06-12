@@ -142,7 +142,7 @@ void destroy_particles(void)
          if(r2 > Radius*Radius)
            {
              BhP[i].DestroyFlag = 1;
-             printf("\nJETS: Destroying Particles -> FeedbackCount:%d\n\n", All.FeedbackCount - 1);
+             printf("\nJETS: Destroying Particles\n\n");
            }
        }
      else
