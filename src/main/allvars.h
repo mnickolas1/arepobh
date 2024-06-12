@@ -1218,10 +1218,10 @@ extern struct global_data_all_processes
 #ifdef BLACKHOLES
   double EnergyExchange[2];
   double EnergyExchangeTot[2];
+  int FeedbackCount;
   int FeedbackFlag;
 
   /*for parameter file*/
-  double FeedbackCount;
   double FeedbackTime;
   double PJet;
   double VJet;
