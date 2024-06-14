@@ -99,7 +99,7 @@
 
 #--------------------------------------- External gravity; default: no external potential
 #EXTERNALGRAVITY               # master switch for external potential
-#EXTERNALGY=0.0                # constant external gravity in y direction
+#EXTERNAL                      # external gravitational field
 
 #--------------------------------------- Static NFW Potential
 #STATICNFW                     # static gravitational Navarro-Frenk-White (NFW) potential
