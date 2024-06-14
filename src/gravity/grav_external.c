@@ -153,10 +153,29 @@ static void gravity_external_get_force(double pos[3], int type, MyIDType ID, dou
 
   *pot = 0;
 
-#ifdef EXTERNALGY
-  acc[1] += EXTERNALGY;
-  *pot = -(EXTERNALGY)*pos[1];
-#endif /* #ifdef EXTERNALGY */
+#ifdef EXTERNAL
+  double rc   = 10;
+  double beta = 0.38;
+  
+  double u   = pow(10, 7) * BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6 / 
+    (All.UnitEnergy_in_cgs/All.UnitMass_in_g); 
+  
+  double r, dx, dy, dz;
+  
+  dx = pos[0] - boxHalf_X;
+  dy = pos[1] - boxHalf_Y;
+  dz = pos[2] - boxHalf_Z;
+  
+  r = sqrt(dx * dx + dy * dy + dz * dz);
+  
+  if(r > 0)
+    {
+      acc[0] += -3 * beta * u * GAMMA_MINUS1 / (r*r + rc*rc) * dx;
+      acc[1] += -3 * beta * u * GAMMA_MINUS1 / (r*r + rc*rc) * dy;
+      acc[2] += -3 * beta * u * GAMMA_MINUS1 / (r*r + rc*rc) * dz;
+    }
+  
+#endif /* #ifdef EXTERNAL */
 
 #ifdef STATICISO
   {
