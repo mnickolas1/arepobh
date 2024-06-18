@@ -38,7 +38,7 @@ BoxSize                                   300
 TimeOfFirstSnapshot                       0.0
 TimeBetStatistics                         0.01
 TimeBegin                                 0.0
-TimeMax                                   0.115
+TimeMax                                   0.1
 TimeBetSnapshot                           5e-3
 
 %% Units
