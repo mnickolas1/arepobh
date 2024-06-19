@@ -154,6 +154,9 @@ static void gravity_external_get_force(double pos[3], int type, MyIDType ID, dou
   *pot = 0;
 
 #ifdef EXTERNAL
+  
+  if(type == 5) return;
+  
   double rc   = 10;
   double beta = 0.38;
   
