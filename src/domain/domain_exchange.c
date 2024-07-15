@@ -103,7 +103,7 @@ void domain_resize_storage_bh(int count_get_bh)
 
   int max_bhload    = res_bh[0];
   
-  if(max_bhload > (1.0 - ALLOC_TOLERANCE) * All.MaxPartBh || max_bhload < (1.0 - 3 * ALLOC_TOLERANCE) * All.MaxPartBh)
+  if(max_bhload > (1.0 - ALLOC_TOLERANCE) * All.MaxPartBh || (max_bhload < (1.0 - 3 * ALLOC_TOLERANCE) * All.MaxPartBh && max_bhload > 25))
     {
       All.MaxPartBh = max_bhload / (1.0 - 2 * ALLOC_TOLERANCE);
       reallocate_memory_maxpartbh();
