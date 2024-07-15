@@ -235,7 +235,7 @@ void read_ic(const char *fname, int readTypes)
           All.MaxPart    = max_load / (1.0 - 2 * ALLOC_TOLERANCE);
           All.MaxPartSph = max_sphload / (1.0 - 2 * ALLOC_TOLERANCE);
 #ifdef BLACKHOLES
-          
+          max_bhload = 20; /* jets overwrite */
           All.MaxPartBh = max_bhload / (1.0-2*ALLOC_TOLERANCE);
 #endif
 
