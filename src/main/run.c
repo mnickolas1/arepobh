@@ -394,8 +394,15 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
   sfr_create_star_particles();
 #endif /* #if defined(COOLING) && defined(USE_SFR) */
 #ifdef BLACKHOLES
-  bh_density();
-  bh_ngb_feedback();
+  bh_in();
+
+if(All.FeedbackFlag > 0)
+  {
+    bh_density();
+    bh_ngb_feedback();
+  }
+
+  bh_out();
 #endif
 }
 

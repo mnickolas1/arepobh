@@ -117,19 +117,10 @@ static void kernel_local(void)
         if(Thread[threadid].ExportSpace < MinSpace)
           break;
 
-        //idx = NextParticle++;
+        i = NextParticle++;
 
-        //if(idx >= ActiveVirtualPart.NActiveParticles)
-          //break;
-
-        //i = ActiveVirtualPart.ActiveParticleList[idx];
-
-        idx = NextParticle++;
-
-        if(idx >= ActiveVirtualPart.NActiveParticles)
+        if(i >= NumBh)
           break;
-
-        i = ActiveVirtualPart.ActiveParticleList[idx];
 
         if(bh_density_isactive(i))
           bh_density_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
@@ -211,12 +202,10 @@ void bh_density(void)
     {
       t0 = second();
 
-      generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
+      generic_comm_pattern(NumBh, kernel_local, kernel_imported);
 
-      for(idx=0, npleft=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
-      //for(i=0, npleft=0; i<NumBh; i++)
+      for(i=0, npleft=0; i<NumBh; i++)
         {
-          i = ActiveVirtualPart.ActiveParticleList[idx];
           if(bh_density_isactive(i))
             {
               if(BhP[i].Density > 0)

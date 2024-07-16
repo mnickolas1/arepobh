@@ -190,6 +190,28 @@ void kernel(double u, double hinv3, double hinv4, double *wk, double *dwk)
 }
 /*THIS PART ADAPTED FROM GADGET4*/
 
+void bh_in(void)
+{
+  double Pj, Mj, Vj; 
+  
+  Pj = All.PJet / (All.UnitEnergy_in_cgs / All.UnitTime_in_s);
+  Mj = All.MJet; /// (All.UnitMass_in_g);
+  Vj = All.VJet; /// (All.UnitVelocity_in_cm_per_s);
+
+#ifdef BURST_MODE
+  if((Pj * (All.Time) >= All.FeedbackCount * Mj * Vj*Vj) && (All.FeedbackFlag < 0))  
+    All.FeedbackFlag = 1;
+#endif 
+}
+
+void bh_out(void)
+{
+#ifdef BURST_MODE
+  All.FeedbackFlag = -1;
+  All.FeedbackCount++;
+#endif
+}
+
 void bh_feedback(void)
 {
   int idx, i;

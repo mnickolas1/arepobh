@@ -45,10 +45,6 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Pos[0]        = PPB(i).Pos[0];
   in->Pos[1]        = PPB(i).Pos[1];
   in->Pos[2]        = PPB(i).Pos[2];
-  in->Vel[0]        = PPB(i).Vel[0];
-  in->Vel[1]        = PPB(i).Vel[1];
-  in->Vel[2]        = PPB(i).Vel[2];
-  in->Mass          = PPB(i).Mass;
   
   in->BhRho         = BhP[i].Density;
   in->NgbMass       = BhP[i].NgbMass;
@@ -109,12 +105,10 @@ static void kernel_local(void)
         if(Thread[threadid].ExportSpace < MinSpace)
           break;
 
-        idx = NextParticle++;
+        i = NextParticle++;
 
-        if(idx >= ActiveVirtualPart.NActiveParticles)
+        if(i >= NumBh)
           break;
-
-        i = ActiveVirtualPart.ActiveParticleList[idx];
         
         bh_ngb_feedback_evaluate(i, MODE_LOCAL_PARTICLES, threadid);
       }
@@ -150,7 +144,7 @@ void bh_ngb_feedback(void)
 {
   generic_set_MaxNexport();
 
-  generic_comm_pattern(ActiveVirtualPart.NActiveParticles, kernel_local, kernel_imported);
+  generic_comm_pattern(NumBh, kernel_local, kernel_imported);
 }
 /*! \brief Inner function of the SPH density calculation
  *
@@ -170,8 +164,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   int numnodes, *firstnode;
   double h, h2, hinv, hinv3, hinv4;
   double wk, dwk, dx, dy, dz, r, r2, u;
-  MyDouble *pos, *vel;
-  MyDouble mass_j, mass, bh_rho, ngbmass;
+  MyDouble *pos;
+  MyDouble mass_j, bh_rho, ngbmass;
 
   data_in local, *target_data;
 
@@ -191,8 +185,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
     }
 
   pos     = target_data->Pos;
-  vel     = target_data->Vel;
-  mass    = target_data->Mass;
   bh_rho  = target_data->BhRho;
   ngbmass = target_data->NgbMass;
 
@@ -206,9 +198,19 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   hinv3 = hinv * hinv / boxSize_Z;
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
+  
+  /*jet axis and opening angle*/    
 
-  double v2 = vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2];
-  double fkin = 1. / 2. * mass * v2; 
+  /*positive and negative jet axes (no need to be normalized) */
+  double pos_z_axis[3] = {0, 0, 1};
+  double neg_z_axis[3] = {0, 0, -1};      
+  /*jet angle*/
+  double theta = DEG_TO_RAD(10);
+  double vx, vy, vz, pos_z_angle, neg_z_angle;
+  /*jet parameters*/
+  double Vj = All.VJet; // code units 
+  double Mj = All.MJet; // code units
+  double Fkin = 1. / 2. * Mj * Vj * Vj; 
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
@@ -253,7 +255,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
           mass_j = P[j].Mass;
           
-/*add virtual particle feedback*/
+/*add bh feedback*/
 #ifdef MOMENTUM_JET
 /*use kernel weighting*/
           /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
