@@ -394,9 +394,6 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
   sfr_create_star_particles();
 #endif /* #if defined(COOLING) && defined(USE_SFR) */
 #ifdef BLACKHOLES
-  create_particles();
-  destroy_particles();
-  active_virtual_part_set(&ActiveVirtualPart);
   bh_density();
   bh_ngb_feedback();
 #endif
@@ -412,7 +409,7 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
 void calculate_non_standard_physics_end_of_step(void)
 {
 #ifdef BLACKHOLES
-  virtual_part_feedback();
+  bh_feedback();
 #endif
 #ifdef COOLING
 #ifdef USE_SFR

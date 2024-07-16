@@ -190,32 +190,7 @@ void kernel(double u, double hinv3, double hinv4, double *wk, double *dwk)
 }
 /*THIS PART ADAPTED FROM GADGET4*/
 
-void active_virtual_part_init_alloc(struct ActiveVirtualPart *AVP, const char *name, int *MaxPart)
-{
-  AVP->NActiveParticles   = 0;
-  AVP->ActiveParticleList = 0;
-  AVP->MaxPart  = MaxPart;
-
-  char Identifier[200];
-  Identifier[199] = 0;
-
-  snprintf(Identifier, 199, "NextActiveParticle%s", AVP->Name);
-  AVP->ActiveParticleList = (int *)mymalloc_movable(&AVP->ActiveParticleList, Identifier, *(AVP->MaxPart) * sizeof(int));
-}
-
-void active_virtual_part_set(struct ActiveVirtualPart *AVP)
-{
-  AVP->NActiveParticles = 0;
-  
-  for(int i=0; i<NumBh; i++)
-    if(BhP[i].DestroyFlag == 1)
-      {
-        AVP->ActiveParticleList[AVP->NActiveParticles] = i;
-        AVP->NActiveParticles++;
-      }
-}
-
-void virtual_part_feedback(void)
+void bh_feedback(void)
 {
   int idx, i;
   double pj, p0, cos_theta;
