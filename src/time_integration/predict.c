@@ -359,6 +359,9 @@ void drift_particle(int i, integertime time1)
 
   if(i < 0)
     terminate("i=%d  NumPart=%d", i, NumPart);
+  
+  if(P[i].Type == 5)
+    return;
 
   integertime time0 = P[i].Ti_Current;
 
