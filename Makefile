@@ -287,8 +287,7 @@ SUBDIRS += subfind
 endif
 
 ifeq (BLACKHOLES,$(findstring BLACKHOLES,$(CONFIGVARS)))
-OBJS    += blackholes/bh_virtual_particles.o \
-           blackholes/bh_density.o \
+OBJS    += blackholes/bh_density.o \
            blackholes/bh_feedback.o \
            blackholes/bh_update.o
            

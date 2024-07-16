@@ -1478,18 +1478,6 @@ extern struct bh_particle_data
 #define PPB(i) P[BhP[i].PID]
 #endif 
 
-#ifdef BLACKHOLES
-struct ActiveVirtualPart 
-{
-  int NActiveParticles;
-  int *ActiveParticleList;
-  int *MaxPart;
-  char Name[100];
-};
-
-extern struct ActiveVirtualPart ActiveVirtualPart;
-#endif
-
 #ifdef EXACT_GRAVITY_FOR_PARTICLE_TYPE
 extern struct special_particle_data
 {

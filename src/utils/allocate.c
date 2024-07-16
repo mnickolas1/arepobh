@@ -115,10 +115,6 @@ void allocate_memory(void)
 #ifdef BLACKHOLES
   memset(BhP, 0, All.MaxPartBh * sizeof(struct bh_particle_data));
 #endif 
-
-#ifdef BLACKHOLES
-  active_virtual_part_init_alloc(&ActiveVirtualPart, "VirtualParticles", &All.MaxPartBh);
-#endif
 }
 
 /*! \brief Reallocates memory for particle data.
