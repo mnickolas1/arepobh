@@ -221,6 +221,9 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
       dx = pos[0] - P[j].Pos[0];
       dy = pos[1] - P[j].Pos[1];
       dz = pos[2] - P[j].Pos[2];
+      vx = -dx;
+      vy = -dy;
+      vz = -dz;
 
 /* now find the closest image in the given box size */
 #ifndef REFLECTIVE_X
@@ -247,40 +250,50 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
       if(r2 < h2)
         {
-          r = sqrt(r2);
+          pos_z_angle = acos((vx*pos_z_axis[0] + vy*pos_z_axis[1] + vz*pos_z_axis[2]) / 
+                  (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(pos_z_axis[0], 2) + pow(pos_z_axis[1], 2) + pow(pos_z_axis[2], 2))));
+          neg_z_angle = acos((vx*neg_z_axis[0] + vy*neg_z_axis[1] + vz*neg_z_axis[2]) / 
+                  (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(neg_z_axis[0], 2) + pow(neg_z_axis[1], 2) + pow(neg_z_axis[2], 2))));
+                  
+          if((pos_z_angle <= theta) || (neg_z_angle <= theta))
+            {
+            
+              r = sqrt(r2);
 
-          u = r * hinv;
+              u = r * hinv;
 
-          kernel(u, hinv3, hinv4, &wk, &dwk);
+              kernel(u, hinv3, hinv4, &wk, &dwk);
 
-          mass_j = P[j].Mass;
+              mass_j = P[j].Mass;
+          
           
 /*add bh feedback*/
 #ifdef MOMENTUM_JET
 /*use kernel weighting*/
-          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
-          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
-          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
-          SphP[j].FMass        = mass * mass_j/bh_rho * wk;
-          SphP[j].F            = 1;
-          */
+              /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
+              SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
+              SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
+              SphP[j].FMass        = mass * mass_j/bh_rho * wk;
+              SphP[j].F            = 1;
+              */
 /*use mass weighting*/
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
-          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
-          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
-          SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;
+              SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
+              SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
+              SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
+              SphP[j].FMass        = mass * mass_j/ngbmass;
+              SphP[j].F            = 1;
 #endif
 
 #ifdef ENERGY_JET
 /*add momentum at end of step*/
-          SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
-          SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
-          SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
-          SphP[j].Fkin         = fkin * mass_j/ngbmass;
-          SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;
+              SphP[j].FMomentum[0] = vx / r; 
+              SphP[j].FMomentum[1] = vy / r;
+              SphP[j].FMomentum[2] = vz / r;
+              SphP[j].Fkin         = fkin * mass_j/ngbmass;
+              SphP[j].FMass        = mass * mass_j/ngbmass;
+              SphP[j].F            = 1;
 #endif 
+            }
         }  
     }   
 /*compute bh timestep based on min ngb timestep*/

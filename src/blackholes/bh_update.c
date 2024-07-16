@@ -265,10 +265,10 @@ void bh_feedback(void)
 /*calculate momentum feed exactly so energy is conserved*/
 /*-> we need to do this here so that particle properties don't change between loading the buffer and emptying it*/
 
-      double u   = pow(10, 7) * BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6 / 
-        (All.UnitEnergy_in_cgs/All.UnitMass_in_g);
+      //double u   = pow(10, 7) * BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6 / 
+        //(All.UnitEnergy_in_cgs/All.UnitMass_in_g);
       /*update total energy*/
-      SphP[i].Energy += SphP[i].FMass*u + SphP[i].Fkin;
+      SphP[i].Energy += /*SphP[i].FMass*u + */ SphP[i].Fkin;
 
       kick_vector[0] = SphP[i].FMomentum[0];
       kick_vector[1] = SphP[i].FMomentum[1];
