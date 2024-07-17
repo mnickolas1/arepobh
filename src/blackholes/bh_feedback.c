@@ -10,6 +10,7 @@
 
 #include "../domain/domain.h"
 
+#define DEG_TO_RAD(deg) ((deg) * M_PI / 180.0)
 
 static int bh_ngb_feedback_evaluate(int target, int mode, int threadid);
 
@@ -277,10 +278,10 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
               SphP[j].F            = 1;
               */
 /*use mass weighting*/
-              SphP[j].FMomentum[0] = All.MJet * vx/r*All.VJet * mass_j/ngbmass;
-              SphP[j].FMomentum[1] = All.MJet * vy/r*All.VJet * mass_j/ngbmass;
-              SphP[j].FMomentum[2] = All.MJet * vz/r*All.VJet * mass_j/ngbmass;
-              SphP[j].FMass        = All.MJet * mass_j/ngbmass;
+              SphP[j].FMomentum[0] = Mj * vx/r*Vj * mass_j/ngbmass;
+              SphP[j].FMomentum[1] = Mj * vy/r*Vj * mass_j/ngbmass;
+              SphP[j].FMomentum[2] = Mj * vz/r*Vj * mass_j/ngbmass;
+              SphP[j].FMass        = Mj * mass_j/ngbmass;
               SphP[j].F            = 1;
 #endif
 
@@ -289,8 +290,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
               SphP[j].FMomentum[0] = vx / r; 
               SphP[j].FMomentum[1] = vy / r;
               SphP[j].FMomentum[2] = vz / r;
-              SphP[j].Fkin         = fkin * mass_j/ngbmass;
-              SphP[j].FMass        = mass * mass_j/ngbmass;
+              SphP[j].Fkin         = Fkin * mass_j/ngbmass;
+              SphP[j].FMass        = All.Mj * mass_j/ngbmass;
               SphP[j].F            = 1;
 #endif 
             }
