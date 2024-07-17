@@ -291,7 +291,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
               SphP[j].FMomentum[1] = vy / r;
               SphP[j].FMomentum[2] = vz / r;
               SphP[j].Fkin         = Fkin * mass_j/ngbmass;
-              SphP[j].FMass        = All.Mj * mass_j/ngbmass;
+              SphP[j].FMass        = Mj * mass_j/ngbmass;
               SphP[j].F            = 1;
 #endif 
             }
