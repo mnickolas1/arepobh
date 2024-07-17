@@ -277,10 +277,10 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
               SphP[j].F            = 1;
               */
 /*use mass weighting*/
-              SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
-              SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
-              SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
-              SphP[j].FMass        = mass * mass_j/ngbmass;
+              SphP[j].FMomentum[0] = All.MJet * vx/r*All.VJet * mass_j/ngbmass;
+              SphP[j].FMomentum[1] = All.MJet * vy/r*All.VJet * mass_j/ngbmass;
+              SphP[j].FMomentum[2] = All.MJet * vz/r*All.VJet * mass_j/ngbmass;
+              SphP[j].FMass        = All.MJet * mass_j/ngbmass;
               SphP[j].F            = 1;
 #endif
 
