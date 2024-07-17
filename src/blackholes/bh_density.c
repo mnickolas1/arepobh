@@ -105,7 +105,7 @@ static void out2particle(data_out *out, int i, int mode)
  */
 static void kernel_local(void)
 {
-  int i, idx;
+  int i;
   {
     int j, threadid = get_thread_num();
 
@@ -168,7 +168,7 @@ static void kernel_imported(void)
 void bh_density(void)
 {
   MyFloat *Left, *Right;
-  int idx, i, npleft, iter = 0;
+  int i, npleft, iter = 0;
   long long ntot;
   double bh_des_ngb_mass, t0, t1;
 
