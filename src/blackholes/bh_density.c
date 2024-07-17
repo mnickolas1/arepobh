@@ -10,6 +10,7 @@
 
 #include "../domain/domain.h"
 
+#define DEG_TO_RAD(deg) ((deg) * M_PI / 180.0)
 
 static int bh_density_evaluate(int target, int mode, int threadid);
 static int bh_density_isactive(int n);
@@ -354,16 +355,27 @@ static int bh_density_evaluate(int target, int mode, int threadid)
   weighted_numngb = dhsmlrho = 0;
   mass = 0;
 
+  /*jet axis and opening angle*/    
+
+  /*positive and negative jet axes (no need to be normalized) */
+  double pos_z_axis[3] = {0, 0, 1};
+  double neg_z_axis[3] = {0, 0, -1};      
+  /*jet angle*/
+  double theta = DEG_TO_RAD(10);
+  double vx, vy, vz, pos_z_angle, neg_z_angle;
+
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
   for(n = 0; n < nfound; n++)
     {
       j = Thread[threadid].Ngblist[n];
 
-
       dx = pos[0] - P[j].Pos[0];
       dy = pos[1] - P[j].Pos[1];
       dz = pos[2] - P[j].Pos[2];
+      vx = -dx;
+      vy = -dy;
+      vz = -dz;
 
 /* now find the closest image in the given box size */
 #ifndef REFLECTIVE_X
@@ -390,29 +402,37 @@ static int bh_density_evaluate(int target, int mode, int threadid)
 
       if(r2 < h2)
         {
-          numngb++;
+          pos_z_angle = acos((vx*pos_z_axis[0] + vy*pos_z_axis[1] + vz*pos_z_axis[2]) / 
+                  (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(pos_z_axis[0], 2) + pow(pos_z_axis[1], 2) + pow(pos_z_axis[2], 2))));
+          neg_z_angle = acos((vx*neg_z_axis[0] + vy*neg_z_axis[1] + vz*neg_z_axis[2]) / 
+                  (sqrt(pow(vx, 2) + pow(vy, 2) + pow(vz, 2)) * sqrt(pow(neg_z_axis[0], 2) + pow(neg_z_axis[1], 2) + pow(neg_z_axis[2], 2))));
 
-          r = sqrt(r2);
+          if((pos_z_angle <= theta) || (neg_z_angle <= theta))
+            {        
+              numngb++;
 
-          u = r * hinv;
+              r = sqrt(r2);
 
-          kernel(u, hinv3, hinv4, &wk, &dwk);
+              u = r * hinv;
 
-          mass_j = P[j].Mass;
+              kernel(u, hinv3, hinv4, &wk, &dwk);
+
+              mass_j = P[j].Mass;
 
 /*compute bh density*/
-          rho += FLT(mass_j * wk);
+              rho += FLT(mass_j * wk);
         
-          weighted_numngb += FLT(NORM_COEFF * wk / hinv3); /* 4.0/3 * PI = 4.188790204786 */
+              weighted_numngb += FLT(NORM_COEFF * wk / hinv3); /* 4.0/3 * PI = 4.188790204786 */
 
-          dhsmlrho += FLT(-mass_j * (NUMDIMS * hinv * wk + u * dwk));
+              dhsmlrho += FLT(-mass_j * (NUMDIMS * hinv * wk + u * dwk));
 
 /*compute the min hydro step for neighbors*/     
-          if(bin > P[j].TimeBinHydro)
-            bin = P[j].TimeBinHydro;
+              if(bin > P[j].TimeBinHydro)
+                bin = P[j].TimeBinHydro;
 
 /*compute the bh-ngb-mass*/
-          mass += mass_j;
+              mass += mass_j;
+            }
         }  
     }
     
