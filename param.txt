@@ -38,7 +38,7 @@ BoxSize                                   300
 TimeOfFirstSnapshot                       0.0
 TimeBetStatistics                         0.01
 TimeBegin                                 0.0
-TimeMax                                   0.1
+TimeMax                                   0.05
 TimeBetSnapshot                           5e-3
 
 %% Units
@@ -78,7 +78,7 @@ MultipleDomains                           8
 TopNodeFactor                             2.5
 ActivePartFracForNewDomainDecomp          0.01
 
-ReferenceGasPartMass                     20
+ReferenceGasPartMass                      1
 TargetGasMassFactor                       1
 RefinementCriterion                       1
 DerefinementCriterion                     1
@@ -104,10 +104,10 @@ SofteningTypeOfPartType3                  0
 SofteningTypeOfPartType4                  0
 SofteningTypeOfPartType5                  0
 
-BhDesNgbMass                              200
-BhMaxNgbMassDeviation                     40
+BhDesNgbMass                              10
+BhMaxNgbMassDeviation                     2
 FeedbackTime                              0
 
 JetPower                                  1e46   in erg/s
 JetVelocity                               1.5e4  in km/s
-JetParticleMass                           20     in 10^6 Solar Masses
+JetParticleMass                           1      in 10^6 Solar Masses
