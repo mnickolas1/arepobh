@@ -8,6 +8,7 @@
 #include "../main/allvars.h"
 #include "../main/proto.h"
 #include "time.h"
+#include "unistd.h"
 
 
 #define DEG_TO_RAD(deg) ((deg) * M_PI / 180.0)
