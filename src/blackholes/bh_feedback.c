@@ -210,7 +210,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   double vx, vy, vz, pos_z_angle, neg_z_angle;
   /*jet parameters*/
   double Vj = All.VJet; // code units 
-  double Mj = All.MJet; // code units
+  double Mj = 2 * All.MJet; // code units
   double Fkin = 1. / 2. * Mj * Vj * Vj; 
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
