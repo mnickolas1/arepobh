@@ -207,8 +207,11 @@ void bh_in(void)
 void bh_out(void)
 {
 #ifdef BURST_MODE
-  All.FeedbackFlag = -1;
-  All.FeedbackCount++;
+  if(All.FeedbackFlag > 0)
+    {
+      All.FeedbackFlag = -1;
+      All.FeedbackCount++;
+    }
 #endif
 }
 
