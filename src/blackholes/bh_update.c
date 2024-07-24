@@ -199,8 +199,11 @@ void bh_in(void)
   Vj = All.VJet; /// (All.UnitVelocity_in_cm_per_s);
 
 #ifdef BURST_MODE
-  if((Pj * (All.Time) >= All.FeedbackCount * Mj * Vj*Vj) && (All.FeedbackFlag < 0))  
-    All.FeedbackFlag = 1;
+  if((Pj * (All.Time) >= All.FeedbackCount * Mj * Vj*Vj) && (All.FeedbackFlag < 0))
+    {  
+      All.FeedbackFlag = 1;
+      mpi_printf("\nJETS: Kicking Particles -> FeedbackCount:%d\n\n", All.FeedbackCount);
+    }
 #endif 
 }
 
