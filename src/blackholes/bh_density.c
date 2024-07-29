@@ -14,7 +14,7 @@
 static int bh_density_evaluate(int target, int mode, int threadid);
 static int bh_density_isactive(int n);
 
-static MyFloat *BhNumNgb, *BhDhsmlDensityFactor;
+static MyFloat *BhNumNgb;
 
 /*! \brief Local data structure for collecting particle/cell data that is sent
  *         to other processors if needed. Type called data_in and static
