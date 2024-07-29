@@ -21,11 +21,10 @@ typedef struct
 {
   MyDouble Pos[3];
   MyDouble Vel[3];
-  MyDouble Mass;
-
   MyDouble BhRho;
   MyDouble NgbMass;
   MyFloat Hsml;
+
   int Firstnode;
 } data_in;
 
@@ -48,11 +47,10 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Vel[0]        = PPB(i).Vel[0];
   in->Vel[1]        = PPB(i).Vel[1];
   in->Vel[2]        = PPB(i).Vel[2];
-  in->Mass          = PPB(i).Mass;
-  
   in->BhRho         = BhP[i].Density;
   in->NgbMass       = BhP[i].NgbMass;
   in->Hsml          = BhP[i].Hsml;
+
   in->Firstnode     = firstnode;
 }  
 
@@ -166,12 +164,10 @@ void bh_ngb_feedback(void)
  */
 static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 {
-  int j, n;
-  int numnodes, *firstnode;
-  double h, h2, hinv, hinv3, hinv4;
-  double wk, dwk, dx, dy, dz, r, r2, u;
-  MyDouble *pos, *vel;
-  MyDouble mass_j, mass, bh_rho, ngbmass;
+  int j, n, numnodes, *firstnode;
+  double h, h2, hinv, hinv3, hinv4, wk, dwk;
+  double dx, dy, dz, r, r2, u, z;
+  MyDouble *pos, *vel, mass, bh_rho, ngbmass, mass_j;
 
   data_in local, *target_data;
 
@@ -192,7 +188,6 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
   pos     = target_data->Pos;
   vel     = target_data->Vel;
-  mass    = target_data->Mass;
   bh_rho  = target_data->BhRho;
   ngbmass = target_data->NgbMass;
 
@@ -206,7 +201,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   hinv3 = hinv * hinv / boxSize_Z;
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
-
+   
+  mass =  All.MJet; 
   double v2 = vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2];
   double fkin = 1. / 2. * mass * v2; 
 
@@ -249,54 +245,69 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
           u = r * hinv;
 
-          kernel(u, hinv3, hinv4, &wk, &dwk);
+          z = abs(dz) * hinv;
+
+          kernel(u, z, hinv3, hinv4, &wk, &dwk);
 
           mass_j = P[j].Mass;
           
 /*add virtual particle feedback*/
+
 #ifdef MOMENTUM_JET
 /*use kernel weighting*/
-          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
+          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
           SphP[j].FMass        = mass * mass_j/bh_rho * wk;
           SphP[j].F            = 1;
-          */
+          
 /*use mass weighting*/
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
+          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
+          SphP[j].F            = 1;*/
+#endif
+
+#ifdef THERMAL_JET
+/*use kernel weighting*/
+          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
+          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
+          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
+          SphP[j].Fkin         = fkin * mass_j/bh_rho * wk;
+          SphP[j].FMass        = mass * mass_j/bh_rho * wk;
           SphP[j].F            = 1;
+          
+/*use mass weighting*/
+          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
+          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
+          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
+          SphP[j].Fkin         = fkin * mass_j/ngbmass;
+          SphP[j].FMass        = mass * mass_j/ngbmass;
+          SphP[j].F            = 1;*/
 #endif
 
 #ifdef ENERGY_JET
 /*add momentum at end of step*/
+
+/*use kernel weighting*/
           SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
+          SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
+          SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
+          SphP[j].Fkin         = fkin * mass_j/bh_rho * wk;
+          SphP[j].FMass        = mass * mass_j/bh_rho * wk;
+          SphP[j].F            = 1;
+
+/*use mass weighting*/         
+          /*SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
           SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
           SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
           SphP[j].Fkin         = fkin * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;
+          SphP[j].F            = 1;*/
 #endif 
         }  
     }   
-/*compute bh timestep based on min ngb timestep*/
-/*  if(bin == 0)
-    ngb_min_step = 0;
-  else
-    ngb_min_step   = (((integertime)1) << bin);
-  
-  out.DhsmlDensity            = dhsmlrho;
-  out.Ngb                     = weighted_numngb;
-  out.Mass                    = mass;
-  out.NgbMinStep              = ngb_min_step;*/
 
-  /* now collect the result at the right place */
- /*if(mode == MODE_LOCAL_PARTICLES)
-    out2particle(&out, target, MODE_LOCAL_PARTICLES);
-  else
-    DataResult[target] = out;
-*/
   return 0;
 }

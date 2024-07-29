@@ -88,7 +88,7 @@
 static int int_compare(const void *a, const void *b);
 
 /*sph loop kernel function -> u < 1 */
-void kernel(double u, double hinv3, double hinv4, double *wk, double *dwk)
+void kernel(double u, double z, double hinv3, double hinv4, double *wk, double *dwk)
 {
 #ifdef CUBIC_SPLINE_KERNEL
 #if defined(WENDLAND_C2_KERNEL) || defined(WENDLAND_C4_KERNEL) || defined(WENDLAND_C6_KERNEL)
@@ -187,6 +187,10 @@ void kernel(double u, double hinv3, double hinv4, double *wk, double *dwk)
   *dwk *= NORM * hinv4;
   
   *wk *= NORM * hinv3;
+
+#ifdef Z_KERNEL
+  *wk = z; 
+#endif 
 }
 /*THIS PART ADAPTED FROM GADGET4*/
 
@@ -264,12 +268,32 @@ void virtual_part_feedback(void)
       All.EnergyExchange[1] += SphP[i].Energy - old_energy;
 #endif
 
+#ifdef THERMAL_JET
+      /*update momentum*/
+      SphP[i].Momentum[0] += SphP[i].FMomentum[0];
+      SphP[i].Momentum[1] += SphP[i].FMomentum[1];
+      SphP[i].Momentum[2] += SphP[i].FMomentum[2];
+      /*update velocities*/
+      update_primitive_variables_single(P, SphP, i, &pvd);
+      /*update total energy*/
+      SphP[i].Energy += SphP[i].Fkin;
+      /*update internal energy*/
+      update_internal_energy(P, SphP, i, &pvd);
+      /*update pressure*/
+      set_pressure_of_cell_internal(P, SphP, i);
+      
+      All.EnergyExchange[0] += sqrt(SphP[i].FMomentum[0]*SphP[i].FMomentum[0] + 
+        SphP[i].FMomentum[1]*SphP[i].FMomentum[1] + 
+          SphP[i].FMomentum[2]*SphP[i].FMomentum[2]);
+      All.EnergyExchange[1] += SphP[i].Fkin;
+#endif
+
 #ifdef ENERGY_JET
 /*calculate momentum feed exactly so energy is conserved*/
 /*-> we need to do this here so that particle properties don't change between loading the buffer and emptying it*/
 
-      double u   = pow(10, 7) * BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6 / 
-        (All.UnitEnergy_in_cgs/All.UnitMass_in_g);
+      //double u   = pow(10, 7) * BOLTZMANN / GAMMA_MINUS1 / PROTONMASS / 0.6 / 
+      //  (All.UnitEnergy_in_cgs/All.UnitMass_in_g);
       /*update total energy*/
       SphP[i].Energy += /*SphP[i].FMass*u +*/ SphP[i].Fkin;
 

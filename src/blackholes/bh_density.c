@@ -24,6 +24,7 @@ typedef struct
 {
   MyDouble Pos[3];
   MyFloat Hsml;
+
   int Firstnode;
 } data_in;
 
@@ -44,6 +45,7 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Pos[1]        = PPB(i).Pos[1];
   in->Pos[2]        = PPB(i).Pos[2];
   in->Hsml          = BhP[i].Hsml;
+
   in->Firstnode     = firstnode;
 }  
 
@@ -53,11 +55,9 @@ static void particle2in(data_in *in, int i, int firstnode)
  */
 typedef struct
 {
-  MyDouble DhsmlDensity;
   MyDouble Ngb;
   MyDouble Rho;
   MyDouble Mass;
-  integertime NgbMinStep;
 } data_out;
 
 static data_out *DataResult, *DataOut;
@@ -77,20 +77,15 @@ static void out2particle(data_out *out, int i, int mode)
 {
   if(mode == MODE_LOCAL_PARTICLES) /* initial store */
     {
-      BhDhsmlDensityFactor[i]          = out->DhsmlDensity;
       BhNumNgb[i]                      = out->Ngb;
       BhP[i].Density                   = out->Rho;
       BhP[i].NgbMass                   = out->Mass;
-      BhP[i].NgbMinStep                = out->NgbMinStep;
     }
   else /* combine */
     {
-      BhDhsmlDensityFactor[i]          += out->DhsmlDensity;
       BhNumNgb[i]                      += out->Ngb;
       BhP[i].Density                   += out->Rho;
       BhP[i].NgbMass                   += out->Mass;
-      if(out->NgbMinStep < BhP[i].NgbMinStep)
-        BhP[i].NgbMinStep               = out->NgbMinStep;
     }
 }
 
@@ -184,7 +179,6 @@ void bh_density(void)
   CPU_Step[CPU_MISC] += measure_time();
 
   BhNumNgb             = (MyFloat *)mymalloc("BhNumNgb", NumBh * sizeof(MyFloat));
-  BhDhsmlDensityFactor = (MyFloat *)mymalloc("BhDhsmlDensityFactor", NumBh * sizeof(MyFloat));
   Left               = (MyFloat *)mymalloc("Left", NumBh * sizeof(MyFloat));
   Right              = (MyFloat *)mymalloc("Right", NumBh * sizeof(MyFloat));
 
@@ -217,19 +211,7 @@ void bh_density(void)
       //for(i=0, npleft=0; i<NumBh; i++)
         {
           i = ActiveVirtualPart.ActiveParticleList[idx];
-          if(bh_density_isactive(i))
-            {
-              if(BhP[i].Density > 0)
-                {
-                  BhDhsmlDensityFactor[i] *= BhP[i].Hsml / (NUMDIMS * BhP[i].Density);
-                  if(BhDhsmlDensityFactor[i] > -0.9) /* note: this would be -1 if only a single particle at zero lag is found */
-                      BhDhsmlDensityFactor[i] = 1 / (1 + BhDhsmlDensityFactor[i]);
-                  else
-                      BhDhsmlDensityFactor[i] = 1;
-                }
-            } 
         
-
           if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation) || BhP[i].NgbMass > (bh_des_ngb_mass + All.BhMaxNgbMassDeviation))
           {
                   /* need to redo this particle */
@@ -302,7 +284,6 @@ void bh_density(void)
 
   myfree(Right);
   myfree(Left);
-  myfree(BhDhsmlDensityFactor);
   myfree(BhNumNgb);
 
   /* mark as active again */
@@ -328,17 +309,10 @@ for(i = 0; i < NumBh; i++)
  */
 static int bh_density_evaluate(int target, int mode, int threadid)
 {
-  int j, n;
-  int numngb, numnodes, *firstnode;
-  double h, h2, hinv, hinv3, hinv4;
-  double wk, dwk;
-  double dx, dy, dz, r, r2, u, mass_j, rho;
-  MyFloat weighted_numngb;
-  MyFloat dhsmlrho;
-  MyDouble *pos;
-  MyDouble mass;
-  integertime ngb_min_step;
-  int bin = TIMEBINS;
+  int j, n, numngb, numnodes, *firstnode;
+  double h, h2, hinv, hinv3, hinv4, wk, dwk;
+  double dx, dy, dz, r, r2, u, z, mass_j, rho;
+  MyDouble *pos, mass;
 
   data_in local, *target_data;
   data_out out;
@@ -370,16 +344,13 @@ static int bh_density_evaluate(int target, int mode, int threadid)
 #endif /* #ifndef  TWODIMS #else */
   hinv4 = hinv3 * hinv;
 
-  numngb = rho = 0;
-  weighted_numngb = dhsmlrho = 0;
-  mass = 0;
+  numngb = rho = mass = 0;
 
   int nfound = ngb_treefind_variable_threads(pos, h, target, mode, threadid, numnodes, firstnode);
 
   for(n = 0; n < nfound; n++)
     {
       j = Thread[threadid].Ngblist[n];
-
 
       dx = pos[0] - P[j].Pos[0];
       dy = pos[1] - P[j].Pos[1];
@@ -416,37 +387,23 @@ static int bh_density_evaluate(int target, int mode, int threadid)
 
           u = r * hinv;
 
-          kernel(u, hinv3, hinv4, &wk, &dwk);
+          z = abs(dz) * hinv;
+
+          kernel(u, z, hinv3, hinv4, &wk, &dwk);
 
           mass_j = P[j].Mass;
 
 /*compute bh density*/
-          rho += FLT(mass_j * wk);
-        
-          weighted_numngb += FLT(NORM_COEFF * wk / hinv3); /* 4.0/3 * PI = 4.188790204786 */
-
-          dhsmlrho += FLT(-mass_j * (NUMDIMS * hinv * wk + u * dwk));
-
-/*compute the min hydro step for neighbors*/     
-          if(bin > P[j].TimeBinHydro)
-            bin = P[j].TimeBinHydro;
+          rho += mass_j * wk;
 
 /*compute the bh-ngb-mass*/
           mass += mass_j;
         }  
     }
-    
-/*compute bh timestep based on min ngb timestep*/
-  if(bin == 0)
-    ngb_min_step = 0;
-  else
-    ngb_min_step   = (((integertime)1) << bin);
   
-  out.DhsmlDensity            = dhsmlrho;
-  out.Ngb                     = weighted_numngb;
+  out.Ngb                     = numngb;
   out.Rho                     = rho;
   out.Mass                    = mass;
-  out.NgbMinStep              = ngb_min_step;
 
   /* now collect the result at the right place */
   if(mode == MODE_LOCAL_PARTICLES)
