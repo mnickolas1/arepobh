@@ -4,9 +4,10 @@
 #  Enable/Disable compile-time options as needed #
 ##################################################
 BLACKHOLES
-WENDLAND_C2_KERNEL
+Z_KERNEL
 BURST_MODE
 #MOMENTUM_JET
+#THERMAL_JET
 ENERGY_JET
 #--------------------------------------- Basic operation mode of code; default: 3d with 6 particle types; type 0: gas >0: only gravitationally interacting
 #NTYPES=6                      # number of particle types
