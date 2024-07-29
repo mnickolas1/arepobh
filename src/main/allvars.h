@@ -1453,9 +1453,9 @@ extern struct sph_particle_data
 /*feedback flags*/
 #ifdef BLACKHOLES
   int F;
-  MyDouble FMomentum[3];
-  MyDouble Fkin;
   MyDouble FMass;
+  MyDouble Fkin;
+  MyDouble FMomentum[3];  
 #endif
 
 } * SphP,          /*!< holds SPH particle data on local processor */
@@ -1468,7 +1468,6 @@ extern struct bh_particle_data
   int DestroyFlag;
   int DensityFlag;
   MyDouble Hsml;
-  integertime NgbMinStep;
   MyDouble NgbMass;
   MyDouble Density;
 }  *BhP,          
