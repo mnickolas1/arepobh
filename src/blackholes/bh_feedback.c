@@ -255,56 +255,56 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
 
 #ifdef MOMENTUM_JET
 /*use kernel weighting*/
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
+          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
           SphP[j].FMass        = mass * mass_j/bh_rho * wk;
-          SphP[j].F            = 1;
+          SphP[j].F            = 1;*/
           
 /*use mass weighting*/
-          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
+          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;*/
+          SphP[j].F            = 1;
 #endif
 
 #ifdef THERMAL_JET
 /*use kernel weighting*/
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
+          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/bh_rho * wk;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/bh_rho * wk;
           SphP[j].Fkin         = fkin * mass_j/bh_rho * wk;
           SphP[j].FMass        = mass * mass_j/bh_rho * wk;
-          SphP[j].F            = 1;
+          SphP[j].F            = 1;*/
           
 /*use mass weighting*/
-          /*SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
+          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
           SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
           SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
           SphP[j].Fkin         = fkin * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;*/
+          SphP[j].F            = 1;
 #endif
 
 #ifdef ENERGY_JET
 /*add momentum at end of step*/
 
 /*use kernel weighting*/
-          SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
+          /*SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
           SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
           SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
           SphP[j].Fkin         = fkin * mass_j/bh_rho * wk;
           SphP[j].FMass        = mass * mass_j/bh_rho * wk;
-          SphP[j].F            = 1;
+          SphP[j].F            = 1;*/
 
 /*use mass weighting*/         
-          /*SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
+          SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
           SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
           SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
           SphP[j].Fkin         = fkin * mass_j/ngbmass;
           SphP[j].FMass        = mass * mass_j/ngbmass;
-          SphP[j].F            = 1;*/
+          SphP[j].F            = 1;
 #endif 
         }  
     }   
