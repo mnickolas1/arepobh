@@ -91,8 +91,8 @@ GRAVITY_NOT_PERIODIC          # gravity is not treated periodically
 #NSOFTTYPES_HYDRO=64           # Overrides number of discrete softening values for gas cellls when ADAPTIVE_HYDRO_SOFTENING (default is 64)
 
 #--------------------------------------- External gravity; default: no external potential
-EXTERNALGRAVITY               # master switch for external potential
-EXTERNAL                      # external gravitational field
+#EXTERNALGRAVITY               # master switch for external potential
+#EXTERNAL                      # external gravitational field
 
 #--------------------------------------- Static NFW Potential
 #STATICNFW                     # static gravitational Navarro-Frenk-White (NFW) potential
