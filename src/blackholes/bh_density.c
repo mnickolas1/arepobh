@@ -387,7 +387,7 @@ static int bh_density_evaluate(int target, int mode, int threadid)
 
           u = r * hinv;
 
-          z = abs(dz) * hinv;
+          z = fabs(dz) * hinv;
 
           kernel(u, z, hinv3, hinv4, &wk, &dwk);
 
