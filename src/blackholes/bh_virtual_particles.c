@@ -42,12 +42,11 @@ void create_particles(void)
   
   if(All.FeedbackFlag > 0)
     {
-
       int i;
       int particles_spawned = 0;
       int tot_particles_spawned = 2;
-      if(ThisTask < tot_particles_spawned)
-        particles_spawned = 1;
+      if(ThisTask == 0)
+        particles_spawned = 2;
       mpi_printf("\nJETS: Kicking Particles -> FeedbackCount:%d\n\n", All.FeedbackCount);      
       
       int *list;
