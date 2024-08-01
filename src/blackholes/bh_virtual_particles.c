@@ -96,13 +96,13 @@ void create_particles(void)
           P[NumPart + i].Pos[1] = 150;
           P[NumPart + i].Pos[2] = 300;
           //assign vel 
-          if(ThisTask == 0)
+          if(i%2 == 0)
             {
               P[NumPart + i].Vel[0] = x*Vj;
               P[NumPart + i].Vel[1] = y*Vj;
               P[NumPart + i].Vel[2] = z*Vj;
             }
-          else
+          if(i%2 == 1)
             {
               P[NumPart + i].Vel[0] = -x*Vj;
               P[NumPart + i].Vel[1] = -y*Vj;
