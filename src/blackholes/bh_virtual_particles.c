@@ -43,6 +43,8 @@ void create_particles(void)
   if(All.FeedbackFlag > 0)
     {
       int i;
+      double theta, phi, x, y, z;
+      
       int particles_spawned = 0;
       int tot_particles_spawned = 2;
       if(ThisTask == 0)
@@ -65,18 +67,11 @@ void create_particles(void)
 
       myfree(list);
 
-      for(i = 0; i < particles_spawned; i++)
+      if(particles_spawned > 0)
         {
-/* Assign new unique IDs to the spawned particles */
-          P[NumPart + i].ID = newid;
-
-          newid++;
-
-/* Assign properties to the spawned particles */ 
           unsigned long seed = mix(clock(), time(NULL), getpid());
+      
           srand(seed);
-
-          double phi, theta;
 
           // Generate random angles for phi (azimuthal angle) and theta (polar angle)
           phi = DEG_TO_RAD(rand() % 360);
@@ -85,9 +80,19 @@ void create_particles(void)
           else
             theta = DEG_TO_RAD(rand() % 21 + 170);
           // Calculate x, y, and z components
-          double x = cos(phi) * sin(theta);
-          double y = sin(phi) * sin(theta);
-          double z = cos(theta);
+          x = cos(phi) * sin(theta);
+          y = sin(phi) * sin(theta);
+          z = cos(theta);
+        }
+
+      for(i = 0; i < particles_spawned; i++)
+        {
+/* Assign properties to the spawned particles */
+
+/* Assign new unique IDs to the spawned particles */
+          P[NumPart + i].ID = newid;
+
+          newid++;
 
           //assign mass
           P[NumPart + i].Mass = Mj;
