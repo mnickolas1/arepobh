@@ -53,7 +53,7 @@ ErrTolTheta                               0.1
 ErrTolForceAcc                            0.1
 
 %% timestepping
-MaxSizeTimestep                           1e-5
+MaxSizeTimestep                           1e-2
 MinSizeTimestep                           1e-10
 TypeOfTimestepCriterion                   0
 
