@@ -442,7 +442,7 @@ integertime get_timestep_hydro(int p)
 #endif /* #ifdef PMGRID */
 
 #ifdef BLACKHOLES
-  double dtjet;
+  double dtjet = All.MaxSizeTimestep;
   
   double dx = P[p].Pos[0] - 150;
   double dy = P[p].Pos[1] - 150;
