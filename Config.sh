@@ -116,7 +116,7 @@ GRAVITY_NOT_PERIODIC          # gravity is not treated periodically
 
 #--------------------------------------- Time integration options
 #FORCE_EQUAL_TIMESTEPS         # variable but global timestep
-#TREE_BASED_TIMESTEPS          # non-local timestep criterion (take 'signal speed' into account)
+TREE_BASED_TIMESTEPS          # non-local timestep criterion (take 'signal speed' into account)
 #PM_TIMESTEP_BASED_ON_TYPES=2+4  # particle types that should be considered in setting the PM timestep
 #NO_PMFORCE_IN_SHORT_RANGE_TIMESTEP  # PM force is not included in short-range timestep criterion
 #ENLARGE_DYNAMIC_RANGE_IN_TIME # This extends the dynamic range of the integer timeline from 32 to 64 bit
