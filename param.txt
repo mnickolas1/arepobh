@@ -78,7 +78,7 @@ MultipleDomains                           8
 TopNodeFactor                             2.5
 ActivePartFracForNewDomainDecomp          0.01
 
-ReferenceGasPartMass                      2
+ReferenceGasPartMass                      1
 TargetGasMassFactor                       1
 RefinementCriterion                       1
 DerefinementCriterion                     1
@@ -110,4 +110,4 @@ FeedbackTime                              0
 
 JetPower                                  1e46   in erg/s
 JetVelocity                               1.5e4  in km/s
-JetParticleMass                           2      in 10^6 Solar Masses
+JetParticleMass                           1      in 10^6 Solar Masses
