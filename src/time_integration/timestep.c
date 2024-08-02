@@ -441,6 +441,24 @@ integertime get_timestep_hydro(int p)
     dt = All.DtDisplacement;
 #endif /* #ifdef PMGRID */
 
+#ifdef BLACKHOLES
+  double dtjet;
+  
+  double dx = P[p].Pos[0] - 150;
+  double dy = P[p].Pos[1] - 150;
+  double dz = P[p].Pos[2] - 300;
+
+  double r = sqrt(dx*dx + dy*dy + dz*dz);
+
+  if(r < 40)
+    dtjet = 1e-5;
+  else if(r < 50)
+    dtjet = 1e-4
+
+  if(dt > dtjet) 
+    dt = dtjet;
+#endif
+
   ti_step = (integertime)(dt / All.Timebase_interval);
 
   validate_timestep(dt, ti_step, p);
