@@ -197,16 +197,16 @@ void bh_density(void)
                   /* need to redo this particle */
             npleft++;
 
-            if(Left[i] > 0 && Right[i] > 0)
-              {
-                if((Right[i] - Left[i]) < 1.0e-3 * Left[i])
-                  {
+            //if(Left[i] > 0 && Right[i] > 0)
+            //  {
+            //    if((Right[i] - Left[i]) < 1.0e-3 * Left[i])
+            //      {
                         /* this one should be ok */
-                    npleft--;
-                    BhP[i].DensityFlag = -1; /* Mark as inactive */
-                    continue;
-                }
-              } 
+            //        npleft--;
+            //        BhP[i].DensityFlag = -1; /* Mark as inactive */
+            //        continue;
+            //    }
+            //  } 
 
             if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation))
               Left[i] = dmax(BhP[i].Hsml, Left[i]);
@@ -252,10 +252,9 @@ void bh_density(void)
           iter++;
 
           if(iter > 0)
-            mpi_printf("BH_DENSITY: ngb iteration %3d: need to repeat for %12lld particles. (took %g sec)\n", iter, ntot,
-                       timediff(t0, t1));
+            mpi_printf("BH_DENSITY: ngb iteration %d: %d.-> Hsml: %f, NumNgb: %d, Nmass: %f\n", iter, i, BhNumNgb[i], BhP[i].NgbMass);
 
-          if(iter > MAXITER)
+          if(iter > 48)
             terminate("failed to converge in neighbour iteration in bh_density()\n");
         }
     }

@@ -265,10 +265,10 @@ void bh_feedback(void)
       /*update pressure*/
       set_pressure_of_cell_internal(P, SphP, i);
       
-      All.EnergyExchange[0] += sqrt(SphP[i].FMomentum[0]*SphP[i].FMomentum[0] + 
+      All.EnergyExchange[0] += SphP[i].Fmass;
+      All.EnergyExchange[1] += sqrt(SphP[i].FMomentum[0]*SphP[i].FMomentum[0] + 
         SphP[i].FMomentum[1]*SphP[i].FMomentum[1] + 
           SphP[i].FMomentum[2]*SphP[i].FMomentum[2]);
-      All.EnergyExchange[1] += SphP[i].Energy - old_energy;
 #endif
 
 #ifdef THERMAL_JET
@@ -285,10 +285,8 @@ void bh_feedback(void)
       /*update pressure*/
       set_pressure_of_cell_internal(P, SphP, i);
       
-      All.EnergyExchange[0] += sqrt(SphP[i].FMomentum[0]*SphP[i].FMomentum[0] + 
-        SphP[i].FMomentum[1]*SphP[i].FMomentum[1] + 
-          SphP[i].FMomentum[2]*SphP[i].FMomentum[2]);
-      All.EnergyExchange[1] += Fkin;
+      All.EnergyExchange[0] += SphP[i].Fmass;
+      All.EnergyExchange[1] += SphP[i].Fkin;
 #endif
 
 #ifdef ENERGY_JET
@@ -322,7 +320,7 @@ void bh_feedback(void)
       bh_momentum_kick[1] = kick_vector[1] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2));
       bh_momentum_kick[2] = kick_vector[2] * pj / sqrt(pow(kick_vector[0], 2) + pow(kick_vector[1], 2) + pow(kick_vector[2], 2)); 
       
-      All.EnergyExchange[0] += pj;
+      All.EnergyExchange[0] += SphP[i].FMass;
       All.EnergyExchange[1] += SphP[i].Fkin;
       /*update momentum*/
       SphP[i].Momentum[0] += bh_momentum_kick[0];
@@ -348,6 +346,6 @@ void bh_feedback(void)
 
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
-  mpi_printf("JETS: Momentum given by jets = %e, Energy given by jets = %e \n", 
+  mpi_printf("JETS: Mass given by jets = %e, Energy given by jets = %e \n", 
   All.EnergyExchangeTot[0], All.EnergyExchangeTot[1]);
 }
