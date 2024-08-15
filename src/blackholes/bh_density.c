@@ -178,7 +178,7 @@ void bh_density(void)
 
   CPU_Step[CPU_MISC] += measure_time();
 
-  BhNumNgb             = (MyFloat *)mymalloc("BhNumNgb", NumBh * sizeof(MyFloat));
+  BhNumNgb           = (MyFloat *)mymalloc("BhNumNgb", NumBh * sizeof(MyFloat));
   Left               = (MyFloat *)mymalloc("Left", NumBh * sizeof(MyFloat));
   Right              = (MyFloat *)mymalloc("Right", NumBh * sizeof(MyFloat));
 
@@ -272,7 +272,7 @@ void bh_density(void)
           iter++;
 
           if(iter > 0)
-            mpi_printf("BH_DENSITY: ngb iteration %d: %d.-> Hsml: %f, NumNgb: %d, Nmass: %f\n", iter, i, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
+            mpi_printf("BH_DENSITY: ngb iteration %d: %d.-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, i, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
 
           if(iter > 48)
             terminate("failed to converge in neighbour iteration in bh_density()\n");
