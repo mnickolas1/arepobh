@@ -228,6 +228,9 @@ void bh_feedback(void)
   double pj, p0, cos_theta;
   double kick_vector[3], bh_momentum_kick[3];
 
+  double Vj = All.VJet;
+  double Pj = All.PJet / (All.UnitEnergy_in_cgs / All.UnitTime_in_s);
+
   struct pv_update_data pvd;
   if(All.ComovingIntegrationOn)
     {
@@ -347,5 +350,5 @@ void bh_feedback(void)
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
   mpi_printf("JETS: Mass given by jets = %e, Energy given by jets = %e \n", 
-  All.EnergyExchangeTot[0], All.EnergyExchangeTot[1]);
+  All.EnergyExchangeTot[0] / (Pj * All.Time / Vj / Vj), All.EnergyExchangeTot[1] / (Pj * All.Time));
 }
