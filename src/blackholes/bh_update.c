@@ -350,5 +350,5 @@ void bh_feedback(void)
   MPI_Allreduce(&All.EnergyExchange, &All.EnergyExchangeTot, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD); // synchronize all tasks
   mpi_printf("JETS: Mass given by jets = %e, Energy given by jets = %e \n", 
-  All.EnergyExchangeTot[0] / (Pj * All.Time / Vj / Vj / 2.), All.EnergyExchangeTot[1] / (Pj * All.Time));
+  All.EnergyExchangeTot[0] / (Pj * All.Time / Vj / Vj) / 2., All.EnergyExchangeTot[1] / (Pj * All.Time));
 }
