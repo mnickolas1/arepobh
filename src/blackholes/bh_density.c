@@ -251,8 +251,8 @@ void bh_density(void)
         {
           iter++;
 
-          if(iter > 0)
-            mpi_printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
+          if(iter > 0 && NumBh > 0)
+            printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
 
           if(iter > 48)
             terminate("failed to converge in neighbour iteration in bh_density()\n");
