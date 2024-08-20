@@ -125,7 +125,7 @@ void create_particles(void)
           P[NumPart + i].BhID = NumBh + i;
           BhP[NumBh + i].PID  = NumPart + i;
           //assing density loop properties
-          BhP[NumBh + i].Hsml = 5;
+          BhP[NumBh + i].Hsml = 10;
           BhP[NumBh + i].DestroyFlag = -1;
           BhP[NumBh + i].DensityFlag = 1;
         }
