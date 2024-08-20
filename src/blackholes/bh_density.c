@@ -267,23 +267,20 @@ void bh_density(void)
 
       t1 = second();
 
-      if(ntot > 0)
-        {
-          iter++;
+      iter++;
           
-          if(iter > 0) 
-            { 
-              for(idx=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
-                {
-                  i = ActiveVirtualPart.ActiveParticleList[idx];
+      if(iter > 0) 
+        { 
+          for(idx=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
+            {
+              i = ActiveVirtualPart.ActiveParticleList[idx];
 
-                  printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
-                }
+              printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
             }
-
-          if(iter > 48)
-            terminate("failed to converge in neighbour iteration in bh_density()\n");
         }
+
+      if(iter > 48)
+        terminate("failed to converge in neighbour iteration in bh_density()\n");
     }
   while(ntot > 0);
 
@@ -293,7 +290,7 @@ void bh_density(void)
   myfree(BhNumNgb);
 
   /* mark as active again */
-for(i = 0; i < NumBh; i++)
+  for(i = 0; i < NumBh; i++)
     {
      BhP[i].DensityFlag = 1;
     }
