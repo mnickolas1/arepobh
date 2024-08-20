@@ -247,18 +247,16 @@ void bh_density(void)
 
       t1 = second();
 
-      if(ntot > 0)
-        {
-          iter++;
+      iter++;
           
-          if(iter > 0) 
-            { 
-              for(i=0; i<NumBh; i++)
-                printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
-            }
-          if(iter > 48)
-            terminate("failed to converge in neighbour iteration in bh_density()\n");
+      if(iter > 0) 
+        { 
+          for(i=0; i<NumBh; i++)
+            printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
         }
+      
+      if(iter > 48)
+        terminate("failed to converge in neighbour iteration in bh_density()\n");
     }
   while(ntot > 0);
 
