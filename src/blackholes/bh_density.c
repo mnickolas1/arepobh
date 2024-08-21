@@ -192,6 +192,8 @@ void bh_density(void)
 
       for(i=0, npleft=0; i<NumBh; i++)
         {
+          printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
+
           if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation) || BhP[i].NgbMass > (bh_des_ngb_mass + All.BhMaxNgbMassDeviation))
           {
                   /* need to redo this particle */
@@ -248,13 +250,7 @@ void bh_density(void)
       t1 = second();
 
       iter++;
-          
-      if(iter > 0) 
-        { 
-          for(i=0; i<NumBh; i++)
-            printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
-        }
-      
+        
       if(iter > 48)
         terminate("failed to converge in neighbour iteration in bh_density()\n");
     }
