@@ -278,6 +278,10 @@ limit timestep before first energy injection
 
           drift_all_particles();
 
+#ifdef BLACKHOLES
+          create_particles();
+#endif
+
           domain_Decomposition(); /* do new domain decomposition, will also make a new chained-list of synchronized particles */
 
           ngb_treeallocate();
@@ -394,7 +398,6 @@ void calculate_non_standard_physics_prior_mesh_construction(void)
   sfr_create_star_particles();
 #endif /* #if defined(COOLING) && defined(USE_SFR) */
 #ifdef BLACKHOLES
-  create_particles();
   destroy_particles();
   active_virtual_part_set(&ActiveVirtualPart);
   bh_density();
