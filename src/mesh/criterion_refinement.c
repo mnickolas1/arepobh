@@ -162,7 +162,7 @@ static int refine_criterion_default(int i)
   if(SphP[i].AllowRefinement != 0)
 #endif /* #ifdef REFINEMENT_HIGH_RES_GAS */
 
-    if(can_ths_cell_be_split(i) && P[i].Mass > 2.0 * All.TargetGasMass)
+    if(can_this_cell_be_split(i) && P[i].Mass > 2.0 * All.TargetGasMass)
       return 1;
 
   return 0; /* default is not to refine */
