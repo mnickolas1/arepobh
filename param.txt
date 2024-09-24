@@ -38,7 +38,7 @@ BoxSize                                   300
 TimeOfFirstSnapshot                       0.0
 TimeBetStatistics                         0.01
 TimeBegin                                 0.0
-TimeMax                                   0.05
+TimeMax                                   0.065
 TimeBetSnapshot                           5e-3
 
 %% Units
@@ -104,10 +104,10 @@ SofteningTypeOfPartType3                  0
 SofteningTypeOfPartType4                  0
 SofteningTypeOfPartType5                  0
 
-BhDesNgbMass                              10
-BhMaxNgbMassDeviation                     2
+BhDesNgbMass                              20
+BhMaxNgbMassDeviation                     10
 FeedbackTime                              0
 
-JetPower                                  1e46   in erg/s
+JetPower                                  3e45   in erg/s
 JetVelocity                               1.5e4  in km/s
 JetParticleMass                           1      in 10^6 Solar Masses

@@ -450,10 +450,10 @@ integertime get_timestep_hydro(int p)
 
   double r = sqrt(dx*dx + dy*dy + dz*dz);
 
-  if(r < 40)
+  if(r < 20)
+    dtjet = 1e-6;
+  else if(r < 40)
     dtjet = 1e-5;
-  else if(r < 50)
-    dtjet = 1e-4;
 
   if(dt > dtjet) 
     dt = dtjet;

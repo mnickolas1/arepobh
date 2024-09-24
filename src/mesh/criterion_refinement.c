@@ -162,21 +162,7 @@ static int refine_criterion_default(int i)
   if(SphP[i].AllowRefinement != 0)
 #endif /* #ifdef REFINEMENT_HIGH_RES_GAS */
 
-#ifdef BLACKHOLES
-    double dx = P[i].Pos[0] - 150;
-    double dy = P[i].Pos[1] - 150;
-    double dz = P[i].Pos[2] - 300;
-
-    double r = sqrt(dx*dx + dy*dy + dz*dz);
-
-    if(r < 20)
-      {
-        if(can_this_cell_be_split(i) && P[i].Mass > 2.0 * All.TargetGasMass / 10.)
-          return 1;
-      }
-#endif
-
-    if(can_this_cell_be_split(i) && P[i].Mass > 2.0 * All.TargetGasMass)
+    if(can_ths_cell_be_split(i) && P[i].Mass > 2.0 * All.TargetGasMass)
       return 1;
 
   return 0; /* default is not to refine */
