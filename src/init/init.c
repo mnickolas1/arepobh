@@ -39,6 +39,7 @@
 #include <mpi.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "../main/allvars.h"
 #include "../main/proto.h"
@@ -564,6 +565,9 @@ int init(void)
 
 /*initialize feedback flags*/
 #ifdef BLACKHOLES
+
+  srand((unsigned int)time(NULL));
+
   for(i=0; i<NumGas; i++)
     SphP[i].F = -1;
   All.FeedbackCount = 1;
