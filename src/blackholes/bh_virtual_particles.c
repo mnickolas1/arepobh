@@ -26,6 +26,7 @@ void create_particles(void)
   if(All.FeedbackFlag > 0)
     {
       int i;
+      double x,y,z;
 
       int particles_spawned = 0;
       int tot_particles_spawned = 2;
@@ -58,9 +59,9 @@ void create_particles(void)
           double theta = acos(cos_theta); 
 
           // Convert spherical coordinates to Cartesian coordinates
-          double x = sin(theta) * cos(phi); 
-          double y = sin(theta) * sin(phi);  
-          double z = cos(theta);              
+          x = sin(theta) * cos(phi); 
+          y = sin(theta) * sin(phi);  
+          z = cos(theta);              
         }
 
       for(i = 0; i < particles_spawned; i++)
