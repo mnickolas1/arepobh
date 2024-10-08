@@ -4,28 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <unistd.h>
 
 #include "../main/allvars.h"
 #include "../main/proto.h"
 
 #define DEG_TO_RAD(deg) ((deg) * M_PI / 180.0)
-
-// Robert Jenkins' 96 bit Mix Function
-unsigned long mix(unsigned long a, unsigned long b, unsigned long c)
-{
-    a=a-b;  a=a-c;  a=a^(c >> 13);
-    b=b-c;  b=b-a;  b=b^(a << 8);
-    c=c-a;  c=c-b;  c=c^(b >> 13);
-    a=a-b;  a=a-c;  a=a^(c >> 12);
-    b=b-c;  b=b-a;  b=b^(a << 16);
-    c=c-a;  c=c-b;  c=c^(b >> 5);
-    a=a-b;  a=a-c;  a=a^(c >> 3);
-    b=b-c;  b=b-a;  b=b^(a << 10);
-    c=c-a;  c=c-b;  c=c^(b >> 15);
-    return c;
-}
 
 void create_particles(void)
 {
@@ -43,8 +26,7 @@ void create_particles(void)
   if(All.FeedbackFlag > 0)
     {
       int i;
-      double theta, phi, x, y, z;
-      
+
       int particles_spawned = 0;
       int tot_particles_spawned = 2;
       if(ThisTask == 0)
@@ -69,20 +51,16 @@ void create_particles(void)
 
       if(particles_spawned > 0)
         {
-          unsigned long seed = mix(clock(), time(NULL), getpid());
-      
-          srand(seed);
+          double phi = ((double)rand() / RAND_MAX) * 2 * M_PI;
 
-          // Generate random angles for phi (azimuthal angle) and theta (polar angle)
-          phi = DEG_TO_RAD(rand() % 360);
-          if(rand() % 2 == 0)
-            theta = DEG_TO_RAD(rand() % 21 - 10);
-          else
-            theta = DEG_TO_RAD(rand() % 21 + 170);
-          // Calculate x, y, and z components
-          x = cos(phi) * sin(theta);
-          y = sin(phi) * sin(theta);
-          z = cos(theta);
+          // Generate a random value for cosine(theta) to ensure uniform distribution in the cone
+          double cos_theta = ((double)rand() / RAND_MAX) * (cos(DEG_TO_RAD(10)) - 1) + 1;
+          double theta = acos(cos_theta); 
+
+          // Convert spherical coordinates to Cartesian coordinates
+          double x = sin(theta) * cos(phi); 
+          double y = sin(theta) * sin(phi);  
+          double z = cos(theta);              
         }
 
       for(i = 0; i < particles_spawned; i++)
