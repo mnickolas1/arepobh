@@ -48,9 +48,9 @@ UnitMass_in_g                             1.989e39  10^6solar
 GravityConstantInternal                   0.0
 
 %% settings for gravity
-ErrTolIntAccuracy                         0.1
-ErrTolTheta                               0.1
-ErrTolForceAcc                            0.1
+ErrTolIntAccuracy                         0.012
+ErrTolTheta                               0.7
+ErrTolForceAcc                            0.0025
 
 %% timestepping
 MaxSizeTimestep                           1e-2
@@ -84,7 +84,9 @@ RefinementCriterion                       1
 DerefinementCriterion                     1
 
 %% gravitational softening
-GasSoftFactor                             0.01
+%MinimumComovingHydroSoftening             1.0
+%AdaptiveHydroSofteningSpacing             1.2
+GasSoftFactor                             2.5
 SofteningComovingType0                    0.01
 SofteningComovingType1                    0.1
 SofteningComovingType2                    0.1
@@ -98,11 +100,11 @@ SofteningMaxPhysType3                     0.1
 SofteningMaxPhysType4                     0.1
 SofteningMaxPhysType5                     0.1
 SofteningTypeOfPartType0                  0
-SofteningTypeOfPartType1                  0
-SofteningTypeOfPartType2                  0
-SofteningTypeOfPartType3                  0
-SofteningTypeOfPartType4                  0
-SofteningTypeOfPartType5                  0
+SofteningTypeOfPartType1                  1
+SofteningTypeOfPartType2                  1
+SofteningTypeOfPartType3                  1
+SofteningTypeOfPartType4                  1
+SofteningTypeOfPartType5                  1
 
 BhDesNgbMass                              20
 BhMaxNgbMassDeviation                     10
