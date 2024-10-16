@@ -76,7 +76,7 @@ MinimumDensityOnStartUp                   0.0
 %% domain decomposition
 MultipleDomains                           8
 TopNodeFactor                             2.5
-ActivePartFracForNewDomainDecomp          0.01
+ActivePartFracForNewDomainDecomp          0.00
 
 ReferenceGasPartMass                      1
 TargetGasMassFactor                       1
