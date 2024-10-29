@@ -444,9 +444,9 @@ integertime get_timestep_hydro(int p)
 #ifdef BLACKHOLES
   double dtjet = All.MaxSizeTimestep;
 
-  double dx = P[p].Pos[0] - 150;
-  double dy = P[p].Pos[1] - 150;
-  double dz = P[p].Pos[2] - 300;
+  double dx = P[p].Pos[0] - boxHalf_X;
+  double dy = P[p].Pos[1] - boxHalf_Y;
+  double dz = P[p].Pos[2] - boxHalf_Z;
 
   double r = sqrt(dx*dx + dy*dy + dz*dz);
 
