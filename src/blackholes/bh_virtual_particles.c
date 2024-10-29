@@ -76,9 +76,9 @@ void create_particles(void)
           //assign mass
           P[NumPart + i].Mass = Mj;
           //assign pos
-          P[NumPart + i].Pos[0] = 150;
-          P[NumPart + i].Pos[1] = 150;
-          P[NumPart + i].Pos[2] = 300;
+          P[NumPart + i].Pos[0] = boxHalf_X;
+          P[NumPart + i].Pos[1] = boxHalf_Y;
+          P[NumPart + i].Pos[2] = boxHalf_Z;
           //assign vel 
           if(i%2 == 0)
             {
@@ -132,9 +132,9 @@ void destroy_particles(void)
    { 
      if(BhP[i].DestroyFlag < 0)
        {
-         x = PPB(i).Pos[0] - 150;
-         y = PPB(i).Pos[1] - 150;
-         z = PPB(i).Pos[2] - 300;
+         x = PPB(i).Pos[0] - boxHalf_X;
+         y = PPB(i).Pos[1] - boxHalf_Y;
+         z = PPB(i).Pos[2] - boxHalf_Z;
 
          r2 = x*x + y*y + z*z;
 
