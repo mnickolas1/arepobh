@@ -214,7 +214,7 @@ void bh_density(void)
 
           printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
         
-          if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation) || BhP[i].NgbMass > (bh_des_ngb_mass + All.BhMaxNgbMassDeviation))
+          if(BhNumNgb[i]  < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation) || BhNumNgb[i] > (bh_des_ngb_mass + All.BhMaxNgbMassDeviation))
           {
                   /* need to redo this particle */
             npleft++;
@@ -230,7 +230,7 @@ void bh_density(void)
             //    }
             //  } 
 
-            if(BhP[i].NgbMass < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation))
+            if(BhNumNgb[i] < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation))
               Left[i] = dmax(BhP[i].Hsml, Left[i]);
             else
               {
