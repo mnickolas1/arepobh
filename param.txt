@@ -1,14 +1,14 @@
 %% system options
 MaxMemSize                                2500
-CpuTimeBetRestartFile                     36000
-TimeLimitCPU                              90000
+CpuTimeBetRestartFile                     40000
+TimeLimitCPU                              100000
 
 %% initial conditions
 InitCondFile                              ./IC
 ICFormat                                  3
 
 %% output options
-OutputDir                                 ./output/
+OutputDir                                 ./arepo/
 SnapshotFileBase                          snap
 SnapFormat                                3
 NumFilesPerSnapshot                       1
@@ -38,7 +38,7 @@ BoxSize                                   300
 TimeOfFirstSnapshot                       0.0
 TimeBetStatistics                         0.01
 TimeBegin                                 0.0
-TimeMax                                   0.065
+TimeMax                                   0.1
 TimeBetSnapshot                           5e-3
 
 %% Units
@@ -78,7 +78,7 @@ MultipleDomains                           8
 TopNodeFactor                             2.5
 ActivePartFracForNewDomainDecomp          0.00
 
-ReferenceGasPartMass                      1
+ReferenceGasPartMass                      0.2
 TargetGasMassFactor                       1
 RefinementCriterion                       1
 DerefinementCriterion                     1
@@ -106,10 +106,10 @@ SofteningTypeOfPartType3                  1
 SofteningTypeOfPartType4                  1
 SofteningTypeOfPartType5                  1
 
-BhDesNgbMass                              20
-BhMaxNgbMassDeviation                     10
+BhDesNgbMass                              10
+BhMaxNgbMassDeviation                     2
 FeedbackTime                              0
 
-JetPower                                  3e45   in erg/s
-JetVelocity                               1.5e4  in km/s
-JetParticleMass                           1      in 10^6 Solar Masses
+JetPower                                  5.e45 in erg/s
+JetVelocity                               4.e4  in km/s
+JetParticleMass                           0.04  in 10^6 Solar Masses
