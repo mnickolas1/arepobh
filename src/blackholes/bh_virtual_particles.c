@@ -55,7 +55,7 @@ void create_particles(void)
           double phi = ((double)rand() / RAND_MAX) * 2 * M_PI;
 
           // Generate a random value for cosine(theta) to ensure uniform distribution in the cone
-          double cos_theta = ((double)rand() / RAND_MAX) * (cos(DEG_TO_RAD(10)) - 1) + 1;
+          double cos_theta = ((double)rand() / RAND_MAX) * (cos(DEG_TO_RAD(15)) - 1) + 1;
           double theta = acos(cos_theta); 
 
           // Convert spherical coordinates to Cartesian coordinates
