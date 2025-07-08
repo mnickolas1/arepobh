@@ -1,6 +1,6 @@
 %% system options
 MaxMemSize                                2500
-CpuTimeBetRestartFile                     40000
+CpuTimeBetRestartFile                     45000
 TimeLimitCPU                              100000
 
 %% initial conditions
