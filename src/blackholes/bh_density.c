@@ -79,13 +79,13 @@ static void out2particle(data_out *out, int i, int mode)
     {
       BhNumNgb[i]                      = out->Ngb;
       BhP[i].Density                   = out->Rho;
-      BhP[i].NgbMass                   = out->Mass;
+      BhP[i].NgbsMass                   = out->Mass;
     }
   else /* combine */
     {
       BhNumNgb[i]                      += out->Ngb;
       BhP[i].Density                   += out->Rho;
-      BhP[i].NgbMass                   += out->Mass;
+      BhP[i].NgbsMass                   += out->Mass;
     }
 }
 
@@ -212,9 +212,10 @@ void bh_density(void)
         {
           i = ActiveVirtualPart.ActiveParticleList[idx];
 
-          printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbMass);
+          printf("BH_DENSITY: ngb iteration %d:-> Hsml: %f, NumNgb: %f, Nmass: %f\n", iter, BhP[i].Hsml, BhNumNgb[i], BhP[i].NgbsMass);
+          fflush(stdout);
         
-          if(BhNumNgb[i]  < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation) || BhNumNgb[i] > (bh_des_ngb_mass + All.BhMaxNgbMassDeviation))
+          if(BhP[i].NgbsMass < (All.BhDesNgb - All.BhDesDev) * All.TargetGasMass || BhP[i].NgbsMass > (All.BhDesNgb + All.BhDesDev) * All.TargetGasMass)
           {
                   /* need to redo this particle */
             npleft++;
@@ -230,7 +231,7 @@ void bh_density(void)
             //    }
             //  } 
 
-            if(BhNumNgb[i] < (bh_des_ngb_mass - All.BhMaxNgbMassDeviation))
+            if(BhP[i].NgbsMass < (All.BhDesNgb - All.BhDesDev) * All.TargetGasMass)
               Left[i] = dmax(BhP[i].Hsml, Left[i]);
             else
               {

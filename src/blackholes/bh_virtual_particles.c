@@ -142,6 +142,7 @@ void destroy_particles(void)
            {
              BhP[i].DestroyFlag = 1;
              printf("\nJETS: Destroying Particles\n\n");
+             fflush(stdout);
            }
        }
      else

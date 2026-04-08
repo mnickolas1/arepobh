@@ -22,7 +22,7 @@ typedef struct
   MyDouble Pos[3];
   MyDouble Vel[3];
   MyDouble BhRho;
-  MyDouble NgbMass;
+  MyDouble NgbsMass;
   MyFloat Hsml;
 
   int Firstnode;
@@ -48,7 +48,7 @@ static void particle2in(data_in *in, int i, int firstnode)
   in->Vel[1]        = PPB(i).Vel[1];
   in->Vel[2]        = PPB(i).Vel[2];
   in->BhRho         = BhP[i].Density;
-  in->NgbMass       = BhP[i].NgbMass;
+  in->NgbsMass       = BhP[i].NgbsMass;
   in->Hsml          = BhP[i].Hsml;
 
   in->Firstnode     = firstnode;
@@ -167,7 +167,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   int j, n, numnodes, *firstnode;
   double h, h2, hinv, hinv3, hinv4, wk, dwk;
   double dx, dy, dz, r, r2, u, z;
-  MyDouble *pos, *vel, mass, bh_rho, ngbmass, mass_j;
+  MyDouble *pos, *vel, mass, bh_rho, ngbsmass, mass_j;
 
   data_in local, *target_data;
 
@@ -189,7 +189,7 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
   pos     = target_data->Pos;
   vel     = target_data->Vel;
   bh_rho  = target_data->BhRho;
-  ngbmass = target_data->NgbMass;
+  ngbsmass = target_data->NgbsMass;
 
   h       = target_data->Hsml;
 
@@ -262,10 +262,10 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].F            = 1;*/
           
 /*use mass weighting*/
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
-          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
-          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
-          SphP[j].FMass        = mass * mass_j/ngbmass;
+          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbsmass;
+          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbsmass;
+          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbsmass;
+          SphP[j].FMass        = mass * mass_j/ngbsmass;
           SphP[j].F            = 1;
 #endif
 
@@ -279,11 +279,11 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].F            = 1;*/
           
 /*use mass weighting*/
-          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbmass;
-          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbmass;
-          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbmass;
-          SphP[j].Fkin         = fkin * mass_j/ngbmass;
-          SphP[j].FMass        = mass * mass_j/ngbmass;
+          SphP[j].FMomentum[0] = mass*vel[0] * mass_j/ngbsmass;
+          SphP[j].FMomentum[1] = mass*vel[1] * mass_j/ngbsmass;
+          SphP[j].FMomentum[2] = mass*vel[2] * mass_j/ngbsmass;
+          SphP[j].Fkin         = fkin * mass_j/ngbsmass;
+          SphP[j].FMass        = mass * mass_j/ngbsmass;
           SphP[j].F            = 1;
 #endif
 
@@ -302,8 +302,8 @@ static int bh_ngb_feedback_evaluate(int target, int mode, int threadid)
           SphP[j].FMomentum[0] = vel[0] / sqrt(v2); 
           SphP[j].FMomentum[1] = vel[1] / sqrt(v2);
           SphP[j].FMomentum[2] = vel[2] / sqrt(v2);
-          SphP[j].Fkin         = fkin * mass_j/ngbmass;
-          SphP[j].FMass        = mass * mass_j/ngbmass;
+          SphP[j].Fkin         = fkin * mass_j/ngbsmass;
+          SphP[j].FMass        = mass * mass_j/ngbsmass;
           SphP[j].F            = 1;
 #endif 
         }  

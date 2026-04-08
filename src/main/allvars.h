@@ -1226,8 +1226,8 @@ extern struct global_data_all_processes
   double PJet;
   double VJet;
   double MJet;
-  double BhDesNgbMass;
-  double BhMaxNgbMassDeviation;
+  double BhDesNgb;
+  double BhDesDev;
 #endif
 } All;
 
@@ -1468,7 +1468,7 @@ extern struct bh_particle_data
   int DestroyFlag;
   int DensityFlag;
   MyDouble Hsml;
-  MyDouble NgbMass;
+  MyDouble NgbsMass;
   MyDouble Density;
 }  *BhP,          
     *DomainBhBuf; 
