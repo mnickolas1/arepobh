@@ -60,6 +60,10 @@ static int jeans_derefinement_criteria(int i);
  */
 int derefine_should_this_cell_be_merged(int i, int flag)
 {
+  /* Don't derefine jet cells */ //TODO: Add proper flags and guards
+  if(SphP[i].PScalars[0] > 0.01)
+    return 0;
+
 #ifdef REFINEMENT_HIGH_RES_GAS
   if(SphP[i].AllowRefinement == 0)
     return 0;
