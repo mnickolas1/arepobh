@@ -450,10 +450,14 @@ integertime get_timestep_hydro(int p)
 
   double r = sqrt(dx*dx + dy*dy + dz*dz);
 
+  if(All.Time < 0.001) // TODO: Introduce parameter here
+    {
+      if(r < 40)
+        dtjet = 5e-5;
+    }
+
   if(r < 20)
-    dtjet = 1e-6;
-  else if(r < 40)
-    dtjet = 1e-5;
+    dtjet = 5e-6;
 
   if(dt > dtjet) 
     dt = dtjet;
