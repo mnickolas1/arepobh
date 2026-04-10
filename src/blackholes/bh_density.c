@@ -198,8 +198,6 @@ void bh_density(void)
 
   generic_set_MaxNexport();
 
-  bh_des_ngb_mass = All.BhDesNgbMass;
-
   /* we will repeat the whole thing for those particles where we didn't find enough neighbours */
   do
     {
