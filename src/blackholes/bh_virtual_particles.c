@@ -128,6 +128,8 @@ void destroy_particles(void)
  double x, y, z, r2;
  double Radius = 10;
 
+ int local_destroyed = 0, global_destroyed = 0;
+
  for(i=0; i<NumBh; i++)
    { 
      if(BhP[i].DestroyFlag < 0)
@@ -141,11 +143,15 @@ void destroy_particles(void)
          if(r2 > Radius*Radius)
            {
              BhP[i].DestroyFlag = 1;
-             printf("\nJETS: Destroying Particles\n\n");
-             fflush(stdout);
+             local_destroyed++;
            }
        }
      else
        BhP[i].DestroyFlag = 2;
    }
+
+  MPI_Reduce(&local_destroyed, &global_destroyed, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  
+  if(global_destroyed > 0) 
+    mpi_printf("\nJETS: Destroying %d particles across all tasks\n\n", global_destroyed);
 }
