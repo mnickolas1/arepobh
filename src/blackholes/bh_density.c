@@ -174,7 +174,7 @@ void bh_density(void)
   MyFloat *Left, *Right;
   int idx, i, npleft, iter = 0;
   long long ntot;
-  double bh_des_ngb_mass, t0, t1;
+  double t0, t1;
 
   CPU_Step[CPU_MISC] += measure_time();
 
@@ -275,6 +275,12 @@ void bh_density(void)
     }
   while(ntot > 0);
 
+  for(idx=0; idx<ActiveVirtualPart.NActiveParticles; idx++)
+    {
+      i = ActiveVirtualPart.ActiveParticleList[idx];
+      if(BhP[i].Hsml > 10.0)
+        terminate("\nHSML > 10!!!!\n");
+    }
 
   myfree(Right);
   myfree(Left);
