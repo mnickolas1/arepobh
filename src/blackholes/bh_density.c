@@ -270,7 +270,7 @@ void bh_density(void)
 
       iter++;
 
-      if(iter > 0)
+      if(iter > 0 && ntot > 0)
         mpi_printf("BH_DENSITY: ngb iteration %3d: need to repeat for %12lld particles. (took %g sec)\n", iter, ntot,
         timediff(t0, t1));
 
